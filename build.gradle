@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group 'com.ritualsoftheold.weltschmerz'
+version '0'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
