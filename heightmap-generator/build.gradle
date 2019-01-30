@@ -1,5 +1,6 @@
 dependencies {
-     compile project(':weltschmerz-noise')
-    compile project(':weltschmerz-plates')
+    compile project(':weltschmerz-noise')
+    compile project(':weltschmerz-core')
+    compile project(':weltschmerz-experimental')
     compile 'org.world-engine:worldengine-java:1.0'
 }
