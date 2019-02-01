@@ -11,14 +11,14 @@ public class TestHeightMapWorld {
         int width = 500;
         int height = 500;
         //Creates frame for heigh map
-        JFrame frame = new JFrame("Joise Example 02");
+        JFrame frame = new JFrame("Weltschmerz");
         frame.setPreferredSize(new Dimension(width, height));
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        World world = new World(200, 200, 789, 4, 5);
-        Canvas canvas = new Canvas(200);
+        World world = new World(300, 300, 789, 4, 5);
+        Canvas canvas = new Canvas(400);
         world.generateWorld(10);
         canvas.updateImage(world.getMap());
         frame.add(canvas);
