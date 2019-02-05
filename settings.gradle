@@ -3,4 +3,5 @@ include 'heightmap-generator'
 include 'weltschmerz-noise'
 include 'weltschmerz-core'
 include 'weltschmerz-experimental'
+include 'weltschmerz-landmass'
 

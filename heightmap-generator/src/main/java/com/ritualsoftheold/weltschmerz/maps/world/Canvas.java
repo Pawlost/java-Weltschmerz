@@ -1,8 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.Shape;
-import com.ritualsoftheold.weltschmerz.experimental.Lithosphere;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
