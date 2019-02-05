@@ -1,57 +1,74 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Location {
     private Shape shape;
-    private int startx;
-    private int starty;
-    private int endx;
-    private int endy;
+    private int innerx;
+    private int innery;
+    private int width;
+    private int height;
+    private int outerx;
+    private int outery;
+    private int outerendx;
+    private int outerendy;
     private double[][] terrain;
 
-    public Location(int startx, int starty, int endx, int endy, Shape shape){
-        this.startx = startx;
-        this.starty = starty;
-        this.endx = endx;
-        this.endy = endy;
+    public Location(int startx, int starty, int width, int height, Shape shape){
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        this.innerx = startx;
+        this.innery = starty;
+        this.width = width;
+        this.height = height;
         this.shape = shape;
         terrain = new double[getHeight()][getWidth()];
-        terrain = new double[getHeight()][getWidth()];
+//          outerx = random.nextInt(startx + 1, startx + width -2);
+ //      outery = random.nextInt(starty + 1, starty + height -2);
+    //   outerendx = random.nextInt(outerx, outerx + width -1);
+    //   outerendy = random.nextInt(outery, outery + height -1);
     }
 
-    public void fill(WeltschmerzNoise ma){
-        ThreadLocalRandom  random = ThreadLocalRandom.current();
+    public void fill(ModuleAutoCorrect mod){
         Shape randShape = Shape.SEA;
-        int middlex = getWidth()/2;
-        int middley = getHeight()/2;
+        int middlex = width/2;
+        int middley = height/2;
         int startx = 0;
         int starty = 0;
-        while (shape != Generation.getPrevious(randShape))  {
+
+        while (shape != Generation.getPrevious(randShape)) {
             int layer = Generation.getNumShapes(randShape);
-            int maxposx = getWidth()/layer;
-            int maxposy = getHeight()/layer;
-            startx += middlex - maxposx/2;
-            starty += middley - maxposy/2;
-            for (int y = 0; y < maxposy - 1; y++) {
-                for (int x = 0; x < maxposx - 1; x++) {
-                    double r = ThreadLocalRandom.current().nextDouble(randShape.min, randShape.max);
-                    terrain[y + starty][x + startx] = r;
+            int maxposx = width / layer;
+            int maxposy = height / layer;
+            startx += middlex - maxposx / 2;
+            starty += middley - maxposy / 2;
+            for (int y = starty; y < maxposy - 1; y++) {
+                for (int x = startx; x < maxposx - 1; x++) {
+                    double r = 1.0;
+                    if(randShape != Shape.SEA) {
+                       r = mod.get(y, x);
+                    }
+                    terrain[y + starty][x + startx] = r + randShape.min;
                 }
             }
-            middlex = maxposx/2;
-            middley = maxposy/2;
+            middlex = maxposx / 2;
+            middley = maxposy / 2;
             randShape = Generation.getNext(randShape);
         }
+        makeContinent();
+    }
+
+    private void makeContinent(){
+
     }
 
     public int getWidth(){
-        return endx - startx;
+        return width;
     }
 
     public int getHeight(){
-        return endy - starty;
+        return height;
     }
 
     public Shape getShape(){
@@ -59,19 +76,11 @@ public class Location {
     }
 
     public int getStartx(){
-        return startx;
+        return innerx;
     }
 
     public int getStarty() {
-        return starty;
-    }
-
-    public int getEndx(){
-        return endx;
-    }
-
-    public int getEndy() {
-        return endy;
+        return innery;
     }
 
     public double[][] getTerrain() {

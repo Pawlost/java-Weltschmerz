@@ -18,7 +18,7 @@ public class WeltschmerzNoise {
         gen.setSeed(seed);
     }
 
-    public ModuleAutoCorrect generateNoise(float min, float max){
+    public ModuleAutoCorrect generateNoise(){
         /*
          * ... route it through an autocorrection module...
          *

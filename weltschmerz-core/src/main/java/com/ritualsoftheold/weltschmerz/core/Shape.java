@@ -2,11 +2,11 @@ package com.ritualsoftheold.weltschmerz.core;
 
 public enum Shape {
 
-    SEA(0.5, 1.0),
-    SHORELINE(1.0, 1.5),
-    PLAINS(1.5, 3.0),
-    HILLS(3.0, 4.0),
-    MOUNTAINS(4.0, 5.0);
+    SEA(0.5, 1.6),
+    SHORELINE(1.6, 2.6),
+    PLAINS(2.6, 3.6),
+    HILLS(4.6, 5.6),
+    MOUNTAINS(6.6, 10.0);
 
     public final double min;
     public final double max;

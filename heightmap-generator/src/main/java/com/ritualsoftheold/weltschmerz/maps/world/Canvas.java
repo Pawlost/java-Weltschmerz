@@ -2,6 +2,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.Shape;
 import com.ritualsoftheold.weltschmerz.experimental.Lithosphere;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,19 +19,25 @@ public class Canvas extends JPanel {
         for (int y = 0; y < map.length; y++) {
             for(int x = 0; x < map[y].length; x++) {
                 double f = map[y][x];
-
+                float r = (float) f;
+                System.out.println(r);
                 if (f < Shape.SEA.min) {
-                    image.setRGB(x, y, new Color(0, 0, 64).getRGB());
+                    image.setRGB(x, y, new Color(0f, 0f, 0.25f).getRGB());
                 } else if( f > Shape.SEA.min && f < Shape.SEA.max) {
-                    image.setRGB(x, y, new Color(0, 0, 255).getRGB());
+                    r -= Shape.SEA.min;
+                    image.setRGB(x, y, new Color(0f, 0f, 1.0f, r).getRGB());
                 }else if ( f > Shape.SHORELINE.min && f < Shape.SHORELINE.max) {
-                    image.setRGB(x, y, new Color(255, 255, 0).getRGB());
+                    r -= Shape.SHORELINE.min;
+                    image.setRGB(x, y, new Color(1.0f, 1.0f, 0, r).getRGB());
                 } else if (f > Shape.PLAINS.min && f < Shape.PLAINS.max) {
-                    image.setRGB(x, y, new Color(0, 255, 0).getRGB());
+                    r -= Shape.PLAINS.min;
+                    image.setRGB(x, y, new Color(0, 1.0f, 0, r).getRGB());
                 } else if (f > Shape.HILLS.min && f < Shape.HILLS.max) {
-                    image.setRGB(x, y, new Color(255, 128, 0).getRGB());
+                    r -= Shape.HILLS.min;
+                    image.setRGB(x, y, new Color(1.0f, 0.5f, 0, r).getRGB());
                 } else if (f > Shape.MOUNTAINS.min) {
-                    image.setRGB(x, y, new Color(96, 96, 96).getRGB());
+                    r -= Shape.MOUNTAINS.min;
+                    image.setRGB(x, y, new Color(0.38f, 0.38f, 0.38f, r).getRGB());
                 }
             }
         }
@@ -43,4 +50,5 @@ public class Canvas extends JPanel {
         g2.drawImage(this.image, null, null);
         g2.dispose();
     }
+
 }
