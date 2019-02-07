@@ -1,10 +1,10 @@
 package com.ritualsoftheold.weltschmerz.landmass.events;
 
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.DataNode;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.EdgeNode;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.Point;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.VoronoiEdge;
+import com.ritualsoftheold.weltschmerz.landmass.geometry.*;
+import com.ritualsoftheold.weltschmerz.landmass.nodes.BorderNode;
+import com.ritualsoftheold.weltschmerz.landmass.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.landmass.nodes.Node;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,65 +12,65 @@ import java.util.HashSet;
 public class CircleEvent extends Event {
 
     public DataNode NodeN, NodeL, NodeR;
-    public Point Center;
+    public Vertex center;
     public boolean Valid;
 
-    public CircleEvent(DataNode n, DataNode l, DataNode r, Point c) {
+    public CircleEvent(DataNode n, DataNode l, DataNode r, Vertex c) {
         NodeN = n;
         NodeL = l;
         NodeR = r;
-        Center = c;
+        center = c;
         Valid = true;
     }
 
 
     @Override
     public double getX() {
-        return Center.getX();
+        return center.getX();
     }
 
     @Override
     public double getY() {
-        double dist = NodeN.DataPoint.dist(Center);
-        return PrecisionMath.round(Center.getY() + dist);
+        double dist = NodeN.point.dist(center);
+        return PrecisionMath.round(center.getY() + dist);
     }
 
     @Override
     public Node process(Node Root, double ys,
-                        HashSet<Point> vertList,
-                        HashSet<VoronoiEdge> edgeList,
+                        HashSet<Vertex> vertList,
+                        HashSet<VoronoiBorder> edgeList,
                         ArrayList<DataNode> CircleCheckList) {
-        final DataNode b = NodeN;
-        final DataNode a = Node.LeftDataNode(b);
-        final DataNode c = Node.RightDataNode(b);
+        DataNode b = NodeN;
+        DataNode a = Node.leftDataNode(b);
+        DataNode c = Node.rightDataNode(b);
         if (a == null || b.getParent() == null || c == null
-                || !a.DataPoint.equals(NodeL.DataPoint)
-                || !c.DataPoint.equals(NodeR.DataPoint)) {
+                || !a.point.equals(NodeL.point)
+                || !c.point.equals(NodeR.point)) {
             return Root;
         }
 
-        final EdgeNode eu = (EdgeNode) b.getParent();
+        BorderNode eu = (BorderNode) b.getParent();
         CircleCheckList.add(a);
         CircleCheckList.add(c);
 
         // 1. Create the new Vertex
-        final Point VNew = new Point(Center.getX(), Center.getY());
+        Vertex VNew = new Vertex(center.getX(), center.getY(), null);
         vertList.add(VNew);
 
         // 2. Find out if a or c are in a distand part of the tree (the other
         // is then b's sibling) and assign the new vertex
-        EdgeNode eo;
-        final Node eleft = eu.getLeft();
-        final Node eright = eu.getRight();
+        BorderNode eo;
+        Node eleft = eu.getLeft();
+        Node eright = eu.getRight();
         if (eleft == b) {
             // c is sibling
-            eo = Node.EdgeToRightDataNode(a);
+            eo = Node.edgeToRightDataNode(a);
 
             // replace eu by eu's Right
             eu.getParent().Replace(eu, eright);
         } else {
             // a is sibling
-            eo = Node.EdgeToRightDataNode(b);
+            eo = Node.edgeToRightDataNode(b);
 
             // replace eu by eu's Left
             eu.getParent().Replace(eu, eleft);
@@ -79,15 +79,14 @@ public class CircleEvent extends Event {
         eo.Edge.AddVertex(VNew);
 
         // 2. Replace eo by new Edge
-        VoronoiEdge VE = new VoronoiEdge();
-        VE.LeftData = a.DataPoint;
-        VE.RightData = c.DataPoint;
+        VoronoiBorder VE = new VoronoiBorder();
+        VE.LeftData = a.point;
+        VE.RightData = c.point;
         VE.AddVertex(VNew);
         edgeList.add(VE);
 
-        final EdgeNode VEN = new EdgeNode(VE, false, eo.getLeft(), eo
-                .getRight());
-        final Node parent = eo.getParent();
+        BorderNode VEN = new BorderNode(VE, false, eo.getLeft(), eo.getRight());
+        Node parent = eo.getParent();
         if (parent == null)
             return VEN;
         parent.Replace(eo, VEN);

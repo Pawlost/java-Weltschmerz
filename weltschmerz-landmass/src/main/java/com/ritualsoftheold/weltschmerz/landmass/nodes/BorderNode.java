@@ -1,14 +1,15 @@
-package com.ritualsoftheold.weltschmerz.landmass.geometry;
+package com.ritualsoftheold.weltschmerz.landmass.nodes;
 
+import com.ritualsoftheold.weltschmerz.landmass.Area;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.events.Node;
+import com.ritualsoftheold.weltschmerz.landmass.geometry.VoronoiBorder;
 
-public class EdgeNode extends Node {
+public class BorderNode extends Node {
 
-    public VoronoiEdge Edge;
+    public VoronoiBorder Edge;
     private boolean Flipped;
 
-    public EdgeNode(VoronoiEdge E, boolean Flipped, Node left, Node right) {
+    public BorderNode(VoronoiBorder E, boolean Flipped, Node left, Node right) {
         super(left, right);
         Edge = E;
         this.Flipped = Flipped;
@@ -16,16 +17,17 @@ public class EdgeNode extends Node {
 
 
     public double Cut(double ys, double x) {
-        final double l0 = Edge.LeftData.getX();
-        final double l1 = Edge.LeftData.getY();
-        final double r0 = Edge.RightData.getX();
-        final double r1 = Edge.RightData.getY();
+         double l0 = Edge.LeftData.getX();
+         double l1 = Edge.LeftData.getY();
+         double r0 = Edge.RightData.getX();
+         double r1 = Edge.RightData.getY();
 
         double delta;
         if (!Flipped)
             delta = ParabolicCut(l0, l1, r0, r1, ys);
         else
             delta = ParabolicCut(r0, r1, l0, l1, ys);
+
         return PrecisionMath.round(x - delta);
     }
 

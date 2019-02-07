@@ -1,8 +1,7 @@
-package com.ritualsoftheold.weltschmerz.landmass.events;
+package com.ritualsoftheold.weltschmerz.landmass.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.geometry.DataNode;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.EdgeNode;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.Point;
+import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
+import com.ritualsoftheold.weltschmerz.landmass.geometry.Vertex;
 
 public abstract class Node {
 
@@ -55,8 +54,8 @@ public abstract class Node {
         ChildOld._Parent = null;
     }
 
-    public static DataNode LeftDataNode(DataNode Current) {
-        Node C = Current;
+    public static DataNode leftDataNode(DataNode current) {
+        Node C = current;
 
         // 1. Up
         do {
@@ -82,7 +81,7 @@ public abstract class Node {
     }
 
 
-    public static DataNode RightDataNode(DataNode Current) {
+    public static DataNode rightDataNode(DataNode Current) {
         Node C = Current;
 
         // 1. Up
@@ -109,7 +108,7 @@ public abstract class Node {
     }
 
 
-    public static EdgeNode EdgeToRightDataNode(DataNode Current) {
+    public static BorderNode edgeToRightDataNode(DataNode Current) {
         Node C = Current;
 
         // 1. Up
@@ -124,16 +123,16 @@ public abstract class Node {
                 break;
             }
         } while (true);
-        return (EdgeNode) C;
+        return (BorderNode) C;
     }
 
 
-    public static DataNode FindDataNode(Node Root, double ys, double x) {
+    public static DataNode findDataNode(Node Root, double ys, double x) {
         Node C = Root;
         do {
             if (C instanceof DataNode)
                 return (DataNode) C;
-            if (((EdgeNode) C).Cut(ys, x) < 0)
+            if (((BorderNode) C).Cut(ys, x) < 0)
                 C = C._Left;
             else
                 C = C._Right;
@@ -141,37 +140,37 @@ public abstract class Node {
     }
 
 
-    public static Point CircumCircleCenter(Point A, Point B, Point C) {
-        if (A == B || B == C || A == C)
+    public static Vertex circumCircleCenter(Centroid left, Centroid middle, Centroid right) {
+        if (left == middle || middle == right || left == right)
             throw new IllegalArgumentException("Need three different points!");
-        final double tx = (A.getX() + C.getX()) / 2;
-        final double ty = (A.getY() + C.getY()) / 2;
+        double tx = (left.getX() + right.getX()) / 2;
+        double ty = (left.getY() + right.getY()) / 2;
 
-        final double vx = (B.getX() + C.getX()) / 2;
-        final double vy = (B.getY() + C.getY()) / 2;
+        double vx = (middle.getX() + right.getX()) / 2;
+        double vy = (middle.getY() + right.getY()) / 2;
 
         double ux, uy, wx, wy;
 
-        if (A.getX() == C.getX()) {
+        if (left.getX() == right.getX()) {
             ux = 1;
             uy = 0;
         } else {
-            ux = (C.getY() - A.getY()) / (A.getX() - C.getX());
+            ux = (right.getY() - left.getY()) / (left.getX() - right.getX());
             uy = 1;
         }
 
-        if (B.getX() == C.getX()) {
+        if (middle.getX() == right.getX()) {
             wx = -1;
             wy = 0;
         } else {
-            wx = (B.getY() - C.getY()) / (B.getX() - C.getX());
+            wx = (middle.getY() - right.getY()) / (middle.getX() - right.getX());
             wy = -1;
         }
 
         final double alpha = (wy * (vx - tx) - wx * (vy - ty))
                 / (ux * wy - wx * uy);
 
-        return new Point(tx + alpha * ux, ty + alpha * uy);
+        return new Vertex(tx + alpha * ux, ty + alpha * uy, null);
     }
 
     private Node _Parent = null;
