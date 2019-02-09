@@ -1,70 +1,52 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.landmass.Location;
+import com.ritualsoftheold.weltschmerz.landmass.Voronoi;
+import com.ritualsoftheold.weltschmerz.landmass.algorithms.Fortune;
+import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World extends ArrayList<Location> {
-    private int width;
-    private int height;
-    private WeltschmerzNoise noise;
+    private int size;
+    private Location[] locations;
 
-    public World(int width, int height, int seed, int octaves, int freqeuncy) {
-        noise = new WeltschmerzNoise(seed, octaves, freqeuncy);
-        this.width = width;
-        this.height = height;
-    }
+    public World(int size){
+        this.size = size;
 
-    public void generateWorld(int maxContinentSize) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        int width = this.width;
-        int height = this.height;
-
-        while (width > 0 && height > 0) {
-
-            int continentStructure = random.nextInt(1, maxContinentSize);
-            int startx = random.nextInt((this.width-1)/2);
-            int starty = random.nextInt((this.height-1)/2);
-
-            int endx = random.nextInt( this.width - 1);
-            int endy = random.nextInt( this.height- 1);
-
-            Shape shape = Generation.getRandomShape(random.nextInt(1, Generation.SHAPES));
-            for (int i = 0; i <= continentStructure; i++) {
-                if (width > endx && height > endy) {
-                    Location location = new Location(startx, starty, endx, endy, shape);
-                    location.fill(noise.generateNoise());
-                    this.add(location);
-
-                    width -= location.getWidth();
-                    height -= location.getHeight();
-
-                    if(this.width  - 1 > 1 && this.height - 1 > 1) {
-                        endx = random.nextInt(this.width - 1 );
-                        endy = random.nextInt(this.height - 1);
-
-                        shape = Generation.getNext(location.getShape());
-                    }else{
-                        break;
-                    }
-                }else{
-                    width = 0;
-                    height = 0;
-                }
-            }
+        locations = new Location[size];
+        for(int i = 0; i < size; i++){
+            double x = random.nextDouble(1, (double) locations.length);
+            double y = random.nextDouble(1, (double) locations.length);
+            Location location = new Location(x, y);
+            locations[i] = location;
         }
     }
 
-    public double[][] getMap() {
-        double[][] worldMap = new double[height][width];
-        for (Location location : this) {
-            for (int y = 0; y < location.getHeight()- location.getStarty() - 1; y++) {
-                for (int x = 0; x < location.getWidth()-  location.getStartx() - 1; x++) {
-                    worldMap[y + location.getStarty()][x + location.getStartx()] = location.getTerrain()[y][x];
-                }
+    public Location[] generateLand(){
+        ArrayList<Centroid> centroids = new ArrayList<>();
+
+        for(Location location : locations){
+            centroids.add(location.getCentroid());
+        }
+
+        Centroid[] centers = new Centroid[centroids.size()];
+        centroids.toArray(centers);
+
+        Voronoi voronoi = Fortune.ComputeGraph(centers);
+        voronoi.getVoronoiArea(locations);
+        return locations;
+    }
+
+    public Location[] reshapeWorld(int relaxation){
+        for(int i = 0; i <= relaxation; i++) {
+            for (Location location : locations) {
+                location.reset();
             }
         }
-        return worldMap;
+        return generateLand();
     }
 }

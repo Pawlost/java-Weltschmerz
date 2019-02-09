@@ -170,7 +170,7 @@ public abstract class Node {
         final double alpha = (wy * (vx - tx) - wx * (vy - ty))
                 / (ux * wy - wx * uy);
 
-        return new Vertex(tx + alpha * ux, ty + alpha * uy, null);
+        return new Vertex(tx + alpha * ux, ty + alpha * uy);
     }
 
     private Node _Parent = null;

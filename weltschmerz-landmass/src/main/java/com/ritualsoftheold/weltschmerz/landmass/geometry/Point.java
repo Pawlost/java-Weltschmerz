@@ -1,5 +1,7 @@
 package com.ritualsoftheold.weltschmerz.landmass.geometry;
 
+import java.io.PipedOutputStream;
+
 public abstract class Point {
     double x;
     double y;
@@ -30,5 +32,9 @@ public abstract class Point {
 
     public double getY() {
         return y;
+    }
+
+    public Point clone() throws CloneNotSupportedException {
+        return  (Point) super.clone();
     }
 }

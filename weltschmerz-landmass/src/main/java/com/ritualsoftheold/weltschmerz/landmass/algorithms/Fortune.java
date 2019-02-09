@@ -1,7 +1,6 @@
 package com.ritualsoftheold.weltschmerz.landmass.algorithms;
 
-import com.ritualsoftheold.weltschmerz.landmass.Area;
-import com.ritualsoftheold.weltschmerz.landmass.Graph;
+import com.ritualsoftheold.weltschmerz.landmass.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.events.CircleEvent;
 import com.ritualsoftheold.weltschmerz.landmass.events.DataEvent;
@@ -13,11 +12,10 @@ import com.ritualsoftheold.weltschmerz.landmass.geometry.VoronoiBorder;
 import com.ritualsoftheold.weltschmerz.landmass.nodes.DataNode;
 import com.ritualsoftheold.weltschmerz.landmass.nodes.Node;
 
-import java.awt.*;
 import java.util.*;
 
 public abstract class Fortune {
-    public static Graph ComputeAreas(Centroid[] vertices){
+    public static Voronoi ComputeGraph(Centroid[] vertices){
         PriorityQueue<Event> queue = new PriorityQueue<>();
         for (Centroid v : vertices) {
             DataEvent ev = new DataEvent(v);
@@ -28,7 +26,7 @@ public abstract class Fortune {
         return ComputeVoronoiGraph(queue);
     }
 
-    private static Graph ComputeVoronoiGraph(PriorityQueue<Event> queue) {
+    private static Voronoi ComputeVoronoiGraph(PriorityQueue<Event> queue) {
         HashMap<DataNode, CircleEvent> CurrentCircles = new HashMap<>();
         HashSet<Vertex> vertexList = new HashSet<>();
         HashSet<VoronoiBorder> edgeList = new HashSet<>();
@@ -107,7 +105,7 @@ public abstract class Fortune {
             }
         }
 
-        return new Graph(finalEdges);
+        return new Voronoi(finalEdges);
     }
 
 }

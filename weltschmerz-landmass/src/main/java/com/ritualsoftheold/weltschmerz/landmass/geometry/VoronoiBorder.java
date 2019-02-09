@@ -1,7 +1,5 @@
 package com.ritualsoftheold.weltschmerz.landmass.geometry;
 
-import com.ritualsoftheold.weltschmerz.landmass.Area;
-
 public class VoronoiBorder {
 
     public Centroid RightData = Centroid.UNKNOWN, LeftData = Centroid.UNKNOWN;
@@ -15,7 +13,7 @@ public class VoronoiBorder {
         else if (VVertexB == Vertex.UNKNOWN)
             VVertexB = V;
         else
-            throw new RuntimeException("Tried to add third Area!");
+            throw new RuntimeException("Tried to add third Location!");
     }
 
     public boolean isPartlyInfinite() {

@@ -1,11 +1,8 @@
 package com.ritualsoftheold.weltschmerz.landmass.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.Area;
 import com.ritualsoftheold.weltschmerz.landmass.events.CircleEvent;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Vertex;
-
-import java.security.interfaces.XECKey;
 
 public class DataNode extends Node {
 

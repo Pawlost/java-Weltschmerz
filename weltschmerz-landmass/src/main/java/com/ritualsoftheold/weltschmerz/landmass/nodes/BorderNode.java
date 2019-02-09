@@ -1,6 +1,5 @@
 package com.ritualsoftheold.weltschmerz.landmass.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.Area;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.VoronoiBorder;
 

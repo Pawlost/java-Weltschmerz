@@ -54,7 +54,7 @@ public class CircleEvent extends Event {
         CircleCheckList.add(c);
 
         // 1. Create the new Vertex
-        Vertex VNew = new Vertex(center.getX(), center.getY(), null);
+        Vertex VNew = new Vertex(center.getX(), center.getY());
         vertList.add(VNew);
 
         // 2. Find out if a or c are in a distand part of the tree (the other

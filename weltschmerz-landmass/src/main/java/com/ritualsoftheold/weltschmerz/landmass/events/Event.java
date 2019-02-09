@@ -1,6 +1,5 @@
 package com.ritualsoftheold.weltschmerz.landmass.events;
 
-import com.ritualsoftheold.weltschmerz.landmass.Area;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.nodes.DataNode;
 import com.ritualsoftheold.weltschmerz.landmass.nodes.Node;
