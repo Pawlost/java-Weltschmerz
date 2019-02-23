@@ -12,10 +12,10 @@ public class Centroid extends Point {
         if (!allowOdd) {
             if (Double.isInfinite(x) || Double.isInfinite(y))
                 throw new IllegalArgumentException("Infinite co-ordinates" +
-                        " not allowed in a Vertex.");
+                        " not allowed in a Centroid.");
             if (Double.isNaN(x) || Double.isNaN(y))
                 throw new IllegalArgumentException("NaN co-ordinates" +
-                        " not allowed in a Vertex.");
+                        " not allowed in a Centroid.");
         }
 
         this.x = x;

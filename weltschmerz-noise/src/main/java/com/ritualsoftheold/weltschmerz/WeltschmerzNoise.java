@@ -10,11 +10,11 @@ public class WeltschmerzNoise {
     public WeltschmerzNoise(long seed, int octaves, double frequency){
         //Creates basic fractal module
         gen = new ModuleFractal();
-        gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+        gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
         gen.setNumOctaves(octaves);
         gen.setFrequency(frequency);
-        gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+        gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(seed);
     }
 

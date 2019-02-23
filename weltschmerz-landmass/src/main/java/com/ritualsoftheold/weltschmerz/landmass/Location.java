@@ -41,7 +41,7 @@ public class Location {
     }
 
     private void listVertices() {
-        for (Border border : getBorders()) {
+        for (Border border : borders) {
             vertice.add(border.getVertexA());
             vertice.add(border.getVertexB());
         }
@@ -49,39 +49,71 @@ public class Location {
 
     public void reset() {
 
-        double newX = (centroid.getX() + this.centerX())/2;
-        double newY = (centroid.getY() + this.centerY())/2;
+        double newX = (centroid.getX() + this.centerX()) / 2;
+        double newY = (centroid.getY() + this.centerY()) / 2;
 
         centroid = new Centroid(newX, newY);
         borders.clear();
         vertice.clear();
     }
 
-    private double centerX(){
+    private double centerX() {
         if (vertice.size() == 0)
             listVertices();
 
-        double centreX = 0;
+        double center = 0;
 
-        for (Vertex vertex:vertice) {
-            centreX += vertex.getX();
+        for (Vertex vertex : vertice) {
+            center += vertex.getX();
         }
 
-        centreX /= vertice.size();
-        return centreX;
+        center /= vertice.size();
+        return center;
     }
 
-    private double centerY(){
+    private double centerY() {
         if (vertice.size() == 0)
             listVertices();
 
-        double centreY = 0;
+        double center = 0;
 
-        for (Vertex vertex:vertice) {
-            centreY += vertex.getY();
+        for (Vertex vertex : vertice) {
+            center += vertex.getY();
         }
 
-        centreY /= vertice.size();
-        return centreY;
+        center /= vertice.size();
+        return center;
+    }
+
+    public void circularize() {
+        ArrayList<Border> cloneBorders = new ArrayList<>();
+        cloneBorders.add(borders.get(0));
+
+        while (checkNext(cloneBorders));
+
+        if(borders.size() == cloneBorders.size()) {
+            borders = cloneBorders;
+        }else{
+            borders = new ArrayList<>();
+        }
+    }
+
+    private boolean checkNext(ArrayList<Border> cloneBorders){
+        for(int i = 0; i < borders.size(); i++){
+            Border next = borders.get(i);
+            if(!cloneBorders.contains(next)) {
+                Border border = cloneBorders.get(cloneBorders.size() -1);
+                if (border.getVertexB() == next.getVertexA()) {
+                    cloneBorders.add(next);
+                    return true;
+                } else if (border.getVertexB() == next.getVertexB()) {
+                    Border newBorder = new Border(next.getVertexB(), next.getVertexA(), next.getDatumA(), next.getDatumB());
+                    cloneBorders.add(newBorder);
+                    borders.set(i, newBorder);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

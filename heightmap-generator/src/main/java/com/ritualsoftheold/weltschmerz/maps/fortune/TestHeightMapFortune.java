@@ -4,6 +4,8 @@ import com.ritualsoftheold.weltschmerz.core.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TestHeightMapFortune {
     public static void main(String... args) {
@@ -16,16 +18,38 @@ public class TestHeightMapFortune {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        World world = new World(500);
-        Canvas canvas = new Canvas(300, world);
-        canvas.paintWorld();
+        World world = new World(50, 200);
+        Canvas canvas = new Canvas(400, world);
+
+      // canvas.paintWorld();
+
+       canvas.fillWorld();
 
         JButton btnStart = new JButton("Start");
-        btnStart.addActionListener(e -> canvas.changeWorld());
+        btnStart.addActionListener(new ActionListener() {
+            private int i = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.paintOnce(i);
+                i += 1;
+            }
+        });
+
+        JButton btnCheck = new JButton("Check");
+        btnCheck.addActionListener(new ActionListener() {
+            private int i = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.fillOnce(i);
+                i++;
+            }
+        });
 
         btnStart.setBounds(10, 10, 110, 100);
+        btnCheck.setBounds(10, 110, 110, 100);
 
         canvas.add(btnStart);
+        canvas.add(btnCheck);
         frame.add(canvas);
 
         frame.pack();

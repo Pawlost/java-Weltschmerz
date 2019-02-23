@@ -5,24 +5,23 @@ import com.ritualsoftheold.weltschmerz.landmass.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.algorithms.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World extends ArrayList<Location> {
     private int size;
-    private Location[] locations;
+    private HashSet<Location> locations;
 
-    public World(int size){
-        this.size = size;
-
+    public World(int density, double spread){
+        this.size = (int) spread;
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        locations = new Location[size];
-        for(int i = 0; i < size; i++){
-            double x = random.nextDouble(1, (double) locations.length);
-            double y = random.nextDouble(1, (double) locations.length);
+        locations = new HashSet<>();
+        for(int i = 0; i < density; i++){
+            double x = random.nextDouble(1, spread);
+            double y = random.nextDouble(1, spread);
             Location location = new Location(x, y);
-            locations[i] = location;
+            locations.add(location);
         }
     }
 
@@ -37,8 +36,12 @@ public class World extends ArrayList<Location> {
         centroids.toArray(centers);
 
         Voronoi voronoi = Fortune.ComputeGraph(centers);
+
         voronoi.getVoronoiArea(locations);
-        return locations;
+
+        Location[] copy = new Location[locations.size()];
+        locations.toArray(copy);
+        return copy;
     }
 
     public Location[] reshapeWorld(int relaxation){

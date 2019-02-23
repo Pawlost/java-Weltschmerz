@@ -21,12 +21,6 @@ public class Voronoi {
         return vEdges;
     }
 
-    public Vertex[] getVertexArray() {
-        Vertex[] vVerts = new Vertex[voroniVertices.size()];
-        voroniVertices.toArray(vVerts);
-        return vVerts;
-    }
-
     private void listVertices() {
         voroniVertices = new HashSet<>();
         for (Border VE : voronoiBorders) {
@@ -35,12 +29,49 @@ public class Voronoi {
         }
     }
 
-    public void getVoronoiArea(Location[] locations){
-        for(Location location : locations) {
+    public void getVoronoiArea(HashSet<Location> locations) {
+        for (Location location : locations) {
             for (Border border : getBorderArray()) {
-                if (border.getDatumA() == location.getCentroid() || border.getDatumB() == location.getCentroid()){
+                if (border.getDatumA() == location.getCentroid() || border.getDatumB() == location.getCentroid()) {
                     location.add(border);
                 }
+            }
+        }
+        /*Location[] copy = new Location[locations.size()];
+        locations.toArray(copy);
+        while (voronoiBorders.size() > 0) {
+            System.out.println("here");
+            for (Border border : getBorderArray()) {
+                for (Location location : copy) {
+                /*if(border.getVertexA().getX() > width || border.getVertexA().getY() > height || border.getVertexB().getX() > width
+                        || border.getVertexB().getY() > height || border.getVertexA().getX() < width || border.getVertexA().getY() < height
+                        || border.getVertexB().getX() < width || border.getVertexB().getY() < height){
+                    voronoiBorders.remove(border);
+                }else
+                    if (border.getDatumA() != location.getCentroid() && border.getDatumB() == location.getCentroid()) {
+                        location.add(border);
+                    } else if (border.getDatumB() == location.getCentroid() && border.getDatumB() != location.getCentroid()) {
+                        location.add(border);
+                    }
+                }
+                voronoiBorders.remove(border);
+            }
+        }*/
+        Location[] locationsCopy = new Location[locations.size()];
+        locations.toArray(locationsCopy);
+
+        for (Location location : locationsCopy) {
+            if (location.getBorders().length < 1) {
+                locations.remove(location);
+            }
+        }
+
+        for (Location location : locationsCopy) {
+               location.circularize();
+            }
+        for (Location location : locationsCopy) {
+            if (location.getBorders().length <= 2) {
+                locations.remove(location);
             }
         }
     }

@@ -35,4 +35,12 @@ public class Border {
     public Centroid getDatumB() {
         return rightDatum;
     }
+
+    public void setVVertexB(Vertex VVertexB) {
+        this.VVertexB = VVertexB;
+    }
+
+    public void setVVertexA(Vertex VVertexA) {
+        this.VVertexA = VVertexA;
+    }
 }

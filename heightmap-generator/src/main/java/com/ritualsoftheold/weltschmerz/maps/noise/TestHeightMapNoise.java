@@ -19,7 +19,7 @@ public class TestHeightMapNoise {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        WeltschmerzNoise noise = new WeltschmerzNoise(898456, 5, 2.34);
+        WeltschmerzNoise noise = new WeltschmerzNoise(898456, 6, 0.5);
         canvas.updateImage(noise.generateNoise());
 
         frame.pack();
