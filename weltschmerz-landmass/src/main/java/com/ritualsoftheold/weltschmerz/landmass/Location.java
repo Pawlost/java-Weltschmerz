@@ -85,24 +85,24 @@ public class Location {
         return center;
     }
 
-    public void circularize() {
+    void circularize() {
         ArrayList<Border> cloneBorders = new ArrayList<>();
         cloneBorders.add(borders.get(0));
 
-        while (checkNext(cloneBorders));
+        while (checkNext(cloneBorders)) ;
 
-        if(borders.size() == cloneBorders.size()) {
+        if (borders.size() == cloneBorders.size()) {
             borders = cloneBorders;
-        }else{
+        } else {
             borders = new ArrayList<>();
         }
     }
 
-    private boolean checkNext(ArrayList<Border> cloneBorders){
-        for(int i = 0; i < borders.size(); i++){
+    private boolean checkNext(ArrayList<Border> cloneBorders) {
+        for (int i = 0; i < borders.size(); i++) {
             Border next = borders.get(i);
-            if(!cloneBorders.contains(next)) {
-                Border border = cloneBorders.get(cloneBorders.size() -1);
+            if (!cloneBorders.contains(next)) {
+                Border border = cloneBorders.get(cloneBorders.size() - 1);
                 if (border.getVertexB() == next.getVertexA()) {
                     cloneBorders.add(next);
                     return true;

@@ -16,7 +16,7 @@ public class TestHeightMapWorld {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        Canvas canvas = new Canvas(600);
+        Canvas canvas = new Canvas(600, 600);
         WeltschmerzNoise noise = new WeltschmerzNoise(213, 9, 32);
         frame.add(canvas);
 

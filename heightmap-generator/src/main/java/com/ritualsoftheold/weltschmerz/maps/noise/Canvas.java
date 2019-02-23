@@ -12,7 +12,7 @@ public class Canvas extends JPanel {
   private static final float SCALE = 1.0f;
   private BufferedImage image;
 
-  Canvas(int width, int height) {
+  public Canvas(int width, int height) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
   }
 

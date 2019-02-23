@@ -5,6 +5,7 @@ import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class TestHeightMapNoise {
     public static void main(String... args) {
         int width = 640;

@@ -29,48 +29,37 @@ public class Voronoi {
         }
     }
 
-    public void getVoronoiArea(HashSet<Location> locations) {
+    public void getVoronoiArea(HashSet<Location> locations, int width, int height) {
         for (Location location : locations) {
             for (Border border : getBorderArray()) {
-                if (border.getDatumA() == location.getCentroid() || border.getDatumB() == location.getCentroid()) {
-                    location.add(border);
+                if(border.getVertexA().getX() < width && border.getVertexA().getY() < height &&
+                        border.getVertexB().getX() < width && border.getVertexB().getY() < height &&
+                        border.getVertexA().getX() > 0 && border.getVertexA().getY() > 0 &&
+                        border.getVertexB().getX() > 0 && border.getVertexB().getY() > 0) {
+                    if (border.getDatumA() == location.getCentroid() || border.getDatumB() == location.getCentroid()) {
+                        location.add(border);
+                    }
+                }else{
+                    voronoiBorders.remove(border);
                 }
             }
         }
-        /*Location[] copy = new Location[locations.size()];
-        locations.toArray(copy);
-        while (voronoiBorders.size() > 0) {
-            System.out.println("here");
-            for (Border border : getBorderArray()) {
-                for (Location location : copy) {
-                /*if(border.getVertexA().getX() > width || border.getVertexA().getY() > height || border.getVertexB().getX() > width
-                        || border.getVertexB().getY() > height || border.getVertexA().getX() < width || border.getVertexA().getY() < height
-                        || border.getVertexB().getX() < width || border.getVertexB().getY() < height){
-                    voronoiBorders.remove(border);
-                }else
-                    if (border.getDatumA() != location.getCentroid() && border.getDatumB() == location.getCentroid()) {
-                        location.add(border);
-                    } else if (border.getDatumB() == location.getCentroid() && border.getDatumB() != location.getCentroid()) {
-                        location.add(border);
-                    }
-                }
-                voronoiBorders.remove(border);
-            }
-        }*/
+
+        optimalizeLocations(locations);
+
+        for (Location location : locations) {
+            location.circularize();
+        }
+
+        optimalizeLocations(locations);
+    }
+
+    private void optimalizeLocations(HashSet<Location> locations){
         Location[] locationsCopy = new Location[locations.size()];
         locations.toArray(locationsCopy);
 
         for (Location location : locationsCopy) {
-            if (location.getBorders().length < 1) {
-                locations.remove(location);
-            }
-        }
-
-        for (Location location : locationsCopy) {
-               location.circularize();
-            }
-        for (Location location : locationsCopy) {
-            if (location.getBorders().length <= 2) {
+            if (location.getBorders().length < 2) {
                 locations.remove(location);
             }
         }

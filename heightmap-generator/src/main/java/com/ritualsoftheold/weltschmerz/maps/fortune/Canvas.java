@@ -55,14 +55,11 @@ public class Canvas extends JPanel {
         g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                 (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
 
-        System.out.println(border.getVertexA().getX() + " " + border.getVertexA().getY());
-        System.out.println(border.getVertexB().getX() + " " + border.getVertexB().getY());
-
         this.repaint();
     }
 
-    public void changeWorld() {
-        drawWorld(world.reshapeWorld(0));
+    public void reshapeWorld() {
+        drawWorld(world.reshapeWorld());
     }
 
     private void fillPolygon(Location location) {
@@ -73,12 +70,9 @@ public class Canvas extends JPanel {
         Polygon polygon = new Polygon();
         for (Vertex vertex : location.getVertice()) {
             polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
-            System.out.println((int) vertex.getX() +" "+ (int) vertex.getY());
         }
 
-        System.out.println("-----------END----------");
         g.fillPolygon(polygon);
-
         this.repaint();
     }
 

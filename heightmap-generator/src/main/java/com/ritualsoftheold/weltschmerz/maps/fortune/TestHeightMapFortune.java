@@ -11,6 +11,7 @@ public class TestHeightMapFortune {
     public static void main(String... args) {
         int width = 500;
         int height = 500;
+
         //Creates frame for heigh map
         JFrame frame = new JFrame("Weltschmerz");
         frame.setPreferredSize(new Dimension(width, height));
@@ -21,29 +22,22 @@ public class TestHeightMapFortune {
         World world = new World(50, 200);
         Canvas canvas = new Canvas(400, world);
 
-      // canvas.paintWorld();
+        canvas.fillWorld();
 
-       canvas.fillWorld();
+        canvas.paintWorld();
 
         JButton btnStart = new JButton("Start");
         btnStart.addActionListener(new ActionListener() {
             private int i = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
-                canvas.paintOnce(i);
-                i += 1;
+                canvas.fillOnce(i);
+                i ++;
             }
         });
 
-        JButton btnCheck = new JButton("Check");
-        btnCheck.addActionListener(new ActionListener() {
-            private int i = 0;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                canvas.fillOnce(i);
-                i++;
-            }
-        });
+        JButton btnCheck = new JButton("Reshape");
+        btnCheck.addActionListener(e -> canvas.reshapeWorld());
 
         btnStart.setBounds(10, 10, 110, 100);
         btnCheck.setBounds(10, 110, 110, 100);

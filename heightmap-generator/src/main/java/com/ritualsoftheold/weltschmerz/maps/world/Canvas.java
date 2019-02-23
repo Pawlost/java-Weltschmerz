@@ -9,8 +9,8 @@ import java.awt.image.BufferedImage;
 public class Canvas extends JPanel {
     private BufferedImage image;
 
-    Canvas(int size) {
-        this.image = new BufferedImage(size , size, BufferedImage.TYPE_INT_ARGB);
+    Canvas(int width, int height) {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
 
     void updateImage(double[][] map) {
