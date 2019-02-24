@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.maps.fortune;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.Location;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Border;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.Vertex;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,20 +11,17 @@ import java.awt.image.BufferedImage;
 
 public class Canvas extends JPanel {
     private BufferedImage image;
-    Polygon polygon = new Polygon();
     private World world;
     private int size;
     private Location[] locations;
+    private ModuleAutoCorrect module;
 
-    public Canvas(int size, World world) {
+    public Canvas(int size, World world, ModuleAutoCorrect module) {
         this.image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         this.world = world;
         locations = world.generateLand();
         this.size = size;
-    }
-
-    public void paintWorld() {
-        drawWorld(locations);
+        this.module = module;
     }
 
     public void paintOnce(int index) {
@@ -59,32 +56,18 @@ public class Canvas extends JPanel {
     }
 
     public void reshapeWorld() {
-        drawWorld(world.reshapeWorld());
+        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        locations = world.reshapeWorld();
+        fillWorld();
+        drawWorld();
     }
 
     private void fillPolygon(Location location) {
         Graphics g = image.getGraphics();
 
-        g.setColor(Color.GREEN);
+        g.setColor(location.setShape(module, 1));
 
-        Polygon polygon = new Polygon();
-        for (Vertex vertex : location.getVertice()) {
-            polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
-        }
-
-        g.fillPolygon(polygon);
-        this.repaint();
-    }
-
-
-    public void fillPart(int index) {
-        Graphics g = image.getGraphics();
-
-        g.setColor(Color.GREEN);
-
-        Vertex vertex  = locations[0].getVertice()[index];
-        polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
-        g.fillPolygon(polygon);
+        g.fillPolygon(location.getPolygon());
 
         this.repaint();
     }
@@ -99,9 +82,7 @@ public class Canvas extends JPanel {
         fillPolygon(locations[index]);
     }
 
-    private void drawWorld(Location[] locations) {
-
-        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+    public void drawWorld() {
 
         Graphics g = image.getGraphics();
 

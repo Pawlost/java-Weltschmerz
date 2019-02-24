@@ -1,16 +1,23 @@
 package com.ritualsoftheold.weltschmerz.landmass;
 
+import com.ritualsoftheold.weltschmerz.core.Generation;
+import com.ritualsoftheold.weltschmerz.core.Shape;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.geometry.Vertex;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class Location {
+public class Location{
 
     private ArrayList<Border> borders;
     private ArrayList<Vertex> vertice;
+    private Polygon polygon;
     private Centroid centroid;
+    private Shape shape;
 
     public Location(double x, double y) {
         centroid = new Centroid(x, y);
@@ -53,6 +60,7 @@ public class Location {
         double newY = (centroid.getY() + this.centerY()) / 2;
 
         centroid = new Centroid(newX, newY);
+        polygon = null;
         borders.clear();
         vertice.clear();
     }
@@ -83,6 +91,42 @@ public class Location {
 
         center /= vertice.size();
         return center;
+    }
+
+    public Color setShape(ModuleAutoCorrect mod, int detail){
+        polygon = new Polygon();
+        for (Vertex vertex : getVertice()) {
+            polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
+        }
+
+        Rectangle boundries = polygon.getBounds();
+        ArrayList<Double> elevation = new ArrayList<>();
+
+        int width = boundries.width + boundries.x;
+        int height = boundries.height + boundries.y;
+
+        for(int x = boundries.x; x < width; x += detail){
+            for(int y = boundries.y; y < height; y += detail){
+                Point point = new java.awt.Point(x, y);
+                if(polygon.contains(point)){
+
+                    double r = mod.get((double) x, (double) y);
+
+                    elevation.add(r);
+                }
+            }
+        }
+
+
+         if(Generation.landGeneration(elevation)){
+             return Color.GREEN;
+         }else {
+             return Color.BLUE;
+         }
+    }
+
+    public Polygon getPolygon() {
+        return polygon;
     }
 
     void circularize() {

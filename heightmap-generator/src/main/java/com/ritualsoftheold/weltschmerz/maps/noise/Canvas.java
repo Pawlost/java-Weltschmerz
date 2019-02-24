@@ -16,7 +16,7 @@ public class Canvas extends JPanel {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
   }
 
-  void updateImage(ModuleAutoCorrect mod) {
+  public void updateImage(ModuleAutoCorrect mod) {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
     float px, py, r;
@@ -24,15 +24,15 @@ public class Canvas extends JPanel {
     for (int x = 0; x < width; x++) {
 
       for (int y = 0; y < height; y++) {
-        px = x / (float) width * SCALE;
-        py = y / (float) height * SCALE;
+       // px = x / (float) width * SCALE;
+       // py = y / (float) height * SCALE;
 
         /*
          * Sample the module chain like this...
          */
-        r = (float) mod.get(px, py);
+        r = (float) mod.get(x, y);
 
-        r = Math.max(0, Math.min(1, r));
+        //r = Math.max(0, Math.min(1, r));
         this.image.setRGB(x, y, new Color(r, r, r).getRGB());
       }
     }

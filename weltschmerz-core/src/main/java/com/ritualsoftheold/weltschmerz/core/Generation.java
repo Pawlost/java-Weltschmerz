@@ -1,5 +1,9 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 public abstract class Generation {
@@ -46,7 +50,7 @@ public abstract class Generation {
         return num;
     }
 
-    static Shape getRandomShape(int index){
+    static Shape getShape(int index){
         switch (index){
             case 1:
                 return Shape.SHORELINE;
@@ -57,7 +61,42 @@ public abstract class Generation {
             case 4:
                 return Shape.MOUNTAINS;
          default:
-             return null;
+             return Shape.SEA;
+        }
+    }
+
+    public static boolean landGeneration(ArrayList<Double> elevation){
+        int ocean = 0;
+        int land = 0;
+
+        for(double e:elevation) {
+            if (e < 0.5) {
+                ocean++;
+            }else{
+                land++;
+            }
+        }
+        if (ocean > land) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public static Color getColor(Shape shape){
+        switch (shape){
+            case SEA:
+                return Color.CYAN;
+            case SHORELINE:
+                return Color.YELLOW;
+            case PLAINS:
+                return Color.GREEN;
+            case HILLS:
+                return Color.RED;
+            case MOUNTAINS:
+                return Color.WHITE;
+            default:
+                return Color.BLUE;
         }
     }
 

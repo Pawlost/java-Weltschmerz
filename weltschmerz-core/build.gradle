@@ -1,4 +1,5 @@
 dependencies {
     compile project(':weltschmerz-noise')
     compile project(':weltschmerz-landmass')
+    compile project(':weltschmerz-core')
 }

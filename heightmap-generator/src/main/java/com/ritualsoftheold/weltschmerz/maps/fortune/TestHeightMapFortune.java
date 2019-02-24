@@ -1,6 +1,8 @@
 package com.ritualsoftheold.weltschmerz.maps.fortune;
 
+import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +21,13 @@ public class TestHeightMapFortune {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        World world = new World(50, 200);
-        Canvas canvas = new Canvas(400, world);
+        World world = new World(10000, 400);
+        WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
+        ModuleAutoCorrect module = noise.generateNoise();
+        Canvas canvas = new Canvas(600, world, module);
 
         canvas.fillWorld();
-
-        canvas.paintWorld();
+        canvas.drawWorld();
 
         JButton btnStart = new JButton("Start");
         btnStart.addActionListener(new ActionListener() {
@@ -44,8 +47,8 @@ public class TestHeightMapFortune {
 
         canvas.add(btnStart);
         canvas.add(btnCheck);
-        frame.add(canvas);
 
+        frame.add(canvas);
         frame.pack();
         frame.setLocationRelativeTo(null);
     }
