@@ -1,21 +1,27 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.Location;
-import com.ritualsoftheold.weltschmerz.landmass.Voronoi;
-import com.ritualsoftheold.weltschmerz.landmass.algorithms.Fortune;
-import com.ritualsoftheold.weltschmerz.landmass.geometry.Centroid;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
+import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms.Fortune;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
+import com.sudoplay.joise.module.ModuleAutoCorrect;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World extends ArrayList<Location> {
     private int size;
+    private static final int DETAIL = 1;
     private HashSet<Location> locations;
     private ArrayList<Centroid> centroids;
+    private ModuleAutoCorrect module;
 
-    public World(int density, double spread){
+    public World(int density, double spread, ModuleAutoCorrect module){
         this.size = (int) spread;
+        this.module = module;
         ThreadLocalRandom random = ThreadLocalRandom.current();
         locations = new HashSet<>();
         centroids = new ArrayList<>();
@@ -37,6 +43,12 @@ public class World extends ArrayList<Location> {
 
         voronoi.getVoronoiArea(locations, size, size);
 
+        for(Location location:locations){
+            location.setLand(module, DETAIL);
+        }
+
+        createShoreline();
+
         Location[] copy = new Location[locations.size()];
         locations.toArray(copy);
         return copy;
@@ -53,5 +65,37 @@ public class World extends ArrayList<Location> {
         }
 
         return generateLand();
+    }
+
+    public Location[] reverse(){
+        for(Location location:locations){
+            location.setLand(!location.isLand());
+        }
+
+        createShoreline();
+
+        Location[] copy = new Location[locations.size()];
+        locations.toArray(copy);
+        return copy;
+    }
+
+    private void createShoreline(){
+        for(Location location: locations){
+            Centroid[] centroids = location.getNeighbors();
+            for(Location next:locations){
+                for(Centroid centroid:centroids) {
+                    if (next.getCentroid() == centroid) {
+                        if(next.isLand() != location.isLand()){
+                            if(location.isLand()) {
+                                location.setShape(Shape.SHORELINE);
+                            }else{
+                                location.setShape(Shape.SEA);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
