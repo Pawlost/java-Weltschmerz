@@ -2,8 +2,6 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 public abstract class Generation {
@@ -14,12 +12,12 @@ public abstract class Generation {
         switch (shape){
             case SHORELINE:
                 return Shape.SEA;
-            case PLAINS:
+            case PLAIN:
                 return Shape.SHORELINE;
-            case HILLS:
-                return  Shape.PLAINS;
-            case MOUNTAINS:
-                return Shape.HILLS;
+            case HILL:
+                return  Shape.PLAIN;
+            case MOUNTAIN:
+                return Shape.HILL;
                 default:
                     return null;
         }
@@ -30,13 +28,13 @@ public abstract class Generation {
             case SEA:
                 return Shape.SHORELINE;
             case SHORELINE:
-                return Shape.PLAINS;
-            case PLAINS:
-                return Shape.HILLS;
-            case HILLS:
-                return  Shape.MOUNTAINS;
-            case MOUNTAINS:
-                return Shape.MOUNTAINS;
+                return Shape.PLAIN;
+            case PLAIN:
+                return Shape.HILL;
+            case HILL:
+                return  Shape.MOUNTAIN;
+            case MOUNTAIN:
+                return Shape.MOUNTAIN;
             default:
                 return null;
         }
@@ -55,17 +53,17 @@ public abstract class Generation {
             case 1:
                 return Shape.SHORELINE;
             case 2:
-                return Shape.PLAINS;
+                return Shape.PLAIN;
             case 3:
-                return Shape.HILLS;
+                return Shape.HILL;
             case 4:
-                return Shape.MOUNTAINS;
+                return Shape.MOUNTAIN;
          default:
              return Shape.SEA;
         }
     }
 
-    public static boolean landGeneration(ArrayList<Double> elevation){
+    public static Shape landGeneration(ArrayList<Double> elevation){
         int ocean = 0;
         int land = 0;
 
@@ -77,26 +75,9 @@ public abstract class Generation {
             }
         }
         if (ocean > land) {
-            return false;
+            return Shape.OCEAN;
         }else{
-            return true;
-        }
-    }
-
-    public static Color getColor(Shape shape){
-        switch (shape){
-            case SEA:
-                return Color.CYAN;
-            case SHORELINE:
-                return Color.YELLOW;
-            case PLAINS:
-                return Color.GREEN;
-            case HILLS:
-                return Color.RED;
-            case MOUNTAINS:
-                return Color.WHITE;
-            default:
-                return Color.BLUE;
+            return Shape.PLAIN;
         }
     }
 
