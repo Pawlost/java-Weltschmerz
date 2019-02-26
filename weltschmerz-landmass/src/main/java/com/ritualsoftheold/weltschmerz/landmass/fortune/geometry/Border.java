@@ -1,31 +1,27 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
 
-public class Border {
-    private Vertex VVertexA;
-    private Vertex VVertexB;
+public class Border{
+    private Vertex VertexA;
+    private Vertex VertexB;
     private Centroid leftDatum;
     private Centroid rightDatum;
 
     public Border(Vertex a, Vertex b, Centroid ld, Centroid rd) {
         if (a.isNaN() || b.isNaN())
                throw new IllegalArgumentException("Undefined vertices" + " not allowed in an Edge.");
-        if (ld.isNaN() || rd.isNaN())
-            throw new IllegalArgumentException("Undefined data points" + " not allowed in an Edge.");
-        if (ld.isInfinite() || rd.isInfinite())
-            throw new IllegalArgumentException("Infinite data points" + " not allowed in an Edge.");
 
         leftDatum = ld;
         rightDatum = rd;
-        VVertexA = a;
-        VVertexB = b;
+        VertexA = a;
+        VertexB = b;
     }
 
     public Vertex getVertexA() {
-        return VVertexA;
+        return VertexA;
     }
 
     public Vertex getVertexB() {
-        return VVertexB;
+        return VertexB;
     }
 
     public Centroid getDatumA() {
@@ -36,11 +32,23 @@ public class Border {
         return rightDatum;
     }
 
-    public void setVVertexB(Vertex VVertexB) {
-        this.VVertexB = VVertexB;
+    public void setDatumA(Centroid leftDatum) {
+        this.leftDatum = leftDatum;
     }
 
-    public void setVVertexA(Vertex VVertexA) {
-        this.VVertexA = VVertexA;
+    public void setDatumB(Centroid rightDatum) {
+        this.rightDatum = rightDatum;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Border))
+            return false;
+
+        Border o = (Border) obj;
+
+        if(VertexA.equals(o.VertexA) && VertexB.equals(o.VertexB)){
+            return true;
+        }else return VertexA.equals(o.VertexB) && VertexB.equals(o.VertexA);
     }
 }

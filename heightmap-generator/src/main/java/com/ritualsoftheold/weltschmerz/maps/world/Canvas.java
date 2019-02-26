@@ -1,10 +1,8 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
-import com.ritualsoftheold.weltschmerz.core.Generation;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +17,7 @@ public class Canvas extends JPanel {
     public Canvas(int size, World world) {
         this.image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         this.world = world;
-        locations = world.generateFirstLand();
+        locations = world.getLocations();
         this.size = size;
     }
 
@@ -47,7 +45,7 @@ public class Canvas extends JPanel {
 
         Location polygon = locations[0];
 
-        Border border = polygon.getBorders()[index];
+        Border border = polygon.getBorders().get(index);
         g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                 (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
 

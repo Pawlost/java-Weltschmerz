@@ -16,27 +16,44 @@ public class TestHeightMapWorld {
 
         //Creates frame for heigh map
         JFrame frame = new JFrame("Weltschmerz");
+        JFrame framePlate = new JFrame("Tectonic plate");
+
+        framePlate.setPreferredSize(new Dimension(width, height));
         frame.setPreferredSize(new Dimension(width, height));
 
         frame.setVisible(true);
+        framePlate.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        framePlate.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
         ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(10000, 600, 6, 10, 1000, module);
+        World world = new World(100, 600, 6, 10, 1000, module);
+        world.generateFirstLand();
         Canvas canvas = new Canvas(600, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
-        tectonicCanvas.drawWorld();
         canvas.fillWorld();
         canvas.drawWorld();
 
+        tectonicCanvas.fill();
+
         JButton btnStart = new JButton("Reverse");
+        JButton btnFill = new JButton("Fill");
         btnStart.addActionListener(new ActionListener() {
             private int i = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
-                //canvas.reverse();
+                tectonicCanvas.drawPart(i);
+                i ++;
+            }
+        });
+
+        btnFill.addActionListener(new ActionListener() {
+            private int i = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tectonicCanvas.fillOnce(i);
                 i ++;
             }
         });
@@ -45,14 +62,20 @@ public class TestHeightMapWorld {
         btnCheck.addActionListener(e -> canvas.reshapeWorld());
 
         btnStart.setBounds(10, 10, 110, 100);
+        btnFill.setBounds(10, 10, 110, 100);
         btnCheck.setBounds(10, 110, 110, 100);
 
-        canvas.add(btnStart);
+        tectonicCanvas.add(btnStart);
+        tectonicCanvas.add(btnFill);
         canvas.add(btnCheck);
 
-       // frame.add(tectonicCanvas);
+        framePlate.add(tectonicCanvas);
         frame.add(canvas);
+
         frame.pack();
+        framePlate.pack();
+
         frame.setLocationRelativeTo(null);
+        framePlate.setLocationRelativeTo(null);
     }
 }

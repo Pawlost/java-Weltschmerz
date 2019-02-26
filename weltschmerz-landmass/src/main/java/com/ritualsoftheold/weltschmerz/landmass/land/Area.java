@@ -4,28 +4,25 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-public abstract class Area {
+public abstract class Area implements Polygon {
 
     protected ArrayList<Border> borders;
     protected ArrayList<Vertex> vertice;
     protected ArrayList<Centroid> neighbors;
-    protected Polygon polygon;
-    protected Centroid centroid;
+    protected java.awt.Polygon polygon;
 
-    public Area(double x, double y) {
-        centroid = new Centroid(x, y);
+    public Area() {
         borders = new ArrayList<>();
         vertice = new ArrayList<>();
         neighbors = new ArrayList<>();
     }
 
-    public Border[] getBorders() {
-        Border[] edges = new Border[borders.size()];
-        borders.toArray(edges);
-        return edges;
+    public ArrayList<Border> getBorders() {
+        if(borders.size() == 0)
+            listVariables();
+        return borders;
     }
 
     public Vertex[] getVertice() {
@@ -44,60 +41,22 @@ public abstract class Area {
         return center;
     }
 
-    protected double centerX() {
-        if (vertice.size() == 0)
-            listVariables();
+    public void circularize() {
+        if(borders.size() > 2) {
+            ArrayList<Border> cloneBorders = new ArrayList<>();
+            cloneBorders.add(borders.get(0));
 
-        double center = 0;
+            while (checkNext(cloneBorders)) ;
 
-        for (Vertex vertex : vertice) {
-            center += vertex.getX();
-        }
-
-        center /= vertice.size();
-
-        return center;
-    }
-
-    protected double centerY() {
-        if (vertice.size() == 0)
-            listVariables();
-
-        double center = 0;
-
-        for (Vertex vertex : vertice) {
-            center += vertex.getY();
-        }
-
-        center /= vertice.size();
-        return center;
-    }
-
-    private void listVariables() {
-        for (Border border : borders) {
-            vertice.add(border.getVertexA());
-            vertice.add(border.getVertexB());
-
-            Centroid neighbor = this.centroid == border.getDatumA()? border.getDatumB(): border.getDatumA();
-            if(neighbor != null) {
-                neighbors.add(neighbor);
+            if (borders.size() == cloneBorders.size()) {
+                borders = cloneBorders;
+            } else {
+                borders = new ArrayList<>();
             }
         }
     }
 
-    public void circularize() {
-        ArrayList<Border> cloneBorders = new ArrayList<>();
-        cloneBorders.add(borders.get(0));
-
-        while (checkNext(cloneBorders)) ;
-
-        if (borders.size() == cloneBorders.size()) {
-            borders = cloneBorders;
-        } else {
-            borders = new ArrayList<>();
-        }
-    }
-
+    //Method for circularization
     private boolean checkNext(ArrayList<Border> cloneBorders) {
         for (int i = 0; i < borders.size(); i++) {
             Border next = borders.get(i);
@@ -117,16 +76,7 @@ public abstract class Area {
         return false;
     }
 
-    public Polygon getPolygon() {
+    public java.awt.Polygon getPolygon() {
         return polygon;
     }
-
-    public void add(Border border) {
-        this.borders.add(border);
-    }
-
-    public Centroid getCentroid() {
-        return centroid;
-    }
-
 }

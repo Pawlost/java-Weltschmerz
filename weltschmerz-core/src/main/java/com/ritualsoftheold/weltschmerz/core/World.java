@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.land.Area;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms.Fortune;
@@ -8,7 +8,6 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
-import java.awt.font.ShapeGraphicAttribute;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,19 +16,22 @@ public class World extends ArrayList<Location> {
     private static final int DETAIL = 1;
     private int volcanoes;
     private int elevation;
+    private int tectonicPlates;
     private ArrayList<Location> locations;
     private ArrayList<Centroid> centroids;
-    private Plate[] plates;
+    private ArrayList<Plate> plates;
     private ModuleAutoCorrect module;
 
     public World(int scale, double spread, int volcanoes, int tectonicPlates, int elevation,
                  ModuleAutoCorrect module){
         this.size = (int) spread;
         this.module = module;
+        this.tectonicPlates = tectonicPlates;
+
         ThreadLocalRandom random = ThreadLocalRandom.current();
         locations = new ArrayList<>();
         centroids = new ArrayList<>();
-        plates = new Plate[tectonicPlates];
+        plates = new ArrayList<>();
 
         this.volcanoes = volcanoes;
         this.elevation = random.nextInt(elevation);
@@ -42,13 +44,6 @@ public class World extends ArrayList<Location> {
             locations.add(location);
         }
 
-        for(int i = 0; i < tectonicPlates; i++){
-            double x = random.nextDouble(1, spread);
-            double y = random.nextDouble(1, spread);
-            Plate plate = new Plate(x, y);
-            plates[i] = plate;
-        }
-
         System.out.println("Set locations");
     }
 
@@ -59,30 +54,43 @@ public class World extends ArrayList<Location> {
         basicHills();
         createVolcanos();
 
-        return getLocation();
+        return getLocations();
     }
 
     private void generateLand(){
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         Centroid[] copyCenters = new Centroid[centroids.size()];
         centroids.toArray(copyCenters);
         Voronoi voronoi = Fortune.ComputeGraph(copyCenters);
 
-        ArrayList<Area> locationAreas = new ArrayList<>(locations);
-
-        voronoi.getVoronoiArea(locationAreas, size, size);
+        voronoi.getVoronoiArea(locations, size, size);
         System.out.println("Generated borders");
-
-        ArrayList<Location> copyLocations = new ArrayList<>(locations);
-        for (Location location : copyLocations) {
-            if (location.getBorders().length < 2) {
-                locations.remove(location);
-            }
-        }
 
         for(Location location:locations){
             location.setLand(module, DETAIL);
         }
-        System.out.println("Generated land");
+
+        int range = locations.size();
+
+
+        for(int i = tectonicPlates; i > 7; i--){
+            Location location;
+            do {
+                int position = random.nextInt(locations.size());
+                location = locations.get(position);
+            }while (location.getTectonicPlate() != null);
+
+            int lol = range/i;
+            Plate plate = new Plate(location);
+            range -= lol;
+            location.setTectonicPlate(plate);
+            plates.add(plate);
+
+            plate.generateTectonic(locations, lol);
+            smoothPlate(plate);
+        }
+
+        System.out.println("Generated Tectonic Plates");
     }
 
     public Location[] reshapeWorld(){
@@ -97,10 +105,10 @@ public class World extends ArrayList<Location> {
 
         generateLand();
         System.out.println("done");
-        return getLocation();
+        return getLocations();
     }
 
-    private Location[] getLocation() {
+    public Location[] getLocations() {
         Location[] copy = new Location[locations.size()];
         locations.toArray(copy);
         return copy;
@@ -120,7 +128,7 @@ public class World extends ArrayList<Location> {
 
     private void createShoreline() {
         for (Location location : locations) {
-            for (Location next : findNeighbors(location.getNeighbors())) {
+            for (Location next : findNeighbors(location.getNeighbors(), locations)) {
                 if (next.isLand() != location.isLand()) {
                     if (location.isLand()) {
                         location.setShape(Shape.SHORELINE);
@@ -137,11 +145,16 @@ public class World extends ArrayList<Location> {
     private void basicHills(){
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for(int v = 0; v < elevation; v++) {
-            int position = random.nextInt(locations.size() - 1);
+            int position = 0;
+            try {
+                position = random.nextInt(locations.size() - 1);
+            }catch (IllegalArgumentException e){
+                e.printStackTrace();
+            }
             Location location = locations.get(position);
 
             if (location.isLand() && location.getShape() != Shape.SHORELINE) {
-                for (Location next : findNeighbors(location.getNeighbors())) {
+                for (Location next : findNeighbors(location.getNeighbors(), locations)) {
                     if (next.getShape() != Shape.SHORELINE && next.getShape() != Shape.SEA) {
                         location.setShape(Shape.HILL);
                     }
@@ -158,7 +171,7 @@ public class World extends ArrayList<Location> {
             Location location = locations.get(position);
             location.setShape(Shape.VOLCANO);
 
-            for (Location next: findNeighbors(location.getNeighbors())){
+            for (Location next: findNeighbors(location.getNeighbors(), locations)){
                 next.setShape(Shape.HILL);
             }
 
@@ -166,7 +179,24 @@ public class World extends ArrayList<Location> {
         System.out.println("Created Volcanos");
     }
 
-    private Location[] findNeighbors(Centroid[] centroids){
+    private void smoothPlate(Plate plate) {
+        for (Location location : plate.getLocations()) {
+            Location[] neighbors = findNeighbors(location.getNeighbors(), locations);
+            for (Location next : neighbors) {
+                for (Border border : location.getBorders()) {
+                    for (Border nextBorder : next.getBorders()) {
+                        if (border.getDatumB() == null && border.getDatumA() == null ||
+                                border.equals(nextBorder) && next.getTectonicPlate() == plate ||
+                                next.getBorders().contains(border) && next.getTectonicPlate() == plate) {
+                            plate.getBorders().remove(border);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static Location[] findNeighbors(Centroid[] centroids, ArrayList<Location> locations){
         ArrayList<Location> neighbors = new ArrayList<>();
         for (Centroid centroid : centroids) {
             for (Location next : locations) {
@@ -181,7 +211,7 @@ public class World extends ArrayList<Location> {
         return copy;
     }
 
-    public Plate[] getPlates() {
+    public ArrayList<Plate> getPlates() {
         return plates;
     }
 }
