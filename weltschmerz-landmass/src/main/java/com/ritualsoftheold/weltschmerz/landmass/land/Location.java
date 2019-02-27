@@ -8,7 +8,6 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import java.awt.*;
-import java.awt.Polygon;
 import java.util.ArrayList;
 
 public class Location extends Area{
@@ -25,18 +24,45 @@ public class Location extends Area{
 
     @Override
     public void listVariables() {
+
+        vertice.clear();
         for (Border border : borders) {
             vertice.add(border.getVertexA());
             vertice.add(border.getVertexB());
+        }
 
-            Centroid neighbor = this.centroid == border.getDatumA() ? border.getDatumB() : border.getDatumA();
-            if (neighbor != null) {
-                neighbors.add(neighbor);
+        if(borders.size() > 2) {
+            Border newBorder = isUncomplete();
+            if (newBorder != null) {
+                borders.add(newBorder);
+            }
+
+            neighbors.clear();
+            for (Border border : borders) {
+                Centroid neighbor = this.centroid == border.getDatumA() ? border.getDatumB() : border.getDatumA();
+                if (neighbor != null) {
+                    neighbors.add(neighbor);
+                }
             }
         }
     }
 
-    @Override
+    private Border isUncomplete(){
+        Vertex start = getVertice()[0];
+        Vertex end = getVertice()[vertice.size() - 1];
+        if(!end.equals(start)) {
+            Border newBorder = new Border(end, start, centroid, null);
+            for (Border border : borders) {
+                if (border.getVertexA() == start && border.getVertexB() == end
+                        || border.getVertexB() == start && border.getVertexA() == end) {
+                    return null;
+                }
+            }
+            return newBorder;
+        }
+        return null;
+    }
+
     public void reset() {
 
         double newX = (centroid.getX() + centerX()) / 2;
@@ -80,11 +106,6 @@ public class Location extends Area{
 
 
     public void setLand(ModuleAutoCorrect mod, int detail){
-        polygon = new Polygon();
-        for (Vertex vertex : getVertice()) {
-            polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
-        }
-
         if(shape == null) {
             Rectangle boundries = polygon.getBounds();
             ArrayList<Double> elevation = new ArrayList<>();

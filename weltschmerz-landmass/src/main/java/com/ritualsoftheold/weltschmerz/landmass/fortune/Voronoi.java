@@ -34,44 +34,37 @@ public class Voronoi {
     }
 
     public void getVoronoiArea(ArrayList<Location> locations, int width, int height) {
-            for (Border border : getBorderArray()) {
-                for (Location location : locations) {
-                    if(border.getVertexA().getX() < width && border.getVertexA().getY() < height &&
+        for (Border border : getBorderArray()) {
+            for (Location location : locations) {
+                if (border.getVertexA().getX() < width && border.getVertexA().getY() < height &&
                         border.getVertexB().getX() < width && border.getVertexB().getY() < height &&
                         border.getVertexA().getX() > 0 && border.getVertexA().getY() > 0 &&
                         border.getVertexB().getX() > 0 && border.getVertexB().getY() > 0) {
                     if (border.getDatumA() == location.getCentroid() || border.getDatumB() == location.getCentroid()) {
                         location.add(border);
                     }
-                }else{
+                } else {
                     voronoiBorders.remove(border);
                 }
             }
         }
 
-        optimalize(locations);
-
         for (Location location : locations) {
             location.circularize();
         }
 
-        optimalize(locations);
-    }
-
-    private void optimalize(ArrayList<Location> locations){
         ArrayList<Location> cloneLocation = new ArrayList<>(locations);
         for (Location location : cloneLocation) {
             if (location.getBorders().size() <= 2) {
                 locations.remove(location);
-                for(Border border:location.getBorders()){
-                    if(border.getDatumA() == location.getCentroid()){
+                for (Border border : location.getBorders()) {
+                    if (border.getDatumA() == location.getCentroid()) {
                         border.setDatumA(null);
-                    }else if(border.getDatumB() == location.getCentroid()){
+                    } else if (border.getDatumB() == location.getCentroid()) {
                         border.setDatumB(null);
                     }
                 }
             }
         }
-
     }
 }

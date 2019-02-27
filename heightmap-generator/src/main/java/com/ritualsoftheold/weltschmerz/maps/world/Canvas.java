@@ -21,7 +21,7 @@ public class Canvas extends JPanel {
         this.size = size;
     }
 
-    public void paintOnce(int index) {
+    public void drawOnce(int index) {
 
         Graphics g = image.getGraphics();
 
@@ -57,6 +57,7 @@ public class Canvas extends JPanel {
         locations = world.reshapeWorld();
         fillWorld();
         drawWorld();
+        this.repaint();
     }
 
     private void fillPolygon(Location location) {

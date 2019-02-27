@@ -73,22 +73,21 @@ public class World extends ArrayList<Location> {
         int range = locations.size();
 
 
-        for(int i = tectonicPlates; i > 7; i--){
-            Location location;
+    // /* for(int i = tectonicPlates; i > 7; i--){
+           Location location;
             do {
                 int position = random.nextInt(locations.size());
                 location = locations.get(position);
             }while (location.getTectonicPlate() != null);
 
-            int lol = range/i;
+            int part = range/2;
             Plate plate = new Plate(location);
-            range -= lol;
+            range -= part;
             location.setTectonicPlate(plate);
             plates.add(plate);
 
-            plate.generateTectonic(locations, lol);
-            smoothPlate(plate);
-        }
+            plate.generateTectonic(locations, range);
+    //  } */
 
         System.out.println("Generated Tectonic Plates");
     }
@@ -177,23 +176,6 @@ public class World extends ArrayList<Location> {
 
         }
         System.out.println("Created Volcanos");
-    }
-
-    private void smoothPlate(Plate plate) {
-        for (Location location : plate.getLocations()) {
-            Location[] neighbors = findNeighbors(location.getNeighbors(), locations);
-            for (Location next : neighbors) {
-                for (Border border : location.getBorders()) {
-                    for (Border nextBorder : next.getBorders()) {
-                        if (border.getDatumB() == null && border.getDatumA() == null ||
-                                border.equals(nextBorder) && next.getTectonicPlate() == plate ||
-                                next.getBorders().contains(border) && next.getTectonicPlate() == plate) {
-                            plate.getBorders().remove(border);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public static Location[] findNeighbors(Centroid[] centroids, ArrayList<Location> locations){

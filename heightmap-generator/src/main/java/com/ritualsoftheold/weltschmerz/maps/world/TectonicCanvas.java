@@ -8,7 +8,6 @@ import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class TectonicCanvas extends JPanel{
@@ -44,7 +43,6 @@ public class TectonicCanvas extends JPanel{
         g.setColor(Color.BLACK);
 
         Plate plate = world.getPlates().get(0);
-        ArrayList<Location> locations = plate.getLocations();
         Border border = plate.getBorders().get(index);
 
         g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
@@ -55,10 +53,7 @@ public class TectonicCanvas extends JPanel{
 
 
         public void fill(){
-
             Graphics g = image.getGraphics();
-
-            g.setColor(Color.BLACK);
 
             Random rand = new Random();
 
@@ -67,11 +62,9 @@ public class TectonicCanvas extends JPanel{
                 float z = rand.nextFloat();
                 float b = rand.nextFloat();
                 g.setColor(new Color(r, z, b));
-                for (Location location : plate.getLocations()) {
-                    g.fillPolygon(location.getPolygon());
-                }
+                g.fillPolygon(plate.getPolygon());
             }
-           // drawWorld();
+            drawWorld();
             repaint();
         }
 
@@ -91,7 +84,7 @@ public class TectonicCanvas extends JPanel{
             location = plate.getLocations().get(index);
             g.fillPolygon(location.getPolygon());
 
-            //drawWorld();
+            drawWorld();
 
             this.repaint();
         }

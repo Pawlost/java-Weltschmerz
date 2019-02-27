@@ -20,14 +20,13 @@ public abstract class Area implements Polygon {
     }
 
     public ArrayList<Border> getBorders() {
-        if(borders.size() == 0)
-            listVariables();
         return borders;
     }
 
     public Vertex[] getVertice() {
-        if (vertice.size() == 0)
+        if (vertice.size() == 0){
             listVariables();
+        }
         Vertex[] points = new Vertex[vertice.size()];
         vertice.toArray(points);
         return points;
@@ -43,6 +42,7 @@ public abstract class Area implements Polygon {
 
     public void circularize() {
         if(borders.size() > 2) {
+
             ArrayList<Border> cloneBorders = new ArrayList<>();
             cloneBorders.add(borders.get(0));
 
@@ -50,10 +50,25 @@ public abstract class Area implements Polygon {
 
             if (borders.size() == cloneBorders.size()) {
                 borders = cloneBorders;
+
+                polygon = new java.awt.Polygon();
+                for (Vertex vertex : getVertice()) {
+                    polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
+                }
+
+                listVariables();
             } else {
                 borders = new ArrayList<>();
             }
         }
+    }
+
+    private Border checkBorders (ArrayList<Border> cloneBorders, Border border){
+            if(cloneBorders.contains(border)){
+                return null;
+            }else{
+                return border;
+            }
     }
 
     //Method for circularization
@@ -62,10 +77,10 @@ public abstract class Area implements Polygon {
             Border next = borders.get(i);
             if (!cloneBorders.contains(next)) {
                 Border border = cloneBorders.get(cloneBorders.size() - 1);
-                if (border.getVertexB() == next.getVertexA()) {
+                if (border.getVertexB().equals(next.getVertexA())) {
                     cloneBorders.add(next);
                     return true;
-                } else if (border.getVertexB() == next.getVertexB()) {
+                } else if (border.getVertexB().equals(next.getVertexB())) {
                     Border newBorder = new Border(next.getVertexB(), next.getVertexA(), next.getDatumA(), next.getDatumB());
                     cloneBorders.add(newBorder);
                     borders.set(i, newBorder);

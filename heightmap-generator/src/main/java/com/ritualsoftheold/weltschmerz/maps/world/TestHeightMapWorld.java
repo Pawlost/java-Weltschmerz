@@ -36,10 +36,12 @@ public class TestHeightMapWorld {
         canvas.fillWorld();
         canvas.drawWorld();
 
-        tectonicCanvas.fill();
+       tectonicCanvas.fill();
 
         JButton btnStart = new JButton("Reverse");
         JButton btnFill = new JButton("Fill");
+        JButton btnFill2 = new JButton("Fill");
+
         btnStart.addActionListener(new ActionListener() {
             private int i = 0;
             @Override
@@ -58,16 +60,28 @@ public class TestHeightMapWorld {
             }
         });
 
+        btnFill2.addActionListener(new ActionListener() {
+            private int i = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                canvas.fillOnce(i);
+                canvas.drawOnce(i);
+                i ++;
+            }
+        });
+
         JButton btnCheck = new JButton("Reshape");
         btnCheck.addActionListener(e -> canvas.reshapeWorld());
 
         btnStart.setBounds(10, 10, 110, 100);
         btnFill.setBounds(10, 10, 110, 100);
+        btnFill2.setBounds(10, 10, 110, 100);
         btnCheck.setBounds(10, 110, 110, 100);
 
         tectonicCanvas.add(btnStart);
         tectonicCanvas.add(btnFill);
         canvas.add(btnCheck);
+        canvas.add(btnFill2);
 
         framePlate.add(tectonicCanvas);
         frame.add(canvas);

@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.core.World;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 
 import java.util.ArrayList;
 
@@ -45,20 +46,44 @@ public class Plate extends Area {
             } else {
                 centroid = locations.get(index);
             }
-            System.out.println("here");
         }
+        reduce(world);
     }
 
     @Override
     public void listVariables() {
-        for (Location location:locations){
-            borders.addAll(location.getBorders());
+        vertice.clear();
+        for (Border border : borders) {
+            vertice.add(border.getVertexA());
+            vertice.add(border.getVertexB());
         }
     }
 
     @Override
     public void reset() {
 
+    }
+
+    private void reduce(ArrayList<Location> world) {
+        borders.clear();
+        for (Location location : locations) {
+            borders.addAll(location.getBorders());
+        }
+
+        for (Location location : locations) {
+            Location[] neighbors = World.findNeighbors(location.getNeighbors(), world);
+            for (Location next : neighbors) {
+                for (Border border : location.getBorders()) {
+                    for (Border nextBorder : next.getBorders()) {
+                        if (border.equals(nextBorder) && next.getTectonicPlate() == this ||
+                                next.getBorders().contains(border) && next.getTectonicPlate() == this) {
+                            borders.remove(border);
+                        }
+                    }
+                }
+            }
+        }
+        circularize();
     }
 
     public ArrayList<Location> getLocations (){
