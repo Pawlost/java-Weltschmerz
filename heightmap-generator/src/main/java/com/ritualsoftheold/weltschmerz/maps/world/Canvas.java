@@ -45,7 +45,7 @@ public class Canvas extends JPanel {
 
         Location polygon = locations[0];
 
-        Border border = polygon.getBorders().get(index);
+        Border border = polygon.getBorders()[index];
         g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                 (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
 

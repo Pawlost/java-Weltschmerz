@@ -51,4 +51,9 @@ public class Border{
             return true;
         }else return VertexA.equals(o.VertexB) && VertexB.equals(o.VertexA);
     }
+
+    @Override
+    public Border clone() {
+        return new Border(VertexA, VertexB, null, null);
+    }
 }

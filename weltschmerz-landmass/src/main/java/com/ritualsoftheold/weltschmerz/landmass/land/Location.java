@@ -32,7 +32,7 @@ public class Location extends Area{
         }
 
         if(borders.size() > 2) {
-            Border newBorder = isUncomplete();
+            Border newBorder = completePolygon();
             if (newBorder != null) {
                 borders.add(newBorder);
             }
@@ -47,7 +47,7 @@ public class Location extends Area{
         }
     }
 
-    private Border isUncomplete(){
+    private Border completePolygon(){
         Vertex start = getVertice()[0];
         Vertex end = getVertice()[vertice.size() - 1];
         if(!end.equals(start)) {

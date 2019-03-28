@@ -1,7 +1,5 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
-import com.ritualsoftheold.weltschmerz.landmass.land.Area;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
@@ -55,7 +53,7 @@ public class Voronoi {
 
         ArrayList<Location> cloneLocation = new ArrayList<>(locations);
         for (Location location : cloneLocation) {
-            if (location.getBorders().size() <= 2) {
+            if (location.getBorders().length <= 2) {
                 locations.remove(location);
                 for (Border border : location.getBorders()) {
                     if (border.getDatumA() == location.getCentroid()) {

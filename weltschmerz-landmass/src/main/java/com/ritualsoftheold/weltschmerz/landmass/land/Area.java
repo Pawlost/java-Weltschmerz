@@ -19,8 +19,10 @@ public abstract class Area implements Polygon {
         neighbors = new ArrayList<>();
     }
 
-    public ArrayList<Border> getBorders() {
-        return borders;
+    public Border[] getBorders() {
+        Border[] cloneBorders = new Border[borders.size()];
+        borders.toArray(cloneBorders);
+        return cloneBorders;
     }
 
     public Vertex[] getVertice() {
@@ -35,7 +37,7 @@ public abstract class Area implements Polygon {
     public Centroid[] getNeighbors() {
         if (neighbors.size() == 0)
             listVariables();
-        Centroid[] center = new Centroid[vertice.size()];
+        Centroid[] center = new Centroid[neighbors.size()];
         neighbors.toArray(center);
         return center;
     }
@@ -46,7 +48,7 @@ public abstract class Area implements Polygon {
             ArrayList<Border> cloneBorders = new ArrayList<>();
             cloneBorders.add(borders.get(0));
 
-            while (checkNext(cloneBorders)) ;
+            while (checkNext(cloneBorders));
 
             if (borders.size() == cloneBorders.size()) {
                 borders = cloneBorders;
@@ -63,16 +65,9 @@ public abstract class Area implements Polygon {
         }
     }
 
-    private Border checkBorders (ArrayList<Border> cloneBorders, Border border){
-            if(cloneBorders.contains(border)){
-                return null;
-            }else{
-                return border;
-            }
-    }
 
     //Method for circularization
-    private boolean checkNext(ArrayList<Border> cloneBorders) {
+    public boolean checkNext(ArrayList<Border> cloneBorders) {
         for (int i = 0; i < borders.size(); i++) {
             Border next = borders.get(i);
             if (!cloneBorders.contains(next)) {
@@ -86,6 +81,27 @@ public abstract class Area implements Polygon {
                     borders.set(i, newBorder);
                     return true;
                 }
+            }
+        }
+
+        Border first = cloneBorders.get(0);
+        Border last = cloneBorders.get(cloneBorders.size() - 1);
+
+        if (first.getVertexA() ==last.getVertexB() && borders.size() != cloneBorders.size()) {
+            for(Border border:getBorders()){
+                if(!isBorderInside(border, cloneBorders)){
+                    borders.remove(border);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isBorderInside(Border border, ArrayList<Border> cloneBorders){
+        for(Border clone:cloneBorders) {
+            if(clone.equals(border)){
+                return true;
             }
         }
         return false;

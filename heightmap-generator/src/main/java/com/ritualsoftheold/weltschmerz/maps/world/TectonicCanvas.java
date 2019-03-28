@@ -28,9 +28,8 @@ public class TectonicCanvas extends JPanel{
             g.setColor(Color.BLACK);
 
             for (Plate plate : world.getPlates()) {
-                for (Border border : plate.getBorders()) {
-                    g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
-                            (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
+                for (Location location : plate.getLocations()) {
+                    g.drawPolygon(location.getPolygon());
                 }
             }
 
@@ -43,10 +42,9 @@ public class TectonicCanvas extends JPanel{
         g.setColor(Color.BLACK);
 
         Plate plate = world.getPlates().get(0);
-        Border border = plate.getBorders().get(index);
+        Location location = plate.getLocations().get(index);
 
-        g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
-                        (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
+        g.drawPolygon(location.getPolygon());
 
         this.repaint();
     }
@@ -62,7 +60,9 @@ public class TectonicCanvas extends JPanel{
                 float z = rand.nextFloat();
                 float b = rand.nextFloat();
                 g.setColor(new Color(r, z, b));
-                g.fillPolygon(plate.getPolygon());
+                for(Location location:plate.getLocations()) {
+                    g.fillPolygon(location.getPolygon());
+                }
             }
             drawWorld();
             repaint();
@@ -74,13 +74,8 @@ public class TectonicCanvas extends JPanel{
 
             g.setColor(Color.BLACK);
 
-            Random rand = new Random();
-
             Plate plate = world.getPlates().get(0);
-            float r = rand.nextFloat();
-            float z = rand.nextFloat();
-            float b = rand.nextFloat();
-            g.setColor(new Color(r, z, b));
+            g.setColor(Color.GREEN);
             location = plate.getLocations().get(index);
             g.fillPolygon(location.getPolygon());
 

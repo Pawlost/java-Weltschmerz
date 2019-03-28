@@ -4,7 +4,6 @@ import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.landmass.land.Polygon;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,9 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-
-public class TestHeightMapWorldTest {
+public class PlateTest {
 
     private World world;
 
@@ -26,13 +23,14 @@ public class TestHeightMapWorldTest {
     }
 
     @Test
-    public void testLocation(){
+    public void testPlate(){
         for(int i =0; i < 100; i++) {
             main();
             world.generateFirstLand();
-            Location[] locations = world.getLocations();
-            for (Location location : locations) {
-                Assert.assertNotNull(location.getPolygon());
+            ArrayList<Plate> plates = world.getPlates();
+            Assert.assertNotEquals(plates.size(), 0);
+            for (Plate plate : plates) {
+                Assert.assertNotNull(plate);
             }
         }
     }

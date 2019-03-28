@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import java.awt.*;
+import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -8,7 +9,7 @@ public abstract class Generation {
 
     static final int SHAPES = 4;
 
-    public static Shape getPrevious(Shape shape){
+    private static Shape getPrevious(Shape shape){
         switch (shape){
             case SHORELINE:
                 return Shape.SEA;
@@ -18,6 +19,7 @@ public abstract class Generation {
                 return  Shape.PLAIN;
             case MOUNTAIN:
                 return Shape.HILL;
+
                 default:
                     return null;
         }
@@ -81,4 +83,14 @@ public abstract class Generation {
         }
     }
 
+    public static boolean isFreeTectonicPlate(int range, ArrayList<Location> world){
+        int count = 0;
+        for(Location location:world){
+            if(location.getTectonicPlate() == null){
+                count++;
+            }
+        }
+
+        return count > range;
+    }
 }
