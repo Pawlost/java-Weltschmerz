@@ -63,7 +63,7 @@ public class Canvas extends JPanel {
     private void fillPolygon(Location location) {
         Graphics g = image.getGraphics();
 
-        g.setColor(location.getShape().color);
+        g.setColor(location.getLegend().color);
 
         g.fillPolygon(location.getPolygon());
 
@@ -109,5 +109,9 @@ public class Canvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(this.image, null, null);
         g2.dispose();
+    }
+
+    public BufferedImage getImage() {
+        return image;
     }
 }

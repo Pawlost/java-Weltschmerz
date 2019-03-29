@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import java.awt.*;
 
-public enum Shape {
+public enum Legend {
     OCEAN(0, 0, false, Color.BLUE),
     SEA(0, 0.5, false, Color.CYAN),
     SHORELINE(0.5, 1.5, true, Color.YELLOW),
@@ -13,12 +13,12 @@ public enum Shape {
 
     public final double min;
     public final double max;
-    public final boolean island;
+    public final boolean land;
     public final Color color;
-    Shape(double min, double max, boolean island, Color color){
+    Legend(double min, double max, boolean land, Color color){
         this.min = min;
         this.max = max;
-        this.island = island;
+        this.land = land;
         this.color = color;
     }
 }

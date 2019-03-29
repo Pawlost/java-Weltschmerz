@@ -9,63 +9,62 @@ public abstract class Generation {
 
     static final int SHAPES = 4;
 
-    private static Shape getPrevious(Shape shape){
-        switch (shape){
+    private static Legend getPrevious(Legend legend){
+        switch (legend){
             case SHORELINE:
-                return Shape.SEA;
+                return Legend.SEA;
             case PLAIN:
-                return Shape.SHORELINE;
+                return Legend.SHORELINE;
             case HILL:
-                return  Shape.PLAIN;
+                return  Legend.PLAIN;
             case MOUNTAIN:
-                return Shape.HILL;
-
+                return Legend.HILL;
                 default:
                     return null;
         }
     }
 
-    public static Shape getNext(Shape shape){
-        switch (shape){
+    public static Legend getNext(Legend legend){
+        switch (legend){
             case SEA:
-                return Shape.SHORELINE;
+                return Legend.SHORELINE;
             case SHORELINE:
-                return Shape.PLAIN;
+                return Legend.PLAIN;
             case PLAIN:
-                return Shape.HILL;
+                return Legend.HILL;
             case HILL:
-                return  Shape.MOUNTAIN;
+                return  Legend.MOUNTAIN;
             case MOUNTAIN:
-                return Shape.MOUNTAIN;
+                return Legend.MOUNTAIN;
             default:
                 return null;
         }
     }
 
-    public static int getNumShapes(Shape shape){
+    public static int getNumShapes(Legend legend){
         int num;
-        for (num = 1; shape != Shape.SEA; num++){
-            shape = getPrevious(Objects.requireNonNull(shape));
+        for (num = 1; legend != Legend.SEA; num++){
+            legend = getPrevious(Objects.requireNonNull(legend));
         }
         return num;
     }
 
-    static Shape getShape(int index){
+    static Legend getShape(int index){
         switch (index){
             case 1:
-                return Shape.SHORELINE;
+                return Legend.SHORELINE;
             case 2:
-                return Shape.PLAIN;
+                return Legend.PLAIN;
             case 3:
-                return Shape.HILL;
+                return Legend.HILL;
             case 4:
-                return Shape.MOUNTAIN;
+                return Legend.MOUNTAIN;
          default:
-             return Shape.SEA;
+             return Legend.SEA;
         }
     }
 
-    public static Shape landGeneration(ArrayList<Double> elevation){
+    public static Legend landGeneration(ArrayList<Double> elevation){
         int ocean = 0;
         int land = 0;
 
@@ -77,9 +76,9 @@ public abstract class Generation {
             }
         }
         if (ocean > land) {
-            return Shape.OCEAN;
+            return Legend.OCEAN;
         }else{
-            return Shape.PLAIN;
+            return Legend.PLAIN;
         }
     }
 

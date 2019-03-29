@@ -1,11 +1,8 @@
 package com.ritualsoftheold.weltschmerz;
 
-import com.ritualsoftheold.weltschmerz.core.Shape;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
-
-import java.awt.*;
 
 public class WeltschmerzNoise {
 

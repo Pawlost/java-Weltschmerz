@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.core.HeightMapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
@@ -28,15 +29,17 @@ public class TestHeightMapWorld {
 
         WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
         ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(1000, 600, 6, 10, 1000, module);
+        World world = new World(10000, 600, 6, 10, 1000, module);
         world.generateFirstLand();
         Canvas canvas = new Canvas(600, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
         canvas.fillWorld();
+        HeightMapIO.saveHeightmap(canvas.getImage(), "map");
+
         canvas.drawWorld();
 
-       tectonicCanvas.fill();
+        tectonicCanvas.fill();
 
         JButton btnStart = new JButton("Reverse");
         JButton btnFill = new JButton("Fill");

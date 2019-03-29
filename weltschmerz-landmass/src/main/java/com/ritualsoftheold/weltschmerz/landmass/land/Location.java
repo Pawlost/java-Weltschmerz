@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.core.Generation;
-import com.ritualsoftheold.weltschmerz.core.Shape;
+import com.ritualsoftheold.weltschmerz.core.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
@@ -14,7 +14,7 @@ public class Location extends Area{
 
     private Plate tectonicPlate;
     private Centroid centroid;
-    private Shape shape;
+    private Legend legend;
     private boolean isLand;
 
     public Location(double x, double y) {
@@ -106,7 +106,7 @@ public class Location extends Area{
 
 
     public void setLand(ModuleAutoCorrect mod, int detail){
-        if(shape == null) {
+        if(legend == null) {
             Rectangle boundries = polygon.getBounds();
             ArrayList<Double> elevation = new ArrayList<>();
 
@@ -123,18 +123,18 @@ public class Location extends Area{
                 }
             }
 
-            shape = Generation.landGeneration(elevation);
-            isLand = shape.island;
+            legend = Generation.landGeneration(elevation);
+            isLand = legend.land;
         }
     }
 
-    public void setShape(Shape shape) {
-        this.shape = shape;
-        this.isLand = shape.island;
+    public void setLegend(Legend legend) {
+        this.legend = legend;
+        this.isLand = legend.land;
     }
 
-    public Shape getShape() {
-        return shape;
+    public Legend getLegend() {
+        return legend;
     }
 
     public void setTectonicPlate(Plate tectonicPlate) {

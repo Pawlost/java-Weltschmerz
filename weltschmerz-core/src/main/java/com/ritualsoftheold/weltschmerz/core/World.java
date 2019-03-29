@@ -56,7 +56,7 @@ public class World {
 
         createShoreline();
         basicHills();
-        createVolcanos();
+        //createVolcanos();
 
         getLocations();
     }
@@ -197,9 +197,9 @@ public class World {
             for (Location next : findNeighbors(location.getNeighbors(), locations)) {
                 if (next.isLand() != location.isLand()) {
                     if (location.isLand()) {
-                        location.setShape(Shape.SHORELINE);
+                        location.setLegend(Legend.SHORELINE);
                     } else {
-                        location.setShape(Shape.SEA);
+                        location.setLegend(Legend.SEA);
                     }
                     break;
                 }
@@ -219,10 +219,10 @@ public class World {
             }
             Location location = locations.get(position);
 
-            if (location.isLand() && location.getShape() != Shape.SHORELINE) {
+            if (location.isLand() && location.getLegend() != Legend.SHORELINE) {
                 for (Location next : findNeighbors(location.getNeighbors(), locations)) {
-                    if (next.getShape() != Shape.SHORELINE && next.getShape() != Shape.SEA) {
-                        location.setShape(Shape.HILL);
+                    if (next.getLegend() != Legend.SHORELINE && next.getLegend() != Legend.SEA) {
+                        location.setLegend(Legend.HILL);
                     }
                 }
             }
@@ -235,10 +235,10 @@ public class World {
         for (int v = 0; v < volcanoes; v++) {
             int position = random.nextInt(locations.size() - 1);
             Location location = locations.get(position);
-            location.setShape(Shape.VOLCANO);
+            location.setLegend(Legend.VOLCANO);
 
             for (Location next : findNeighbors(location.getNeighbors(), locations)) {
-                next.setShape(Shape.HILL);
+                next.setLegend(Legend.HILL);
             }
 
         }
