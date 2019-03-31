@@ -8,6 +8,8 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
+import javax.swing.*;
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
@@ -55,8 +57,52 @@ public class World {
         generateLand();
 
         createShoreline();
-        basicHills();
-        //createVolcanos();
+        createVolcanos();
+        createHills();
+    }
+
+    public void moveTectonicPlates(){
+        System.out.println("here");
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int randomIndex = random.nextInt(0, plates.size() -1);
+        Plate movingPlate = plates.get(randomIndex);
+        Plate collisionPlate = movingPlate.getNeighborPlates().get(0);
+
+        for(Plate plate:movingPlate.getNeighborPlates()){
+            if(plate.size() > collisionPlate.size()){
+                collisionPlate = plate;
+            }
+        }
+
+        ArrayList<Location> collisionLocations = collisionPlate.getBorderLocations();
+        Location[] borderLocations = new Location[collisionLocations.size()];
+        collisionLocations.toArray(borderLocations);
+        for(Location location:borderLocations){
+            Location[] neighbors = World.findNeighbors(location.getCentroid(), locations);
+            if(isLocationBorder(movingPlate,neighbors)){
+                collisionLocations.remove(location);
+            }
+        }
+
+        for (Location location:collisionLocations){
+            location.setLegend(Legend.MOUNTAIN);
+            location.setTectonicPlate(movingPlate);
+            collisionPlate.remove(location);
+            movingPlate.add(location);
+        }
+
+        createShoreline();
+
+        System.out.println("Tectonic plates moved");
+    }
+
+    private boolean isLocationBorder(Plate plate, Location[] neighbors){
+        for(Location neighbor:neighbors){
+            if(neighbor.getTectonicPlate() == plate){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void checkBorders() {
@@ -120,6 +166,14 @@ public class World {
 
         generateBorders();
         checkBorders();
+
+        for(Location location:locations){
+            Location[] neigbors = World.findNeighbors(location.getCentroid(), locations);
+            if(!isLocationBorder(location.getTectonicPlate(), neigbors)){
+                location.getTectonicPlate().remove(location);
+                location.setTectonicPlate(null);
+            }
+        }
 
         for(Plate plate:plates){
             plate.clear();
@@ -228,7 +282,7 @@ public class World {
         System.out.println("Created shoreline");
     }
 
-    private void basicHills() {
+    private void createHills() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int v = 0; v < elevation; v++) {
             int position = 0;
@@ -247,20 +301,23 @@ public class World {
                 }
             }
         }
+
+        
         System.out.println("Created basic hills");
     }
 
     private void createVolcanos() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int v = 0; v < volcanoes; v++) {
-            int position = random.nextInt(locations.size() - 1);
-            Location location = locations.get(position);
+            int plateIndex = random.nextInt(plates.size() - 1);
+            ArrayList<Location> borderLocations = plates.get(plateIndex);
+            int locationIndex = random.nextInt(borderLocations.size() - 1);
+            Location location = borderLocations.get(locationIndex);
             location.setLegend(Legend.VOLCANO);
 
             for (Location next : findNeighbors(location.getNeighbors(), locations)) {
-                next.setLegend(Legend.HILL);
+                next.setLegend(Legend.MOUNTAIN);
             }
-
         }
         System.out.println("Created Volcanos");
     }

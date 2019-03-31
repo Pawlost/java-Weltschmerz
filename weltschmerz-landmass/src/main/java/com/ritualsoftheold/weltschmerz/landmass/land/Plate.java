@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class Plate extends ArrayList<Location>{
     private Location centroid;
     private ArrayList<Plate> neighborPlates;
+    private ArrayList<Location> borderLocations;
 
     public Plate(Location centroid) {
         this.centroid = centroid;
         neighborPlates = new ArrayList<>();
+        borderLocations = new ArrayList<>();
     }
 
     public void generateTectonic(ArrayList<Location> world, int range) {
@@ -47,8 +49,11 @@ public class Plate extends ArrayList<Location>{
         for(Location location:this) {
             Location[] neighbors = World.findNeighbors(location.getNeighbors(), world);
             for(Location neighbor:neighbors){
-                if(neighbor.getTectonicPlate() != this && !neighborPlates.contains(neighbor.getTectonicPlate())){
-                    neighborPlates.add(neighbor.getTectonicPlate());
+                if(neighbor.getTectonicPlate() != this) {
+                    borderLocations.add(location);
+                    if (!neighborPlates.contains(neighbor.getTectonicPlate())){
+                        neighborPlates.add(neighbor.getTectonicPlate());
+                    }
                 }
             }
         }
@@ -56,5 +61,9 @@ public class Plate extends ArrayList<Location>{
 
     public ArrayList<Plate> getNeighborPlates() {
         return neighborPlates;
+    }
+
+    public ArrayList<Location> getBorderLocations() {
+        return borderLocations;
     }
 }
