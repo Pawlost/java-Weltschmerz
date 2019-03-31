@@ -6,7 +6,7 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
 
 import java.util.ArrayList;
 
-public abstract class Area implements Polygon {
+public abstract class Area {
 
     protected ArrayList<Border> borders;
     protected ArrayList<Vertex> vertice;
@@ -65,6 +65,8 @@ public abstract class Area implements Polygon {
         }
     }
 
+    protected void reset(){}
+    protected void listVariables(){}
 
     //Method for circularization
     public boolean checkNext(ArrayList<Border> cloneBorders) {

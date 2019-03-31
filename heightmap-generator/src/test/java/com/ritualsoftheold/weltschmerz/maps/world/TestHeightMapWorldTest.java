@@ -3,16 +3,10 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.landmass.land.Polygon;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.Assert.*;
 
 public class TestHeightMapWorldTest {
 

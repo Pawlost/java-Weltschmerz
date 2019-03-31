@@ -57,8 +57,6 @@ public class World {
         createShoreline();
         basicHills();
         //createVolcanos();
-
-        getLocations();
     }
 
     private void checkBorders() {
@@ -85,13 +83,10 @@ public class World {
         System.out.println("Generated borders");
     }
 
-
     private void generateLand() {
-
         for (Location location : locations) {
             location.setLand(module, DETAIL);
         }
-
 
         while (isLocationEmpty()) {
             checkEmptyLocations();
@@ -106,6 +101,18 @@ public class World {
                 if (location.getCentroid() == centroids.get(i)) {
                     location.reset();
                     centroids.set(i, location.getCentroid());
+                }
+            }
+        }
+
+        generateBorders();
+        checkBorders();
+
+        for(Plate plate:plates){
+            plate.clear();
+            for(Location location:locations){
+                if(location.getTectonicPlate() == plate && location.getPolygon() != null) {
+                    plate.add(location);
                 }
             }
         }
@@ -131,7 +138,7 @@ public class World {
                 for (Location neighbor : neighbors) {
                     if (neighbor.getTectonicPlate() != null) {
                         Plate plate = neighbor.getTectonicPlate();
-                        plate.addLocation(location1);
+                        plate.add(location1);
                         location1.setTectonicPlate(plate);
                         break check;
                     }

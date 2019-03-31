@@ -29,7 +29,7 @@ public class WeltschmerzNoise {
 
         ModuleAutoCorrect ac = new ModuleAutoCorrect(0, 1);
         ac.setSource(gen); // set source (can usually be either another Module or a double value; see specific module for details)
-        ac.setSamples(10000); // set how many samples to take
+        ac.setSamples(100000); // set how many samples to take
         ac.calculate2D(); // perform the calculations
         return ac;
     }

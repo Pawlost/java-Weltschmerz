@@ -1,7 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 
@@ -28,7 +27,7 @@ public class TectonicCanvas extends JPanel{
             g.setColor(Color.BLACK);
 
             for (Plate plate : world.getPlates()) {
-                for (Location location : plate.getLocations()) {
+                for (Location location : plate) {
                     g.drawPolygon(location.getPolygon());
                 }
             }
@@ -42,7 +41,7 @@ public class TectonicCanvas extends JPanel{
         g.setColor(Color.BLACK);
 
         Plate plate = world.getPlates().get(0);
-        Location location = plate.getLocations().get(index);
+        Location location = plate.get(index);
 
         g.drawPolygon(location.getPolygon());
 
@@ -51,6 +50,7 @@ public class TectonicCanvas extends JPanel{
 
 
         public void fill(){
+            this.image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
             Graphics g = image.getGraphics();
 
             Random rand = new Random();
@@ -60,7 +60,7 @@ public class TectonicCanvas extends JPanel{
                 float z = rand.nextFloat();
                 float b = rand.nextFloat();
                 g.setColor(new Color(r, z, b));
-                for(Location location:plate.getLocations()) {
+                for(Location location:plate) {
                     g.fillPolygon(location.getPolygon());
                 }
             }
@@ -76,7 +76,7 @@ public class TectonicCanvas extends JPanel{
 
             Plate plate = world.getPlates().get(0);
             g.setColor(Color.GREEN);
-            location = plate.getLocations().get(index);
+            location = plate.get(index);
             g.fillPolygon(location.getPolygon());
 
             drawWorld();

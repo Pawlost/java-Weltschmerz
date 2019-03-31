@@ -63,13 +63,13 @@ public class Location extends Area{
         return null;
     }
 
+    @Override
     public void reset() {
 
         double newX = (centroid.getX() + centerX()) / 2;
         double newY = (centroid.getY() + centerY()) / 2;
 
         centroid = new Centroid(newX, newY);
-        polygon = null;
         borders.clear();
         vertice.clear();
         neighbors.clear();

@@ -29,7 +29,7 @@ public class TestHeightMapWorld {
 
         WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
         ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(10000, 600, 6, 10, 1000, module);
+        World world = new World(1000, 600, 6, 10, 1000, module);
         world.generateFirstLand();
         Canvas canvas = new Canvas(600, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
@@ -74,7 +74,10 @@ public class TestHeightMapWorld {
         });
 
         JButton btnCheck = new JButton("Reshape");
-        btnCheck.addActionListener(e -> canvas.reshapeWorld());
+        btnCheck.addActionListener(e -> {
+            canvas.reshapeWorld();
+            tectonicCanvas.fill();
+        });
 
         btnStart.setBounds(10, 10, 110, 100);
         btnFill.setBounds(10, 10, 110, 100);
