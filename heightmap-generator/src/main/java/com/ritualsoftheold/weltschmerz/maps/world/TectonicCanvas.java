@@ -40,7 +40,7 @@ public class TectonicCanvas extends JPanel{
 
         g.setColor(Color.BLACK);
 
-        Plate plate = world.getPlates().get(0);
+        Plate plate = world.getPlates()[0];
         Location location = plate.get(index);
 
         g.drawPolygon(location.getPolygon());
@@ -74,7 +74,7 @@ public class TectonicCanvas extends JPanel{
 
             g.setColor(Color.BLACK);
 
-            Plate plate = world.getPlates().get(0);
+            Plate plate = world.getPlates()[0];
             g.setColor(Color.GREEN);
             location = plate.get(index);
             g.fillPolygon(location.getPolygon());

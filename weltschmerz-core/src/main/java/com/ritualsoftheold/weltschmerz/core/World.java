@@ -89,7 +89,20 @@ public class World {
         }
 
         while (isLocationEmpty()) {
-            checkEmptyLocations();
+            fillEmptyLocations();
+        }
+
+        for (Plate plate:getPlates()){
+            plate.makeNeighborPlates(locations);
+            int neighborPlateSize = plate.getNeighborPlates().size();
+            if (neighborPlateSize < 2) {
+                Plate newPlate = plate.getNeighborPlates().get(neighborPlateSize - 1);
+                for(Location location:plate){
+                    location.setTectonicPlate(newPlate);
+                    newPlate.add(location);
+                }
+                plates.remove(plate);
+            }
         }
 
         System.out.println("Generated Tectonic Plates");
@@ -122,7 +135,7 @@ public class World {
         return getLocations();
     }
 
-    private void checkEmptyLocations() {
+    private void fillEmptyLocations() {
         for (Location location1 : locations) {
             Centroid[] centroids = location1.getNeighbors();
             int index = 0;
@@ -282,7 +295,9 @@ public class World {
         return copy;
     }
 
-    public ArrayList<Plate> getPlates() {
-        return plates;
+    public Plate[] getPlates() {
+        Plate[] copyPlates = new Plate[plates.size()];
+        plates.toArray(copyPlates);
+        return copyPlates;
     }
 }
