@@ -68,7 +68,7 @@ public class TectonicCanvas extends JPanel{
                     g.fillPolygon(location.getPolygon());
                 }
             }
-            drawWorld();
+            //drawWorld();
             repaint();
         }
 

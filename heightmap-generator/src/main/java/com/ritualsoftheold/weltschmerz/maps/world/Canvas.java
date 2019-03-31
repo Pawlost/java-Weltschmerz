@@ -71,10 +71,11 @@ public class Canvas extends JPanel {
     }
 
     public void fillWorld() {
+        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         for (Location location : locations) {
             fillPolygon(location);
         }
-        drawWorld();
+        //drawWorld();
     }
 
     public void moveWorld() {
