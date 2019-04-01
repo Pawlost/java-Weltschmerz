@@ -110,6 +110,7 @@ public class World {
                             neighbor.setLegend(Legend.PLAIN);
                             neighbor.setTectonicPlate(movingPlate);
                             plate.remove(neighbor);
+                            used.add(neighbor);
                             collisionLocations.remove(neighbor);
                             movingPlate.add(neighbor);
                         }
