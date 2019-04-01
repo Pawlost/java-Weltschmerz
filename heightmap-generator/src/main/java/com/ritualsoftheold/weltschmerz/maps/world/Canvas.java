@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
+import com.ritualsoftheold.weltschmerz.core.HeightMapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
@@ -75,11 +76,11 @@ public class Canvas extends JPanel {
         for (Location location : locations) {
             fillPolygon(location);
         }
+        HeightMapIO.saveHeightmap(image, "map");
         //drawWorld();
     }
 
     public void moveWorld() {
-        System.out.println("here");
         world.moveTectonicPlates();
         fillWorld();
     }

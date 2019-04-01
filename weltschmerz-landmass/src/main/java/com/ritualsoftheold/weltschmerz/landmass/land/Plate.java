@@ -1,19 +1,20 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.core.Generation;
-import com.ritualsoftheold.weltschmerz.core.World;
+import com.ritualsoftheold.weltschmerz.landmass.Generation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Plate extends ArrayList<Location>{
     private Location centroid;
     private ArrayList<Plate> neighborPlates;
-    private ArrayList<Location> borderLocations;
+    private Set<Location> borderLocations;
 
     public Plate(Location centroid) {
         this.centroid = centroid;
         neighborPlates = new ArrayList<>();
-        borderLocations = new ArrayList<>();
+        borderLocations = new LinkedHashSet<>();
     }
 
     public void generateTectonic(ArrayList<Location> world, int range) {
@@ -63,7 +64,12 @@ public class Plate extends ArrayList<Location>{
         return neighborPlates;
     }
 
-    public ArrayList<Location> getBorderLocations() {
+    public Set<Location> getBorderLocations() {
         return borderLocations;
+    }
+
+    public void reset(){
+        borderLocations.clear();
+        neighborPlates.clear();
     }
 }

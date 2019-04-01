@@ -1,5 +1,6 @@
-package com.ritualsoftheold.weltschmerz.core;
+package com.ritualsoftheold.weltschmerz.landmass;
 
+import com.ritualsoftheold.weltschmerz.landmass.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 
 import java.util.ArrayList;

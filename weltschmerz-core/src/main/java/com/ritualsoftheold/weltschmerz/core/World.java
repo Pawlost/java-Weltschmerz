@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.ritualsoftheold.weltschmerz.landmass.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
@@ -8,10 +9,8 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
-import javax.swing.*;
-import java.nio.file.LinkOption;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
@@ -56,9 +55,14 @@ public class World {
         generatePlates();
         generateLand();
 
+        for(Plate plate:getPlates()) {
+            connectPlate(plate);
+        }
+        makeElevation();
         createShoreline();
        // createVolcanos();
         createHills();
+        System.out.println("Done");
     }
 
     public void moveTectonicPlates(){
@@ -73,26 +77,55 @@ public class World {
             }
         }
 
-        ArrayList<Location> collisionLocations = collisionPlate.getBorderLocations();
+        Set<Location> collisionLocations = collisionPlate.getBorderLocations();
         Location[] borderLocations = new Location[collisionLocations.size()];
         collisionLocations.toArray(borderLocations);
         for(Location location:borderLocations){
             Location[] neighbors = location.getNeighbors();
-            if(isLocationBorder(movingPlate,neighbors)){
+            if(!isLocationBorder(movingPlate, neighbors)){
                 collisionLocations.remove(location);
             }
         }
 
-        for (Location location:collisionLocations){
-            location.setLegend(Legend.MOUNTAIN);
-            location.setTectonicPlate(movingPlate);
-            collisionPlate.remove(location);
-            movingPlate.add(location);
+        borderLocations = new Location[collisionLocations.size()];
+        collisionLocations.toArray(borderLocations);
+        ArrayList<Location> used = new ArrayList<>();
+        for (Location location : borderLocations) {
+            if(!used.contains(location)) {
+                if (location.isLand()) {
+                    location.setLegend(Legend.MOUNTAIN);
+                    location.setTectonicPlate(movingPlate);
+                    collisionPlate.remove(location);
+                    movingPlate.add(location);
+                } else {
+                    location.setLand(true);
+                    location.setLegend(Legend.PLAIN);
+                    location.setTectonicPlate(movingPlate);
+                    collisionPlate.remove(location);
+                    movingPlate.add(location);
+                    for (Location neighbor : location.getNeighbors()) {
+                        if (!neighbor.isLand() || neighbor.getLegend() == Legend.SEA) {
+                            Plate plate = neighbor.getTectonicPlate();
+                            neighbor.setLand(true);
+                            neighbor.setLegend(Legend.PLAIN);
+                            neighbor.setTectonicPlate(movingPlate);
+                            plate.remove(neighbor);
+                            collisionLocations.remove(neighbor);
+                            movingPlate.add(neighbor);
+                        }
+                    }
+                }
+            }
         }
 
-        System.out.println("Tectonic plates moved");
+        for(Plate plate:getPlates()){
+            plate.reset();
+            connectPlate(plate);
+        }
+
         createHills();
         createShoreline();
+        System.out.println("Tectonic plates moved");
     }
 
     private boolean isLocationBorder(Plate plate, Location[] neighbors){
@@ -134,27 +167,28 @@ public class World {
 
     private void generateLand() {
         for (Location location : locations) {
-            location.setLand(module, DETAIL);
+            location.makeLand(module, DETAIL);
         }
 
         while (isLocationEmpty()) {
             fillEmptyLocations();
         }
-
-        for (Plate plate:getPlates()){
-            plate.makeNeighborPlates();
-            int neighborPlateSize = plate.getNeighborPlates().size();
-            if (neighborPlateSize < 2) {
-                Plate newPlate = plate.getNeighborPlates().get(neighborPlateSize - 1);
-                for(Location location:plate){
-                    location.setTectonicPlate(newPlate);
-                    newPlate.add(location);
-                }
-                plates.remove(plate);
-            }
-        }
-
         System.out.println("Generated Tectonic Plates");
+    }
+
+    private void connectPlate(Plate plate) {
+        plate.makeNeighborPlates();
+        int neighborPlateSize = plate.getNeighborPlates().size();
+        if (neighborPlateSize < 2) {
+            Plate newPlate = plate.getNeighborPlates().get(neighborPlateSize - 1);
+            for (Location location : plate) {
+                location.setTectonicPlate(newPlate);
+                newPlate.add(location);
+            }
+            plates.remove(plate);
+            newPlate.reset();
+            connectPlate(newPlate);
+        }
     }
 
     public Location[] reshapeWorld() {
@@ -169,14 +203,6 @@ public class World {
 
         generateBorders();
         checkBorders();
-
-        for(Location location:locations){
-            Location[] neigbors = location.getNeighbors();
-            if(!isLocationBorder(location.getTectonicPlate(), neigbors)){
-                location.getTectonicPlate().remove(location);
-                location.setTectonicPlate(null);
-            }
-        }
 
         for(Plate plate:plates){
             plate.clear();
@@ -282,7 +308,7 @@ public class World {
         System.out.println("Created shoreline");
     }
 
-    private void createHills() {
+    private void makeElevation(){
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int v = 0; v < elevation; v++) {
             int position = 0;
@@ -301,7 +327,9 @@ public class World {
                 }
             }
         }
+    }
 
+    private void createHills() {
         for (Location location:locations){
             Location[] neighbors;
             switch (location.getLegend()){

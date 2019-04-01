@@ -1,5 +1,8 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,5 +19,11 @@ public class HeightMapIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void loadMapConfig(){
+        // Load our own config values from the default location, application.conf
+        Config conf = ConfigFactory.load();
+        System.out.println("The answer is: " + conf.getString("simple-app.answer"));
     }
 }

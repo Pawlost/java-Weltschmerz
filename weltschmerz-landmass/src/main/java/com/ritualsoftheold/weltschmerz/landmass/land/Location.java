@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.core.Generation;
-import com.ritualsoftheold.weltschmerz.core.Legend;
+import com.ritualsoftheold.weltschmerz.landmass.Generation;
+import com.ritualsoftheold.weltschmerz.landmass.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
@@ -9,7 +9,6 @@ import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Location {
 
@@ -214,7 +213,7 @@ public class Location {
     }
 
 
-    public void setLand(ModuleAutoCorrect mod, int detail){
+    public void makeLand(ModuleAutoCorrect mod, int detail){
         if(legend == null) {
             Rectangle boundries = polygon.getBounds();
             ArrayList<Double> elevation = new ArrayList<>();
@@ -268,5 +267,9 @@ public class Location {
 
     public ArrayList<Centroid> getNearCentroids() {
         return nearCentroids;
+    }
+
+    public void setLand(boolean land) {
+        isLand = land;
     }
 }
