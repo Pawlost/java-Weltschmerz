@@ -28,7 +28,7 @@ public class TestHeightMapWorld {
 
         WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
         ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(600, 15000, 0, 30, 1000,  module);
+        World world = new World(600, 15000, 0, 30, 1000, 4,  module);
         world.firstGeneration();
         Canvas canvas = new Canvas(600, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);

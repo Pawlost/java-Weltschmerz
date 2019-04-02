@@ -41,6 +41,7 @@ public class MapIO {
         configuration.tectonicPlates = Integer.parseInt(conf.getString("elevation.tectonicPlates"));
         configuration.hills = Integer.parseInt(conf.getString("elevation.hills"));
         configuration.tectonicMovement = Integer.parseInt(conf.getString("elevation.tectonicMovement"));
+        configuration.tectonicMovement = Integer.parseInt(conf.getString("elevation.islandSize"));
 
         return configuration;
     }

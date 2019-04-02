@@ -11,4 +11,5 @@ public class Configuration {
     public int tectonicPlates = 20;
     public int hills = 1000;
     public int tectonicMovement = 3;
+    public int islandSize = 20;
 }

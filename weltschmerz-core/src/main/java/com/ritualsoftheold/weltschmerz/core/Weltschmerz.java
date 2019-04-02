@@ -11,7 +11,7 @@ public class Weltschmerz {
         Configuration configuration = MapIO.loadMapConfig();
         WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves, configuration.frequency);
         World world = new World(configuration.size, configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
-                configuration.hills, noise.generateNoise());
+                configuration.hills, configuration.islandSize, noise.generateNoise());
 
         world.firstGeneration();
         BufferedImage image = new BufferedImage(configuration.size, configuration.size, BufferedImage.TYPE_INT_ARGB);

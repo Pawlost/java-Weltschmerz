@@ -19,12 +19,13 @@ public class World {
     private int volcanoes;
     private int elevation;
     private int tectonicPlates;
+    private int islandSize;
     private ArrayList<Location> locations;
     private ArrayList<Centroid> centroids;
     private ArrayList<Plate> plates;
     private ModuleAutoCorrect module;
 
-    public World(int size, long detail, int volcanoes, int tectonicPlates, int hills,
+    public World(int size, long detail, int volcanoes, int tectonicPlates, int hills, int islandSize,
                  ModuleAutoCorrect module) {
         System.out.println("Seting locations");
         ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -32,6 +33,7 @@ public class World {
         this.module = module;
         this.tectonicPlates = tectonicPlates;
         this.volcanoes = volcanoes;
+        this.islandSize = islandSize;
         this.elevation = random.nextInt(hills);
 
         locations = new ArrayList<>();
@@ -104,18 +106,7 @@ public class World {
                     location.setTectonicPlate(movingPlate);
                     collisionPlate.remove(location);
                     movingPlate.add(location);
-                    for (Location neighbor : location.getNeighbors()) {
-                        if (!neighbor.isLand() || neighbor.getLegend() == Legend.SEA) {
-                            Plate plate = neighbor.getTectonicPlate();
-                            neighbor.setLand(true);
-                            neighbor.setLegend(Legend.PLAIN);
-                            neighbor.setTectonicPlate(movingPlate);
-                            plate.remove(neighbor);
-                            used.add(neighbor);
-                            collisionLocations.remove(neighbor);
-                            movingPlate.add(neighbor);
-                        }
-                    }
+                    createIsland(location, movingPlate, used, collisionPlate, islandSize);
                 }
             }
         }
@@ -128,6 +119,26 @@ public class World {
         createHills();
         createShoreline();
         System.out.println("Tectonic plates moved");
+    }
+
+    private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount){
+        amount--;
+        for (Location neighbor : location.getNeighbors()) {
+            if (!neighbor.isLand() || neighbor.getLegend() == Legend.SEA) {
+                Plate plate = neighbor.getTectonicPlate();
+                neighbor.setLand(true);
+                neighbor.setLegend(Legend.PLAIN);
+                neighbor.setTectonicPlate(movingPlate);
+                plate.remove(neighbor);
+                used.add(neighbor);
+                collisionLocations.remove(neighbor);
+                movingPlate.add(neighbor);
+            }
+        }
+
+        if(amount > 0){
+            createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
+        }
     }
 
     private boolean isLocationBorder(Plate plate, Location[] neighbors){

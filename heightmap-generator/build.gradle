@@ -1,5 +1,9 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
 dependencies {
     compile project(':weltschmerz-noise')
     compile project(':weltschmerz-core')
-    compile project(':weltschmerz-landmass') 
+    compile project(':weltschmerz-landmass')
 }

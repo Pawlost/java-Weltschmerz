@@ -1,50 +1,17 @@
 allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
     // Apply the java plugin to add support for Java
     apply plugin: 'java'
-    apply plugin: 'eclipse'
-    apply plugin: 'maven-publish'
 
-    sourceCompatibility = 11
-    targetCompatibility = 11
-
-    // In this section you declare where to find the dependencies of your project
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
+    sourceCompatibility = 12
+    targetCompatibility = 12
 
     // In this section you declare the dependencies for your production and test code
     dependencies {
         testCompile 'junit:junit:4.12'
-    }
-
-    task sourceJar(type: Jar) {
-        from sourceSets.main.allJava
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                groupId "com.ritualsoftheold"
-                artifactId project.name
-                version project.property("version")
-
-                from components.java
-
-                artifact sourceJar {
-                    classifier "sources"
-                }
-            }
-        }
-
-        repositories {
-            maven {
-                url project.findProperty("ritualsMavenServer") ?: "https://localhost"
-                credentials {
-                    username project.findProperty("ritualsMavenUser") ?: "invalid-user"
-                    password project.findProperty("ritualsMavenPassword") ?: "invalid-password"
-                }
-            }
-        }
     }
 }
