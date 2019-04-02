@@ -24,32 +24,32 @@ public class World {
     private ArrayList<Plate> plates;
     private ModuleAutoCorrect module;
 
-    public World(int scale, double spread, int volcanoes, int tectonicPlates, int elevation,
+    public World(int size, long detail, int volcanoes, int tectonicPlates, int hills,
                  ModuleAutoCorrect module) {
-        this.size = (int) spread;
+        System.out.println("Seting locations");
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        this.size = size;
         this.module = module;
         this.tectonicPlates = tectonicPlates;
+        this.volcanoes = volcanoes;
+        this.elevation = random.nextInt(hills);
 
-        ThreadLocalRandom random = ThreadLocalRandom.current();
         locations = new ArrayList<>();
         centroids = new ArrayList<>();
         plates = new ArrayList<>();
 
-        this.volcanoes = volcanoes;
-        this.elevation = random.nextInt(elevation);
-
-        for (int i = 0; i < scale; i++) {
-            double x = random.nextDouble(1, spread);
-            double y = random.nextDouble(1, spread);
+        for (int i = 0; i < detail; i++) {
+            double x = random.nextDouble(1, size);
+            double y = random.nextDouble(1, size);
             Location location = new Location(x, y);
             centroids.add(location.getCentroid());
             locations.add(location);
         }
 
-        System.out.println("Set locations");
+        System.out.println("Locations set");
     }
 
-    public void generateFirstLand() {
+    public void firstGeneration() {
         generateBorders();
         checkBorders();
         generatePlates();
@@ -60,12 +60,13 @@ public class World {
         }
         makeElevation();
         createShoreline();
-       // createVolcanos();
+        createVolcanos();
         createHills();
-        System.out.println("Done");
+        System.out.println("First generation done");
     }
 
     public void moveTectonicPlates(){
+        System.out.println("Moving Tectonic plate");
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int randomIndex = random.nextInt(0, plates.size() -1);
         Plate movingPlate = plates.get(randomIndex);
@@ -154,6 +155,7 @@ public class World {
     }
 
     private void generateBorders() {
+        System.out.println("Generating borders");
         Centroid[] copyCenters = new Centroid[centroids.size()];
         centroids.toArray(copyCenters);
         Voronoi voronoi = Fortune.ComputeGraph(copyCenters);
@@ -163,7 +165,7 @@ public class World {
         for(Location location:locations){
             location.makeNeighbors(locations);
         }
-        System.out.println("Generated borders");
+        System.out.println("Borders generated");
     }
 
     private void generateLand() {
@@ -193,6 +195,8 @@ public class World {
     }
 
     public Location[] reshapeWorld() {
+        System.out.println("Reshaping world");
+        System.out.println("Changeding Centroids");
         for (Location location : locations) {
             for (int i = 0; i < centroids.size(); i++) {
                 if (location.getCentroid() == centroids.get(i)) {
@@ -202,7 +206,7 @@ public class World {
             }
         }
 
-        System.out.println("Changed Centroids");
+        System.out.println("Centroids changed");
 
         generateBorders();
         checkBorders();
@@ -217,7 +221,7 @@ public class World {
         }
 
         generateLand();
-        System.out.println("Reshaped");
+        System.out.println("World reshaped");
         return getLocations();
     }
 
@@ -296,6 +300,7 @@ public class World {
     }
 
     private void createShoreline() {
+        System.out.println("Creating shoreline");
         for (Location location : locations) {
             for (Location next : location.getNeighbors()) {
                 if (next.isLand() != location.isLand()) {
@@ -315,7 +320,7 @@ public class World {
             }
         }
 
-        System.out.println("Created shoreline");
+        System.out.println("Shoreline created");
     }
 
     private boolean checkShoreline(Location location) {
@@ -349,6 +354,7 @@ public class World {
     }
 
     private void createHills() {
+        System.out.println("Creating Hills");
         for (Location location:locations){
             Location[] neighbors;
             switch (location.getLegend()){
@@ -371,10 +377,11 @@ public class World {
             }
         }
 
-        System.out.println("Created basic hills");
+        System.out.println("Hills created");
     }
 
     private void createVolcanos() {
+        System.out.println("Creating volcanoes");
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int v = 0; v < volcanoes; v++) {
             int plateIndex = random.nextInt(plates.size() - 1);
@@ -387,7 +394,7 @@ public class World {
                 next.setLegend(Legend.MOUNTAIN);
             }
         }
-        System.out.println("Created Volcanos");
+        System.out.println("Volcanoes created");
     }
 
     public Plate[] getPlates() {

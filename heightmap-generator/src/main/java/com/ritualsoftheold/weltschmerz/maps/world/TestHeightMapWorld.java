@@ -1,7 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
-import com.ritualsoftheold.weltschmerz.core.HeightMapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
@@ -14,8 +13,6 @@ public class TestHeightMapWorld {
     public static void main(String... args) {
         int width = 600;
         int height = 700;
-
-      //  HeightMapIO.loadMapConfig();
 
         //Creates frame for heigh map
         JFrame frame = new JFrame("Weltschmerz");
@@ -31,8 +28,8 @@ public class TestHeightMapWorld {
 
         WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
         ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(15000, 600, 6, 30, 1000, module);
-        world.generateFirstLand();
+        World world = new World(600, 15000, 0, 30, 1000,  module);
+        world.firstGeneration();
         Canvas canvas = new Canvas(600, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
