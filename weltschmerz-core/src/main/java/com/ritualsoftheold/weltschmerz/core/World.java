@@ -202,6 +202,8 @@ public class World {
             }
         }
 
+        System.out.println("Changed Centroids");
+
         generateBorders();
         checkBorders();
 
@@ -306,7 +308,23 @@ public class World {
                 }
             }
         }
+
+        for (Location location : locations) {
+            if(location.getLegend() == Legend.SHORELINE && checkShoreline(location)){
+                location.setLegend(Legend.PLAIN);
+            }
+        }
+
         System.out.println("Created shoreline");
+    }
+
+    private boolean checkShoreline(Location location) {
+        for (Location next : location.getNeighbors()) {
+            if (!next.isLand()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void makeElevation(){
