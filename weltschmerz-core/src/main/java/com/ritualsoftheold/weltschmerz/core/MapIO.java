@@ -5,12 +5,11 @@ import com.typesafe.config.ConfigFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class MapIO {
     public static String outputFile= "map";
-    public static String inputFile = "config";
+    public static String configFile = "config";
 
     public static void saveHeightmap(BufferedImage image){
         try {
@@ -27,7 +26,7 @@ public class MapIO {
     public static Configuration loadMapConfig(){
         // Load our own config values from the default location, application.conf
         Configuration configuration = new Configuration();
-        Config conf = ConfigFactory.load(inputFile);
+        Config conf = ConfigFactory.load(configFile);
         configuration.size = Integer.parseInt(conf.getString("map.size"));
         configuration.detail = Long.parseLong(conf.getString("map.detail"));
         configuration.smooth = Integer.parseInt(conf.getString("map.smooth"));

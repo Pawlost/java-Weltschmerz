@@ -1,5 +1,8 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.events.CircleEvent;
@@ -28,7 +31,6 @@ public abstract class Fortune {
 
     private static Voronoi ComputeVoronoiGraph(PriorityQueue<Event> queue) {
         HashMap<DataNode, CircleEvent> CurrentCircles = new HashMap<>();
-        HashSet<Vertex> vertexList = new HashSet<>();
         HashSet<VoronoiBorder> edgeList = new HashSet<>();
 
         Node rootNode = null;
@@ -42,7 +44,7 @@ public abstract class Fortune {
                 if (!cev.Valid)
                     continue;
             }
-            rootNode = VE.process(rootNode, VE.getY(), vertexList, edgeList, CircleCheckList);
+            rootNode = VE.process(rootNode, VE.getY(), edgeList, CircleCheckList);
 
             for (DataNode VD : CircleCheckList) {
                 if (CurrentCircles.containsKey(VD)) {
@@ -98,10 +100,12 @@ public abstract class Fortune {
         for (VoronoiBorder VE : MinuteEdges)
             edgeList.remove(VE);
 
-        HashSet<Border> finalEdges = new HashSet<>();
+        Multimap<Centroid, Border> finalEdges = ArrayListMultimap.create();
         for (VoronoiBorder VE : edgeList) {
             if(VE.isPartlyInfinite()) {
-                finalEdges.add(VE.toEdge());
+                Border border = VE.toEdge();
+                finalEdges.put(border.getDatumA(), border);
+                finalEdges.put(border.getDatumB(), border);
             }
         }
 

@@ -39,7 +39,7 @@ public class Location {
     }
 
     public Vertex[] getVertice() {
-        if (vertice.size() == 0){
+        if (vertice.size() == 0) {
             listVariables();
         }
         Vertex[] points = new Vertex[vertice.size()];
@@ -56,12 +56,13 @@ public class Location {
     }
 
     public void circularize() {
-        if(borders.size() > 2) {
-
+        if (borders.size() > 2) {
             ArrayList<Border> cloneBorders = new ArrayList<>();
             cloneBorders.add(borders.get(0));
 
-            while (checkNext(cloneBorders));
+            while (
+
+                    checkNext(cloneBorders)) ;
 
             if (borders.size() == cloneBorders.size()) {
                 borders = cloneBorders;

@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
-import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 

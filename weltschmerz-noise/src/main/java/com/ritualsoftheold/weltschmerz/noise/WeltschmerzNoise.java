@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz;
+package com.ritualsoftheold.weltschmerz.noise;
 
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;

@@ -1,10 +1,11 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.events;
 
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.*;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.BorderNode;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.BorderNode;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +38,6 @@ public class CircleEvent extends Event {
 
     @Override
     public Node process(Node Root, double ys,
-                        HashSet<Vertex> vertList,
                         HashSet<VoronoiBorder> edgeList,
                         ArrayList<DataNode> CircleCheckList) {
         DataNode b = NodeN;
@@ -55,7 +55,6 @@ public class CircleEvent extends Event {
 
         // 1. Create the new Vertex
         Vertex VNew = new Vertex(center.getX(), center.getY());
-        vertList.add(VNew);
 
         // 2. Find out if a or c are in a distand part of the tree (the other
         // is then b's sibling) and assign the new vertex

@@ -1,10 +1,10 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.events;
 
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,6 @@ public abstract class Event implements Comparable<Event>  {
 
 
     public abstract Node process(Node Root, double ys,
-                                 HashSet<Vertex> vertList,
                                  HashSet<VoronoiBorder> edgeList,
                                  ArrayList<DataNode> CircleCheckList);
 

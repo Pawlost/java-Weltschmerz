@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
+import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 
 public class BorderNode extends Node {
 

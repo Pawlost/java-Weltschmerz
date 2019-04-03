@@ -1,10 +1,12 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.events;
 
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.*;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.BorderNode;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.BorderNode;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +22,6 @@ public class DataEvent extends Event {
     //Will return the new root (unchanged except in start-up)
     @Override
     public Node process(Node root, double ys,
-                        HashSet<Vertex> vertList,
                         HashSet<VoronoiBorder> edgeList,
                         ArrayList<DataNode> CircleCheckList)
     {

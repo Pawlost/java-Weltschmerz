@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 
 import java.awt.*;

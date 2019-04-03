@@ -1,8 +1,8 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.events.CircleEvent;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.events.CircleEvent;
 
 public class DataNode extends Node {
 
@@ -13,8 +13,8 @@ public class DataNode extends Node {
     }
 
     public CircleEvent CircleCheckDataNode(double ys) {
-        DataNode l = Node.leftDataNode(this);
-        DataNode r = Node.rightDataNode(this);
+        DataNode l = leftDataNode(this);
+        DataNode r = rightDataNode(this);
         if (l == null || r == null || l.point == r.point
                 || l.point == point || point == r.point)
             return null;
