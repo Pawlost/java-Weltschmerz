@@ -7,7 +7,6 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Voronoi {
     private Multimap<Centroid, Border> allborders;
@@ -19,12 +18,47 @@ public class Voronoi {
     public void getVoronoiArea(ArrayList<Location> locations, int width, int height) {
         for (Location location : locations) {
             for(Border border:allborders.get(location.getCentroid())) {
-                if (border.getVertexA().getX() < width && border.getVertexA().getY() < height &&
-                        border.getVertexB().getX() < width && border.getVertexB().getY() < height &&
-                        border.getVertexA().getX() > 0 && border.getVertexA().getY() > 0 &&
-                        border.getVertexB().getX() > 0 && border.getVertexB().getY() > 0) {
-                    location.add(border);
+
+                if (border.getVertexA().getX() > width)
+                {
+                    border.setVertexA(new Vertex(width, border.getVertexA().getY()));
                 }
+
+                if (border.getVertexA().getY() > height)
+                {
+                    border.setVertexA(new Vertex(border.getVertexA().getX(), height));
+                }
+
+                if (border.getVertexB().getX() > width)
+                {
+                    border.setVertexB(new Vertex(width, border.getVertexB().getY()));
+                }
+
+                if (border.getVertexB().getY() > height)
+                {
+                    border.setVertexB(new Vertex(border.getVertexB().getX(), height));
+                }
+
+                if (border.getVertexA().getX() < 0)
+                {
+                    border.setVertexA(new Vertex(0, border.getVertexA().getY()));
+                }
+
+                if (border.getVertexA().getY() < 0)
+                {
+                    border.setVertexA(new Vertex(border.getVertexA().getX(), 0));
+                }
+
+                if (border.getVertexB().getX() < 0)
+                {
+                    border.setVertexB(new Vertex(0, border.getVertexB().getY()));
+                }
+
+                if (border.getVertexB().getY() < 0)
+                {
+                    border.setVertexB(new Vertex(border.getVertexB().getX(), 0));
+                }
+                location.add(border);
             }
         }
 

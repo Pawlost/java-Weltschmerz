@@ -29,7 +29,7 @@ public class Vertex extends Point implements Comparable<Vertex> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Vertex))
+        if (!(obj instanceof Vertex))
             return false;
 
         final Vertex o = (Vertex) obj;

@@ -16,6 +16,14 @@ public class Border{
         VertexB = b;
     }
 
+    public void setVertexA(Vertex vertexA) {
+        VertexA = vertexA;
+    }
+
+    public void setVertexB(Vertex vertexB) {
+        VertexB = vertexB;
+    }
+
     public Vertex getVertexA() {
         return VertexA;
     }

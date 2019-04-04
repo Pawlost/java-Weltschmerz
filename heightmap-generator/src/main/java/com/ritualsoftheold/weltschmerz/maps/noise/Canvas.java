@@ -5,6 +5,7 @@ import com.sudoplay.joise.module.ModuleAutoCorrect;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 //Jframe canvas to show noise
 public class Canvas extends JPanel {
@@ -19,23 +20,20 @@ public class Canvas extends JPanel {
   public void updateImage(ModuleAutoCorrect mod) {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
-    float px, py, r;
 
     for (int x = 0; x < width; x++) {
-
       for (int y = 0; y < height; y++) {
-       // px = x / (float) width * SCALE;
-       // py = y / (float) height * SCALE;
-
-        /*
-         * Sample the module chain like this...
-         */
-        r = (float) mod.get(x, y);
-
-        //r = Math.max(0, Math.min(1, r));
-        this.image.setRGB(x, y, new Color(r, r, r).getRGB());
+        float s=x/(float)width;
+        float t=y/(float)height;
+        double nx=Math.cos(s*2*Math.PI)*1.0/(2*Math.PI);
+        double ny=Math.cos(t*2*Math.PI)*1.0/(2*Math.PI);
+        double nz=Math.sin(s*2*Math.PI)*1.0/(2*Math.PI);
+        double nw=Math.sin(t*2*Math.PI)*1.0/(2*Math.PI);
+        float c = (float) mod.get(nx, ny, nz, nw);
+        this.image.setRGB(x, y, new Color(c, c, c).getRGB());
       }
     }
+
     this.repaint();
   }
 

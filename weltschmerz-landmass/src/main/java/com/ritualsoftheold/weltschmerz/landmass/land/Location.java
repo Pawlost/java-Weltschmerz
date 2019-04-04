@@ -5,6 +5,7 @@ import com.ritualsoftheold.weltschmerz.landmass.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import java.awt.*;
@@ -214,7 +215,7 @@ public class Location {
     }
 
 
-    public void makeLand(ModuleAutoCorrect mod, int detail){
+    public void makeLand(WeltschmerzNoise noise, int spacing){
         if(legend == null) {
             Rectangle boundries = polygon.getBounds();
             ArrayList<Double> elevation = new ArrayList<>();
@@ -222,12 +223,11 @@ public class Location {
             int width = boundries.width + boundries.x;
             int height = boundries.height + boundries.y;
 
-            for (int x = boundries.x; x < width; x += detail) {
-                for (int y = boundries.y; y < height; y += detail) {
+            for (int x = boundries.x; x < width; x += spacing) {
+                for (int y = boundries.y; y < height; y += spacing) {
                     Point point = new java.awt.Point(x, y);
                     if (polygon.contains(point)) {
-                        double r = mod.get((double) x, (double) y);
-                        elevation.add(r);
+                        elevation.add(noise.getNoise(x, y));
                     }
                 }
             }

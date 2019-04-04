@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 public class Weltschmerz {
     public static void main(String[] args) {
         Configuration configuration = MapIO.loadMapConfig();
-        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves, configuration.frequency);
+        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves, configuration.frequency, configuration.size, configuration.size);
         World world = new World(configuration.size, configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
-                configuration.hills, configuration.islandSize, noise.generateNoise());
+                configuration.hills, configuration.islandSize, noise);
 
         world.firstGeneration();
         BufferedImage image = new BufferedImage(configuration.size, configuration.size, BufferedImage.TYPE_INT_ARGB);

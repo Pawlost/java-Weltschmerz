@@ -25,12 +25,12 @@ public class TestHeightMapWorld {
         framePlate.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         framePlate.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        int size = 600;
 
-        WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.01);
-        ModuleAutoCorrect module = noise.generateNoise();
-        World world = new World(600, 15000, 0, 30, 1000, 4,  module);
+        WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 5,  10, size, size);
+        World world = new World(size, 15000, 0, 30, 1000, 4,  noise);
         world.firstGeneration();
-        Canvas canvas = new Canvas(600, world);
+        Canvas canvas = new Canvas(size, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
         canvas.fillWorld();

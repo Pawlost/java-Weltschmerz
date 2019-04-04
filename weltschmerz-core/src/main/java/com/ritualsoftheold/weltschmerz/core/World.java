@@ -7,6 +7,7 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
+import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
     private int size;
-    private static final int DETAIL = 1;
+    private static final int SPACING = 1;
     private int volcanoes;
     private int elevation;
     private int tectonicPlates;
@@ -23,14 +24,14 @@ public class World {
     private ArrayList<Location> locations;
     private ArrayList<Centroid> centroids;
     private ArrayList<Plate> plates;
-    private ModuleAutoCorrect module;
+    private WeltschmerzNoise noise;
 
     public World(int size, long detail, int volcanoes, int tectonicPlates, int hills, int islandSize,
-                 ModuleAutoCorrect module) {
+                 WeltschmerzNoise noise) {
         System.out.println("Seting locations");
         ThreadLocalRandom random = ThreadLocalRandom.current();
         this.size = size;
-        this.module = module;
+        this.noise = noise;
         this.tectonicPlates = tectonicPlates;
         this.volcanoes = volcanoes;
         this.islandSize = islandSize;
@@ -41,8 +42,8 @@ public class World {
         plates = new ArrayList<>();
 
         for (int i = 0; i < detail; i++) {
-            double x = random.nextDouble(1, size);
-            double y = random.nextDouble(1, size);
+            double x = random.nextDouble(-10, size + 10);
+            double y = random.nextDouble(-10, size + 10);
             Location location = new Location(x, y);
             centroids.add(location.getCentroid());
             locations.add(location);
@@ -181,7 +182,7 @@ public class World {
 
     private void generateLand() {
         for (Location location : locations) {
-            location.makeLand(module, DETAIL);
+            location.makeLand(noise, SPACING);
         }
 
         while (isLocationEmpty()) {
