@@ -1,11 +1,10 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
-import com.sudoplay.joise.module.ModuleAutoCorrect;
+import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 //Jframe canvas to show noise
 public class Canvas extends JPanel {
@@ -17,19 +16,13 @@ public class Canvas extends JPanel {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
   }
 
-  public void updateImage(ModuleAutoCorrect mod) {
+  public void updateImage(WeltschmerzNoise noise) {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        float s=x/(float)width;
-        float t=y/(float)height;
-        double nx=Math.cos(s*2*Math.PI)*1.0/(2*Math.PI);
-        double ny=Math.cos(t*2*Math.PI)*1.0/(2*Math.PI);
-        double nz=Math.sin(s*2*Math.PI)*1.0/(2*Math.PI);
-        double nw=Math.sin(t*2*Math.PI)*1.0/(2*Math.PI);
-        float c = (float) mod.get(nx, ny, nz, nw);
+        float c = (float) noise.getNoise(x, y);
         this.image.setRGB(x, y, new Color(c, c, c).getRGB());
       }
     }

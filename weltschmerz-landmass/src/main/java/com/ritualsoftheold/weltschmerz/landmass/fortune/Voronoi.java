@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.landmass.fortune;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
@@ -7,6 +8,7 @@ import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Voronoi {
     private Multimap<Centroid, Border> allborders;
@@ -16,9 +18,9 @@ public class Voronoi {
     }
 
     public void getVoronoiArea(ArrayList<Location> locations, int width, int height) {
+        HashMap<Centroid, Location> neighbors = new HashMap<>();
         for (Location location : locations) {
             for(Border border:allborders.get(location.getCentroid())) {
-
                 if (border.getVertexA().getX() > width)
                 {
                     border.setVertexA(new Vertex(width, border.getVertexA().getY()));
@@ -64,6 +66,13 @@ public class Voronoi {
 
         for (Location location : locations) {
             location.circularize();
+            neighbors.put(location.getCentroid(), location);
+        }
+
+        for(Location location:locations){
+            for(Centroid centroid:location.getNearCentroids()){
+                neighbors.get(centroid).addNeighbor(location);
+            }
         }
 
         ArrayList<Location> cloneLocation = new ArrayList<>(locations);

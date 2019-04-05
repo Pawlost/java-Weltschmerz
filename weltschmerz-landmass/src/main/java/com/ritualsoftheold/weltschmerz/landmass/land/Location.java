@@ -121,13 +121,8 @@ public class Location {
         return false;
     }
 
-    public void makeNeighbors(ArrayList<Location> world) {
-        for (Location next : world) {
-            ArrayList<Centroid> centroids = next.getNearCentroids();
-            if (centroids.contains(centroid)) {
-                neighbors.add(next);
-            }
-        }
+    public void addNeighbor(Location neighbor){
+        neighbors.add(neighbor);
     }
 
     public java.awt.Polygon getPolygon() {

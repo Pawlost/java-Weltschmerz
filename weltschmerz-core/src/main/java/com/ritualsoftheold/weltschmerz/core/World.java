@@ -62,9 +62,9 @@ public class World {
             connectPlate(plate);
         }
         makeElevation();
-        createShoreline();
         createVolcanos();
         createHills();
+        createShoreline();
         System.out.println("First generation done");
     }
 
@@ -174,9 +174,6 @@ public class World {
 
         voronoi.getVoronoiArea(locations, size, size);
 
-        for(Location location:locations){
-            location.makeNeighbors(locations);
-        }
         System.out.println("Borders generated");
     }
 
@@ -357,7 +354,7 @@ public class World {
 
             if (location.isLand() && location.getLegend() != Legend.SHORELINE) {
                 for (Location next : location.getNeighbors()) {
-                    if (next.getLegend() != Legend.SHORELINE && next.getLegend() != Legend.SEA) {
+                    if (next.getLegend() != Legend.SHORELINE && next.isLand()) {
                         location.setLegend(Legend.HILL);
                     }
                 }
@@ -375,6 +372,7 @@ public class World {
                     for(Location neighbor:neighbors){
                         if(neighbor.getLegend().position < location.getLegend().position){
                             neighbor.setLegend(Legend.HILL);
+                            neighbor.setLand(true);
                         }
                     }
                     break;
@@ -383,6 +381,7 @@ public class World {
                     for(Location neighbor:neighbors){
                         if(neighbor.getLegend().position < location.getLegend().position){
                             neighbor.setLegend(Legend.PLAIN);
+                            neighbor.setLand(true);
                         }
                     }
                     break;
