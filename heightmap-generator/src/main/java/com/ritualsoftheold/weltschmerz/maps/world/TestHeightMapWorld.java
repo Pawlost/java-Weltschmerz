@@ -1,8 +1,10 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
+import com.ritualsoftheold.weltschmerz.core.Configuration;
+import com.ritualsoftheold.weltschmerz.core.MapIO;
+import com.ritualsoftheold.weltschmerz.landmass.land.Legend;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,12 +27,15 @@ public class TestHeightMapWorld {
         framePlate.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         framePlate.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        int size = 600;
+        Configuration configuration = MapIO.loadMapConfig();
 
-        WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 4,  7, size, size);
-        World world = new World(size, 100000, 0, 30, 1000, 4,  noise);
+        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves,
+                configuration.frequency, configuration.width, configuration.height, configuration.shapes);
+        World world = new World(configuration.width, configuration.height,
+                configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
+                configuration.islandSize,  noise);
         world.firstGeneration();
-        Canvas canvas = new Canvas(size, world);
+        Canvas canvas = new Canvas(width, height, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
         canvas.fillWorld();

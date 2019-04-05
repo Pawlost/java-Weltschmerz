@@ -71,7 +71,11 @@ public class Voronoi {
 
         for(Location location:locations){
             for(Centroid centroid:location.getNearCentroids()){
-                neighbors.get(centroid).addNeighbor(location);
+                try {
+                    neighbors.get(centroid).addNeighbor(location);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         }
 

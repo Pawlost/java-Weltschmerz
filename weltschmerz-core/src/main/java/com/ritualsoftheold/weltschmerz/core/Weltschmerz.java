@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.ritualsoftheold.weltschmerz.landmass.land.Legend;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 
@@ -9,12 +10,12 @@ import java.awt.image.BufferedImage;
 public class Weltschmerz {
     public static void main(String[] args) {
         Configuration configuration = MapIO.loadMapConfig();
-        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves, configuration.frequency, configuration.size, configuration.size);
-        World world = new World(configuration.size, configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
-                configuration.hills, configuration.islandSize, noise);
-
+        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves, configuration.frequency,
+                configuration.width, configuration.height, configuration.shapes);
+        World world = new World(configuration.width, configuration.height, configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
+                configuration.islandSize, noise);
         world.firstGeneration();
-        BufferedImage image = new BufferedImage(configuration.size, configuration.size, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
         for(int s = 0; s < configuration.smooth; s++){
             world.reshapeWorld();
         }
@@ -23,7 +24,7 @@ public class Weltschmerz {
         }
         Graphics g = image.getGraphics();
         for (Location location : world.getLocations()) {
-            g.setColor(location.getLegend().color);
+            g.setColor(location.getShape().color);
             g.fillPolygon(location.getPolygon());
         }
         MapIO.saveHeightmap(image);

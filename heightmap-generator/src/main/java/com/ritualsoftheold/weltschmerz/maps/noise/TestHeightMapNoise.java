@@ -1,5 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
+import com.ritualsoftheold.weltschmerz.core.Configuration;
+import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
 import javax.swing.*;
@@ -19,8 +21,10 @@ public class TestHeightMapNoise {
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        WeltschmerzNoise noise = new WeltschmerzNoise(7987099, 3, 0.8, width, height);
+        Configuration configuration = MapIO.loadMapConfig();
+        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed,
+                configuration.octaves,  configuration.frequency, configuration.width,
+                configuration.height, configuration.shapes);
         canvas.updateImage(noise);
 
         frame.pack();

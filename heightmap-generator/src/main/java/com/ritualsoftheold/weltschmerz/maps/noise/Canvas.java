@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
+import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class Canvas extends JPanel {
         this.image.setRGB(x, y, new Color(c, c, c).getRGB());
       }
     }
-
+    MapIO.saveHeightmap(image);
     this.repaint();
   }
 

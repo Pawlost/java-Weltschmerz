@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.landmass.Generation;
+import com.ritualsoftheold.weltschmerz.noise.Generation;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -20,7 +20,7 @@ public class Plate extends ArrayList<Location>{
     public void generateTectonic(ArrayList<Location> world, int range) {
         this.add(centroid);
         main:
-        while (this.size() < range && Generation.isFreeTectonicPlate(range, world)) {
+        while (this.size() < range && isFreeTectonicPlate(range, world)) {
             Location[] neighbors = centroid.getNeighbors();
             int loop = 0;
 
@@ -71,5 +71,16 @@ public class Plate extends ArrayList<Location>{
     public void reset(){
         borderLocations.clear();
         neighborPlates.clear();
+    }
+
+    private boolean isFreeTectonicPlate(int range, ArrayList<Location> world) {
+        int count = 0;
+        for (Location location : world) {
+            if (location.getTectonicPlate() == null) {
+                count++;
+            }
+        }
+
+        return count > range;
     }
 }

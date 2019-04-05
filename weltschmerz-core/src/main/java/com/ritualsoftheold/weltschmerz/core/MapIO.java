@@ -25,23 +25,7 @@ public class MapIO {
 
     public static Configuration loadMapConfig(){
         // Load our own config values from the default location, application.conf
-        Configuration configuration = new Configuration();
         Config conf = ConfigFactory.load(configFile);
-        configuration.size = Integer.parseInt(conf.getString("map.size"));
-        configuration.detail = Long.parseLong(conf.getString("map.detail"));
-        configuration.smooth = Integer.parseInt(conf.getString("map.smooth"));
-
-        configuration.seed = Long.parseLong(conf.getString("noise.seed"));
-        configuration.octaves = Integer.parseInt(conf.getString("noise.octaves"));
-        configuration.frequency = Float.parseFloat(conf.getString("noise.frequency"));
-
-
-        configuration.volcanoes = Integer.parseInt(conf.getString("elevation.volcanoes"));
-        configuration.tectonicPlates = Integer.parseInt(conf.getString("elevation.tectonicPlates"));
-        configuration.hills = Integer.parseInt(conf.getString("elevation.hills"));
-        configuration.tectonicMovement = Integer.parseInt(conf.getString("elevation.tectonicMovement"));
-        configuration.tectonicMovement = Integer.parseInt(conf.getString("elevation.islandSize"));
-
-        return configuration;
+        return ConfigParser.parseConfig(conf);
     }
 }

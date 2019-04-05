@@ -12,14 +12,16 @@ import java.awt.image.BufferedImage;
 public class Canvas extends JPanel {
     private BufferedImage image;
     private World world;
-    private int size;
+    private int width;
+    private int height;
     private Location[] locations;
 
-    public Canvas(int size, World world) {
-        this.image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+    public Canvas(int width, int height, World world) {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.world = world;
         locations = world.getLocations();
-        this.size = size;
+        this.width = width;
+        this.height = height;
     }
 
     public void drawOnce(int index) {
@@ -54,7 +56,7 @@ public class Canvas extends JPanel {
     }
 
     public void reshapeWorld() {
-        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         locations = world.reshapeWorld();
         fillWorld();
         drawWorld();
@@ -64,7 +66,7 @@ public class Canvas extends JPanel {
     private void fillPolygon(Location location) {
         Graphics g = image.getGraphics();
 
-        g.setColor(location.getLegend().color);
+        g.setColor(location.getShape().color);
 
         g.fillPolygon(location.getPolygon());
 
@@ -72,7 +74,7 @@ public class Canvas extends JPanel {
     }
 
     public void fillWorld() {
-        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (Location location : locations) {
             fillPolygon(location);
         }
@@ -88,14 +90,6 @@ public class Canvas extends JPanel {
     public void fillOnce(int index) {
         fillPolygon(locations[index]);
     }
-
-    /*public void reverse() {
-        image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        locations = world.reverse();
-        fillWorld();
-        drawWorld();
-    }*/
-
 
     public void drawWorld() {
 

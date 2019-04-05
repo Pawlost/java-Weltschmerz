@@ -1,12 +1,10 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.landmass.Generation;
-import com.ritualsoftheold.weltschmerz.landmass.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,10 +13,11 @@ public class Location {
 
     private Plate tectonicPlate;
     private Centroid centroid;
-    private Legend legend;
+    private Shape shape;
     private boolean isLand;
 
     private ArrayList<Border> borders;
+    private ArrayList<Double> elevation;
     private ArrayList<Vertex> vertice;
     private ArrayList<Location> neighbors;
     private ArrayList<Centroid> nearCentroids;
@@ -27,6 +26,7 @@ public class Location {
     public Location(double x, double y) {
         centroid = new Centroid(x, y);
 
+        elevation = new ArrayList<>();
         borders = new ArrayList<>();
         vertice = new ArrayList<>();
         neighbors = new ArrayList<>();
@@ -39,7 +39,7 @@ public class Location {
         return cloneBorders;
     }
 
-    public Vertex[] getVertice() {
+    private Vertex[] getVertice() {
         if (vertice.size() == 0) {
             listVariables();
         }
@@ -61,9 +61,7 @@ public class Location {
             ArrayList<Border> cloneBorders = new ArrayList<>();
             cloneBorders.add(borders.get(0));
 
-            while (
-
-                    checkNext(cloneBorders)) ;
+            while (checkNext(cloneBorders)) ;
 
             if (borders.size() == cloneBorders.size()) {
                 borders = cloneBorders;
@@ -81,7 +79,7 @@ public class Location {
     }
 
     //Method for circularization
-    public boolean checkNext(ArrayList<Border> cloneBorders) {
+    private boolean checkNext(ArrayList<Border> cloneBorders) {
         for (int i = 0; i < borders.size(); i++) {
             Border next = borders.get(i);
             if (!cloneBorders.contains(next)) {
@@ -129,7 +127,7 @@ public class Location {
         return polygon;
     }
 
-    public void listVariables() {
+    private void listVariables() {
         vertice.clear();
         for (Border border : borders) {
             vertice.add(border.getVertexA());
@@ -174,6 +172,7 @@ public class Location {
         double newY = (centroid.getY() + centerY()) / 2;
 
         centroid = new Centroid(newX, newY);
+        elevation.clear();
         borders.clear();
         vertice.clear();
         neighbors.clear();
@@ -209,11 +208,9 @@ public class Location {
         return center;
     }
 
-
     public void makeLand(WeltschmerzNoise noise, int spacing){
-        if(legend == null) {
+        if(shape == null) {
             Rectangle boundries = polygon.getBounds();
-            ArrayList<Double> elevation = new ArrayList<>();
 
             int width = boundries.width + boundries.x;
             int height = boundries.height + boundries.y;
@@ -227,19 +224,24 @@ public class Location {
                 }
             }
 
-            legend = Generation.landGeneration(elevation);
-            isLand = legend.land;
+            shape = noise.landGeneration(elevation);
+            isLand = shape.land;
         }
     }
 
-    public void setLegend(Legend legend) {
-        this.legend = legend;
-        this.isLand = legend.land;
+    public void setShape(Shape shape) {
+        this.shape = shape;
+        this.isLand = shape.land;
     }
 
-    public Legend getLegend() {
-        return legend;
+    public Shape getShape() {
+        return shape;
     }
+
+    public String getKey() {
+        return shape.key;
+    }
+
 
     public void setTectonicPlate(Plate tectonicPlate) {
         this.tectonicPlate = tectonicPlate;
