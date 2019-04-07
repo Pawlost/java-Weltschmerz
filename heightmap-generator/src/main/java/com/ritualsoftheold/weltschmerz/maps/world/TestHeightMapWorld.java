@@ -1,8 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
-import com.ritualsoftheold.weltschmerz.core.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.landmass.land.Legend;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 import com.ritualsoftheold.weltschmerz.core.World;
 
@@ -13,8 +12,9 @@ import java.awt.event.ActionListener;
 
 public class TestHeightMapWorld {
     public static void main(String... args) {
-        int width = 600;
-        int height = 700;
+        Configuration configuration = MapIO.loadMapConfig();
+        int width = configuration.width;
+        int height = configuration.height;
 
         //Creates frame for heigh map
         JFrame frame = new JFrame("Weltschmerz");
@@ -27,19 +27,15 @@ public class TestHeightMapWorld {
         framePlate.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         framePlate.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Configuration configuration = MapIO.loadMapConfig();
 
-        WeltschmerzNoise noise = new WeltschmerzNoise(configuration.seed, configuration.octaves,
-                configuration.frequency, configuration.width, configuration.height, configuration.shapes);
-        World world = new World(configuration.width, configuration.height,
-                configuration.detail, configuration.volcanoes, configuration.tectonicPlates,
-                configuration.islandSize,  noise);
+        WeltschmerzNoise noise = new WeltschmerzNoise(configuration);
+        World world = new World(configuration, noise);
         world.firstGeneration();
         Canvas canvas = new Canvas(width, height, world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
 
         canvas.fillWorld();
-       // canvas.drawWorld();
+        canvas.drawWorld();
 
         tectonicCanvas.fill();
 
@@ -75,12 +71,6 @@ public class TestHeightMapWorld {
             }
         });
 
-        JButton btnCheck = new JButton("Reshape");
-        btnCheck.addActionListener(e -> {
-            canvas.reshapeWorld();
-            tectonicCanvas.fill();
-        });
-
         JButton btnMove= new JButton("Move Tectonict Plates");
         btnMove.addActionListener(e -> {
             canvas.moveWorld();
@@ -89,7 +79,6 @@ public class TestHeightMapWorld {
 
         tectonicCanvas.add(btnStart);
         tectonicCanvas.add(btnFill);
-        canvas.add(btnCheck);
         canvas.add(btnMove);
         canvas.add(btnFill2);
 

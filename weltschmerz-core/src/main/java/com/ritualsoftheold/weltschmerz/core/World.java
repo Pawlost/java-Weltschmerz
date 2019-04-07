@@ -1,12 +1,12 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.land.Legend;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
 import java.util.ArrayList;
@@ -25,27 +25,26 @@ public class World {
     private ArrayList<Plate> plates;
     private WeltschmerzNoise noise;
 
-    public World(int width, int height, long detail, int volcanoes, int tectonicPlates, int islandSize,
-                 WeltschmerzNoise noise) {
+    public World(Configuration configuration,WeltschmerzNoise noise) {
         System.out.println("Seting locations");
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        this.width = width;
-        this.height = height;
+        this.width = configuration.width;
+        this.height = configuration.height;
         this.noise = noise;
-        this.tectonicPlates = tectonicPlates;
-        this.volcanoes = volcanoes;
-        this.islandSize = islandSize;
+        this.tectonicPlates = configuration.tectonicPlates;
+        this.volcanoes = configuration.volcanoes;
+        this.islandSize = configuration.islandSize;
 
         locations = new ArrayList<>();
         centroids = new ArrayList<>();
         plates = new ArrayList<>();
 
-        for (int i = 0; i < detail; i++) {
-            double x = random.nextDouble(-10, width + 10);
-            double y = random.nextDouble(-10, height + 10);
-            Location location = new Location(x, y);
-            centroids.add(location.getCentroid());
-            locations.add(location);
+        for (double x = -configuration.detail; x < width + 2 *configuration.detail; x += configuration.detail) {
+            for (double y = -configuration.detail; y < height + 2*configuration.detail; y += configuration.detail) {
+                Location location = new Location(x, y);
+                centroids.add(location.getCentroid());
+                locations.add(location);
+
+            }
         }
 
         System.out.println("Locations set");
@@ -199,34 +198,6 @@ public class World {
             newPlate.reset();
             connectPlate(newPlate);
         }
-    }
-
-    public Location[] reshapeWorld() {
-        System.out.println("Reshaping world");
-        System.out.println("Changing Centroids");
-        centroids = new ArrayList<>();
-        for (Location location : locations) {
-            location.reset();
-            centroids.add(location.getCentroid());
-        }
-
-        System.out.println("Centroids changed");
-
-        generateBorders();
-        checkBorders();
-
-        for(Plate plate:plates){
-            plate.clear();
-            for(Location location:locations){
-                if(location.getTectonicPlate() == plate && location.getPolygon() != null) {
-                    plate.add(location);
-                }
-            }
-        }
-
-        generateLand();
-        System.out.println("World reshaped");
-        return getLocations();
     }
 
     private void fillEmptyLocations() {

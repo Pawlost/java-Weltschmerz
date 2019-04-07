@@ -55,14 +55,6 @@ public class Canvas extends JPanel {
         this.repaint();
     }
 
-    public void reshapeWorld() {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        locations = world.reshapeWorld();
-        fillWorld();
-        drawWorld();
-        this.repaint();
-    }
-
     private void fillPolygon(Location location) {
         Graphics g = image.getGraphics();
 

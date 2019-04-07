@@ -1,14 +1,18 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.noise.Generation;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Plate extends ArrayList<Location>{
+    //angle of direction
+    private int angle;
+
+    //middle of plate
     private Location centroid;
     private ArrayList<Plate> neighborPlates;
+
+    //Location on edge of tectonic plate
     private Set<Location> borderLocations;
 
     public Plate(Location centroid) {

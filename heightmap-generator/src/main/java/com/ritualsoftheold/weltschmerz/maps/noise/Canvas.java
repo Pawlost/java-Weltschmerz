@@ -23,7 +23,7 @@ public class Canvas extends JPanel {
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        float c = (float) noise.getNoise(x, y);
+        float c = (float) (noise.getNoise(x, y)/noise.getMax());
         this.image.setRGB(x, y, new Color(c, c, c).getRGB());
       }
     }
