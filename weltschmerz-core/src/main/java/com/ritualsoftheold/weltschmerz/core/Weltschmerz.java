@@ -14,9 +14,7 @@ public class Weltschmerz {
         World world = new World(configuration, noise);
         world.firstGeneration();
         BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
-        for(int m = 0; m < configuration.tectonicMovement; m++){
-            world.moveTectonicPlates();
-        }
+
         Graphics g = image.getGraphics();
         for (Location location : world.getLocations()) {
             g.setColor(location.getShape().color);

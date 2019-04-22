@@ -32,7 +32,8 @@ public class TestHeightMapWorld {
         World world = new World(configuration, noise);
         world.firstGeneration();
         Canvas canvas = new Canvas(width, height, world);
-        TectonicCanvas tectonicCanvas = new TectonicCanvas(600, world);
+        TectonicCanvas tectonicCanvas = new TectonicCanvas(configuration.width, configuration.height,
+                world);
 
         canvas.fillWorld();
         canvas.drawWorld();
@@ -71,15 +72,8 @@ public class TestHeightMapWorld {
             }
         });
 
-        JButton btnMove= new JButton("Move Tectonict Plates");
-        btnMove.addActionListener(e -> {
-            canvas.moveWorld();
-            tectonicCanvas.fill();
-        });
-
         tectonicCanvas.add(btnStart);
         tectonicCanvas.add(btnFill);
-        canvas.add(btnMove);
         canvas.add(btnFill2);
 
         framePlate.add(tectonicCanvas);

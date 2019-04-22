@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
@@ -14,12 +15,8 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
-    private int width;
-    private int height;
     private static final int SPACING = 1;
-    private int volcanoes;
-    private int tectonicPlates;
-    private int islandSize;
+    private Configuration conf;
     private ArrayList<Location> locations;
     private ArrayList<Centroid> centroids;
     private ArrayList<Plate> plates;
@@ -27,23 +24,18 @@ public class World {
 
     public World(Configuration configuration,WeltschmerzNoise noise) {
         System.out.println("Seting locations");
-        this.width = configuration.width;
-        this.height = configuration.height;
         this.noise = noise;
-        this.tectonicPlates = configuration.tectonicPlates;
-        this.volcanoes = configuration.volcanoes;
-        this.islandSize = configuration.islandSize;
+        this.conf = configuration;
 
         locations = new ArrayList<>();
         centroids = new ArrayList<>();
         plates = new ArrayList<>();
 
-        for (double x = -configuration.detail; x < width + 2 *configuration.detail; x += configuration.detail) {
-            for (double y = -configuration.detail; y < height + 2*configuration.detail; y += configuration.detail) {
+        for (double x = -conf.detail; x < conf.width + 2 *conf.detail; x += conf.detail) {
+            for (double y = -conf.detail; y < conf.height + 2*conf.detail; y += conf.detail) {
                 Location location = new Location(x, y);
                 centroids.add(location.getCentroid());
                 locations.add(location);
-
             }
         }
 
@@ -59,64 +51,10 @@ public class World {
         for(Plate plate:getPlates()) {
             connectPlate(plate);
         }
-        createVolcanos();
+       // createVolcanoes();
         createHills();
         createShoreline();
         System.out.println("First generation done");
-    }
-
-    public void moveTectonicPlates(){
-        System.out.println("Moving Tectonic plate");
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int randomIndex = random.nextInt(0, plates.size() -1);
-        Plate movingPlate = plates.get(randomIndex);
-        Plate collisionPlate = movingPlate.getNeighborPlates().get(0);
-
-        for(Plate plate:movingPlate.getNeighborPlates()){
-            if(plate.size() > collisionPlate.size()){
-                collisionPlate = plate;
-            }
-        }
-
-        Set<Location> collisionLocations = collisionPlate.getBorderLocations();
-        Location[] borderLocations = new Location[collisionLocations.size()];
-        collisionLocations.toArray(borderLocations);
-        for(Location location:borderLocations){
-            Location[] neighbors = location.getNeighbors();
-            if(!isLocationBorder(movingPlate, neighbors)){
-                collisionLocations.remove(location);
-            }
-        }
-
-        borderLocations = new Location[collisionLocations.size()];
-        collisionLocations.toArray(borderLocations);
-        ArrayList<Location> used = new ArrayList<>();
-        for (Location location : borderLocations) {
-            if(!used.contains(location)) {
-                if (location.isLand()) {
-                    location.setShape(noise.getShape("MOUNTAIN"));
-                    location.setTectonicPlate(movingPlate);
-                    collisionPlate.remove(location);
-                    movingPlate.add(location);
-                } else {
-                    location.setLand(true);
-                    location.setShape(noise.getShape("PLAIN"));
-                    location.setTectonicPlate(movingPlate);
-                    collisionPlate.remove(location);
-                    movingPlate.add(location);
-                    createIsland(location, movingPlate, used, collisionPlate, islandSize);
-                }
-            }
-        }
-
-        for(Plate plate:getPlates()){
-            plate.reset();
-            connectPlate(plate);
-        }
-
-        createHills();
-       createShoreline();
-        System.out.println("Tectonic plates moved");
     }
 
     private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount){
@@ -137,15 +75,6 @@ public class World {
         if(amount > 0){
             createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
         }
-    }
-
-    private boolean isLocationBorder(Plate plate, Location[] neighbors){
-        for(Location neighbor:neighbors){
-            if(neighbor.getTectonicPlate() == plate){
-                return true;
-            }
-        }
-        return false;
     }
 
     private void checkBorders() {
@@ -169,7 +98,7 @@ public class World {
         centroids.toArray(copyCenters);
         Voronoi voronoi = Fortune.ComputeGraph(copyCenters);
 
-        voronoi.getVoronoiArea(locations, width, height);
+        voronoi.getVoronoiArea(locations, conf.width, conf.height);
 
         System.out.println("Borders generated");
     }
@@ -226,37 +155,11 @@ public class World {
         }
     }
 
-    private boolean isLocationEmpty(){
-        for (Location location1 : locations) {
-            if(location1.getTectonicPlate() == null){
-                return true;
-            }
-        }
-        return false;
-    }
-    public Location[] getLocations() {
-        Location[] copy = new Location[locations.size()];
-        locations.toArray(copy);
-        return copy;
-    }
-
-   /* public Location[] reverse(){
-        for(Location location:locations){
-            location.setLand(!location.isLand());
-        }
-
-        createShoreline();
-
-        Location[] copy = new Location[locations.size()];
-        locations.toArray(copy);
-        return copy;
-    }*/
-
     private void generatePlates() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
         int range = locations.size();
+        ThreadLocalRandom random = ThreadLocalRandom.current();
 
-        for (int i = tectonicPlates; i > 1; i--) {
+        for (int i = conf.tectonicPlates; i > 1; i--) {
             Location location;
 
             int part = range / i;
@@ -341,18 +244,17 @@ public class World {
         System.out.println("Hills created");
     }
 
-    private void createVolcanos() {
+    private void createVolcanoes() {
         System.out.println("Creating volcanoes");
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        for (int v = 0; v < volcanoes; v++) {
-            int plateIndex = random.nextInt(plates.size() - 1);
+        for (int v = 1; v <= conf.volcanoes; v++) {
+            int plateIndex = (int)Math.round(PrecisionMath.sigmoid(conf.seed, v)*conf.volcanoes);
             ArrayList<Location> borderLocations = plates.get(plateIndex);
-            int locationIndex = random.nextInt(borderLocations.size() - 1);
+            int locationIndex = (int)Math.round(PrecisionMath.sigmoid(conf.seed, v)*borderLocations.size());
             Location location = borderLocations.get(locationIndex);
             location.setShape(noise.getShape("VOLCANO"));
-
             for (Location next : location.getNeighbors()) {
                 next.setShape(noise.getShape("MOUNTAIN"));
+                next.setLand(true);
             }
         }
         System.out.println("Volcanoes created");
@@ -362,5 +264,19 @@ public class World {
         Plate[] copyPlates = new Plate[plates.size()];
         plates.toArray(copyPlates);
         return copyPlates;
+    }
+
+    private boolean isLocationEmpty(){
+        for (Location location1 : locations) {
+            if(location1.getTectonicPlate() == null){
+                return true;
+            }
+        }
+        return false;
+    }
+    public Location[] getLocations() {
+        Location[] copy = new Location[locations.size()];
+        locations.toArray(copy);
+        return copy;
     }
 }

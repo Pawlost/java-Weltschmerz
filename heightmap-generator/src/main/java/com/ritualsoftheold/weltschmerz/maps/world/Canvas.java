@@ -74,11 +74,6 @@ public class Canvas extends JPanel {
         //drawWorld();
     }
 
-    public void moveWorld() {
-        world.moveTectonicPlates();
-        fillWorld();
-    }
-
     public void fillOnce(int index) {
         fillPolygon(locations[index]);
     }

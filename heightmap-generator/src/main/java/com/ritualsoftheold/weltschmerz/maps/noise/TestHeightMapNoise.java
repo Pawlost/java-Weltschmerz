@@ -10,8 +10,9 @@ import java.awt.*;
 
 public class TestHeightMapNoise {
     public static void main(String... args) {
-        int width = 640;
-        int height = 480;
+        Configuration configuration = MapIO.loadMapConfig();
+        int width = configuration.width;
+        int height = configuration.height;
         //Creates frame for heigh map
         JFrame frame = new JFrame("Joise Example 01");
         frame.setPreferredSize(new Dimension(width, height));
@@ -21,7 +22,6 @@ public class TestHeightMapNoise {
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        Configuration configuration = MapIO.loadMapConfig();
         WeltschmerzNoise noise = new WeltschmerzNoise(configuration);
         canvas.updateImage(noise);
 
