@@ -1,0 +1,26 @@
+plugins {
+    id "application"
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+application {
+    mainClassName = "com.ritualsoftheold.weltschmerz.core.Weltschmerz"
+}
+
+dependencies {
+    compile project(':weltschmerz-landmass')
+    compile group: 'com.typesafe', name: 'config', version: '1.3.3'
+}
+
+jar {
+    def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
+    manifest {
+        attributes  'Implementation-Title': "Bar thing",
+                'Implementation-Version': '0.0.1',
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Built-Gradle': gradle.gradleVersion,
+                'Class-Path': manifestClasspath,
+                'Main-Class': 'com.ritualsoftheold.weltschmerz.core.Weltschmerz'
+    }
+}
