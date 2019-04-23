@@ -1,13 +1,13 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Sector;
+import com.ritualsoftheold.weltschmerz.noise.ChunkNoise;
 import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class Weltschmerz {
     //Generate map image
@@ -39,10 +39,37 @@ public class Weltschmerz {
 
     //For future use
     public void setMaterialID(){
-
     }
 
-    public ArrayList<Integer> getChunk(int X, int Z){
-        return null;
+    public int[] getChunk(int x, int y, int z, int maxBlocks){
+        return generatePlains(x, y, z, maxBlocks);
+    }
+    public int[] generatePlains(int chunkx, int chunky, int chunkz, int maxBlocks){
+        ChunkNoise noise = new ChunkNoise(world.getLocations()[0]);
+        int[] blocks = new int[maxBlocks];
+        if (chunky <= 56) {
+            for (int i = 0; i < maxBlocks; i++) {
+                blocks[i] = 3;
+            }
+        }else {
+            for (int i = 0; i < maxBlocks; i++) {
+                if(i%4096 < 64) {
+                    blocks[i] = 3;
+                }else{
+                    int x = i%64;
+                    int y = Math.round((i%4096)/64f - 1f);
+                    int z = Math.round(i/4096f - 0.5f);
+                    long size = Math.round(noise.getNoise(x, z));
+                    if(size < y) {
+                        blocks[i] = 1;
+                    }else if (size == y){
+                        blocks[i] = 2;
+                    }else{
+                        blocks[i] = 3;
+                    }
+                }
+            }
+        }
+        return blocks;
     }
 }
