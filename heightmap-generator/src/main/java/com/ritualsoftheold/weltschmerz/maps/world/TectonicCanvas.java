@@ -67,12 +67,7 @@ public class TectonicCanvas extends JPanel {
                 Rectangle chunk = location.getChunk();
                 g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
             }
-              /*  g.setColor(Color.BLACK);
-                for(Location location:plate.getBorderLocations()) {
-                    g.fillPolygon(location.getPolygon());
-                }*/
         }
-        //drawWorld();
         repaint();
     }
 

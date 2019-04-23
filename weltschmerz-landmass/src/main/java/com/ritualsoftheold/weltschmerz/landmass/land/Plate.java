@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Plate extends ArrayList<Location>{
-    //angle of direction
-    private int angle;
 
     //middle of plate
     private Location centroid;

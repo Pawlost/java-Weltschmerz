@@ -77,7 +77,7 @@ public class World {
        /* while (isLocationEmpty()) {
             fillEmptyLocations();
         }*/
-        System.out.println("Generated Tectonic Plates");
+        System.out.println("Generated Land");
     }
 
     private void connectPlate(Plate plate) {
@@ -240,6 +240,7 @@ public class World {
         }
         return false;
     }
+
     public Location[] getLocations() {
         Location[] copy = new Location[locations.size()];
         locations.toArray(copy);
