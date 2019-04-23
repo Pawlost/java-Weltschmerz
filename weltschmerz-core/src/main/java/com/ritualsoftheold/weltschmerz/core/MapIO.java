@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 

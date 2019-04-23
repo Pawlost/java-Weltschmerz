@@ -1,3 +1,4 @@
 dependencies {
+    compile project(':weltschmerz-landmass')
     compile group: 'com.sudoplay.joise', name: 'joise', version: '1.1.0'
 }

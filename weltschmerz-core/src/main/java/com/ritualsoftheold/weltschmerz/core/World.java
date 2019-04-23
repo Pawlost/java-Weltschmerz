@@ -3,20 +3,19 @@ package com.ritualsoftheold.weltschmerz.core;
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
-    private static final int SPACING = 1;
     private Configuration conf;
     private ArrayList<Location> locations;
     private ArrayList<Plate> plates;
-    private WeltschmerzNoise noise;
+    private WorldNoise noise;
 
-    public World(Configuration configuration,WeltschmerzNoise noise) {
+    public World(Configuration configuration, WorldNoise noise) {
         System.out.println("Seting locations");
         this.noise = noise;
         this.conf = configuration;
@@ -24,9 +23,9 @@ public class World {
         locations = new ArrayList<>();
         plates = new ArrayList<>();
 
-        for (double x = -conf.detail; x < conf.width + 2 *conf.detail; x += conf.detail) {
-            for (double y = -conf.detail; y < conf.height + 2*conf.detail; y += conf.detail) {
-                Location location = new Location(x, y, 1);
+        for (int x = -1; x < conf.width + 2; x++) {
+            for (int y = -1; y < conf.height + 2; y ++) {
+                Location location = new Location(x, y, configuration.seed + 100 + x + y);
                 locations.add(location);
             }
         }
@@ -71,7 +70,7 @@ public class World {
 
     private void generateLand() {
         for (Location location : locations) {
-            location.makeLand(noise, SPACING);
+            noise.makeLand(location);
         }
 
        /* while (isLocationEmpty()) {
@@ -189,19 +188,19 @@ public class World {
                 case "MOUNTAIN":
                    neighbors = location.getNeighbors();
                     for(Location neighbor:neighbors){
-                        if(neighbor.getShape().position < location.getShape().position){
+                   /*     if(neighbor.getShape().position < location.getShape().position){
                             neighbor.setShape(noise.getShape("HILL"));
                             neighbor.setLand(true);
-                        }
+                        }*/
                     }
                     break;
                 case "HILL":
                     neighbors = location.getNeighbors();
                     for(Location neighbor:neighbors){
-                        if(neighbor.getShape().position < location.getShape().position){
+                       /* if(neighbor.getShape().position < location.getShape().position){
                             neighbor.setShape(noise.getShape("PLAIN"));
                             neighbor.setLand(true);
-                        }
+                        }*/
                     }
                     break;
             }

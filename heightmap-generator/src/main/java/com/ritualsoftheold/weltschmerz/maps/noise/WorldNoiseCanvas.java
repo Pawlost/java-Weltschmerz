@@ -1,23 +1,25 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 //Jframe canvas to show noise
-public class Canvas extends JPanel {
+public class WorldNoiseCanvas extends JPanel {
 
   private static final float SCALE = 1.0f;
   private BufferedImage image;
 
-  public Canvas(int width, int height) {
+  public WorldNoiseCanvas(int width, int height) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
   }
 
-  public void updateImage(WeltschmerzNoise noise) {
+  public void updateImage(Configuration configuration) {
+    WorldNoise noise = new WorldNoise(configuration);
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
@@ -37,5 +39,4 @@ public class Canvas extends JPanel {
     g2.drawImage(this.image, null, null);
     g2.dispose();
   }
-
 }

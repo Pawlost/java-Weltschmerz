@@ -1,10 +1,13 @@
 package com.ritualsoftheold.weltschmerz.noise;
 
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.landmass.Generation;
+import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
 
-public class WeltschmerzNoise extends Generation {
+public class WorldNoise extends Generation {
 
     private ModuleFractal gen;
     private int worldWidth;
@@ -14,7 +17,7 @@ public class WeltschmerzNoise extends Generation {
     private ModuleAutoCorrect mod;
     private int samples;
 
-    public WeltschmerzNoise(Configuration configuration){
+    public WorldNoise(Configuration configuration){
         super(configuration.shapes);
         //Creates basic fractal module
         this.worldHeight = configuration.height;
@@ -59,6 +62,24 @@ public class WeltschmerzNoise extends Generation {
         double nz=Math.sin(s*2*Math.PI)*1.0/(2*Math.PI);
         double nw=Math.sin(t*2*Math.PI)*1.0/(2*Math.PI);
         return (mod.get(nx, ny, nz, nw));
+    }
+
+    public void makeLand(Location location){
+        if(location.getShape() == null) {
+            int postionX = location.getSector().x;
+            int postionY = location.getSector().y;
+
+            int width = location.getSector().width;
+            int height = location.getSector().height;
+
+           for (int x = postionX; x < width; x++) {
+                for (int y = postionY; y < height; y++) {
+                    location.addElevation(getNoise(x, y));
+                }
+            }
+
+            location.setShape(landGeneration(location.getElevation()));
+        }
     }
 
     public double getMax() {

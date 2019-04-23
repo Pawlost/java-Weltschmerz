@@ -1,8 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +16,13 @@ public class TestHeightMapNoise {
         JFrame frame = new JFrame("Joise Example 01");
         frame.setPreferredSize(new Dimension(width, height));
 
-        Canvas canvas = new Canvas(width, height);
-        frame.add(canvas);
+        //WorldNoiseCanvas noiseCanvas = new WorldNoiseCanvas(width, height);
+        ChunkNoiseCanvas noiseCanvas = new ChunkNoiseCanvas(width, height);
+        frame.add(noiseCanvas);
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        WeltschmerzNoise noise = new WeltschmerzNoise(configuration);
-        canvas.updateImage(noise);
+        noiseCanvas.updateImage();
 
         frame.pack();
         frame.setLocationRelativeTo(null);

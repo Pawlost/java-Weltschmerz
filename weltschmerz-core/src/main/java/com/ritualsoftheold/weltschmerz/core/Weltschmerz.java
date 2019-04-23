@@ -1,8 +1,9 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
+import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.landmass.land.Sector;
+import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +20,7 @@ public class Weltschmerz {
         Graphics g = image.getGraphics();
         for (Location location : weltschmerz.world.getLocations()) {
             g.setColor(location.getShape().color);
-            Rectangle rectangle = location.getChunk();
+            Sector rectangle = location.getSector();
             g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         }
         MapIO.saveHeightmap(image);
@@ -30,7 +31,7 @@ public class Weltschmerz {
 
     public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
-        WeltschmerzNoise noise = new WeltschmerzNoise(configuration);
+        WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
         world.firstGeneration();
         System.out.println("Map generated");

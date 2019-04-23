@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.noise;
+package com.ritualsoftheold.weltschmerz.landmass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
