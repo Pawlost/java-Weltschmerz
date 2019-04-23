@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.landmass.markers;
 
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 

@@ -1,12 +1,12 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.landmass.markers;
 
 public class Border{
     private Vertex VertexA;
     private Vertex VertexB;
-    private Centroid leftDatum;
-    private Centroid rightDatum;
+    private Marker leftDatum;
+    private Marker rightDatum;
 
-    public Border(Vertex a, Vertex b, Centroid ld, Centroid rd) {
+    public Border(Vertex a, Vertex b, Marker ld, Marker rd) {
         if (a.isNaN() || b.isNaN())
                throw new IllegalArgumentException("Undefined vertices" + " not allowed in an Edge.");
 
@@ -32,19 +32,19 @@ public class Border{
         return VertexB;
     }
 
-    public Centroid getDatumA() {
+    public Marker getDatumA() {
         return leftDatum;
     }
 
-    public Centroid getDatumB() {
+    public Marker getDatumB() {
         return rightDatum;
     }
 
-    public void setDatumA(Centroid leftDatum) {
+    public void setDatumA(Marker leftDatum) {
         this.leftDatum = leftDatum;
     }
 
-    public void setDatumB(Centroid rightDatum) {
+    public void setDatumB(Marker rightDatum) {
         this.rightDatum = rightDatum;
     }
 

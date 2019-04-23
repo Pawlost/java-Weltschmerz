@@ -1,8 +1,9 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+
+import com.ritualsoftheold.weltschmerz.landmass.markers.Border;
+import com.ritualsoftheold.weltschmerz.landmass.markers.Marker;
+import com.ritualsoftheold.weltschmerz.landmass.markers.Vertex;
 import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class Location {
 
     private Plate tectonicPlate;
-    private Centroid centroid;
+    private Marker marker;
     private Shape shape;
     private boolean isLand;
 
@@ -20,17 +21,18 @@ public class Location {
     private ArrayList<Double> elevation;
     private ArrayList<Vertex> vertice;
     private ArrayList<Location> neighbors;
-    private ArrayList<Centroid> nearCentroids;
-    private java.awt.Polygon polygon;
+    private ArrayList<Marker> nearMarkers;
+    private Rectangle chunk;
 
-    public Location(double x, double y) {
-        centroid = new Centroid(x, y);
+    public Location(double x, double y, double size) {
+        marker = new Marker(x, y);
 
+        chunk = new Rectangle((int)x, (int)y, (int) size, (int)size);
         elevation = new ArrayList<>();
         borders = new ArrayList<>();
         vertice = new ArrayList<>();
         neighbors = new ArrayList<>();
-        nearCentroids = new ArrayList<>();
+        nearMarkers = new ArrayList<>();
     }
 
     public Border[] getBorders() {
@@ -56,75 +58,8 @@ public class Location {
         return copyNeighbors;
     }
 
-    public void circularize() {
-        if (borders.size() > 2) {
-            ArrayList<Border> cloneBorders = new ArrayList<>();
-            cloneBorders.add(borders.get(0));
-
-            while (checkNext(cloneBorders)) ;
-
-            if (borders.size() == cloneBorders.size()) {
-                borders = cloneBorders;
-
-                polygon = new java.awt.Polygon();
-                for (Vertex vertex : getVertice()) {
-                    polygon.addPoint((int) vertex.getX(), (int) vertex.getY());
-                }
-
-                listVariables();
-            } else {
-                borders = new ArrayList<>();
-            }
-        }
-    }
-
-    //Method for circularization
-    private boolean checkNext(ArrayList<Border> cloneBorders) {
-        for (int i = 0; i < borders.size(); i++) {
-            Border next = borders.get(i);
-            if (!cloneBorders.contains(next)) {
-                Border border = cloneBorders.get(cloneBorders.size() - 1);
-                if (border.getVertexB().equals(next.getVertexA())) {
-                    cloneBorders.add(next);
-                    return true;
-                } else if (border.getVertexB().equals(next.getVertexB())) {
-                    Border newBorder = new Border(next.getVertexB(), next.getVertexA(), next.getDatumA(), next.getDatumB());
-                    cloneBorders.add(newBorder);
-                    borders.set(i, newBorder);
-                    return true;
-                }
-            }
-        }
-
-        Border first = cloneBorders.get(0);
-        Border last = cloneBorders.get(cloneBorders.size() - 1);
-
-        if (first.getVertexA() ==last.getVertexB() && borders.size() != cloneBorders.size()) {
-            for(Border border:getBorders()){
-                if(!isBorderInside(border, cloneBorders)){
-                    borders.remove(border);
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean isBorderInside(Border border, ArrayList<Border> cloneBorders){
-        for(Border clone:cloneBorders) {
-            if(clone.equals(border)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void addNeighbor(Location neighbor){
         neighbors.add(neighbor);
-    }
-
-    public java.awt.Polygon getPolygon() {
-        return polygon;
     }
 
     private void listVariables() {
@@ -140,11 +75,11 @@ public class Location {
                 borders.add(newBorder);
             }
 
-            nearCentroids.clear();
+            nearMarkers.clear();
             for (Border border : borders) {
-                Centroid neighbor = this.centroid == border.getDatumA() ? border.getDatumB() : border.getDatumA();
+                Marker neighbor = this.marker == border.getDatumA() ? border.getDatumB() : border.getDatumA();
                 if (neighbor != null) {
-                    nearCentroids.add(neighbor);
+                    nearMarkers.add(neighbor);
                 }
             }
         }
@@ -154,7 +89,7 @@ public class Location {
         Vertex start = getVertice()[0];
         Vertex end = getVertice()[vertice.size() - 1];
         if(!end.equals(start)) {
-            Border newBorder = new Border(end, start, centroid, null);
+            Border newBorder = new Border(end, start, marker, null);
             for (Border border : borders) {
                 if (border.getVertexA() == start && border.getVertexB() == end
                         || border.getVertexB() == start && border.getVertexA() == end) {
@@ -168,15 +103,15 @@ public class Location {
 
     public void reset() {
 
-        double newX = (centroid.getX() + centerX()) / 2;
-        double newY = (centroid.getY() + centerY()) / 2;
+        double newX = (marker.getX() + centerX()) / 2;
+        double newY = (marker.getY() + centerY()) / 2;
 
-        centroid = new Centroid(newX, newY);
+        marker = new Marker(newX, newY);
         elevation.clear();
         borders.clear();
         vertice.clear();
         neighbors.clear();
-        nearCentroids.clear();
+        nearMarkers.clear();
     }
 
     private double centerX() {
@@ -210,15 +145,13 @@ public class Location {
 
     public void makeLand(WeltschmerzNoise noise, int spacing){
         if(shape == null) {
-            Rectangle boundries = polygon.getBounds();
+            int width = chunk.width + chunk.x;
+            int height = chunk.height + chunk.y;
 
-            int width = boundries.width + boundries.x;
-            int height = boundries.height + boundries.y;
-
-            for (int x = boundries.x; x < width; x += spacing) {
-                for (int y = boundries.y; y < height; y += spacing) {
+            for (int x = chunk.x; x < width; x += spacing) {
+                for (int y = chunk.y; y < height; y += spacing) {
                     Point point = new java.awt.Point(x, y);
-                    if (polygon.contains(point)) {
+                    if (chunk.contains(point)) {
                         elevation.add(noise.getNoise(x, y));
                     }
                 }
@@ -242,6 +175,9 @@ public class Location {
         return shape.key;
     }
 
+    public Rectangle getChunk(){
+        return chunk;
+    }
 
     public void setTectonicPlate(Plate tectonicPlate) {
         this.tectonicPlate = tectonicPlate;
@@ -251,20 +187,12 @@ public class Location {
         return tectonicPlate;
     }
 
-    public void add(Border border) {
-        this.borders.add(border);
-    }
-
-    public Centroid getCentroid() {
-        return centroid;
+    public Marker getMarker() {
+        return marker;
     }
 
     public boolean isLand(){
         return isLand;
-    }
-
-    public ArrayList<Centroid> getNearCentroids() {
-        return nearCentroids;
     }
 
     public void setLand(boolean land) {

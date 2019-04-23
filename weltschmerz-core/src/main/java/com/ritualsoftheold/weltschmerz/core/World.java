@@ -1,24 +1,18 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms.Fortune;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Centroid;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.WeltschmerzNoise;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
     private static final int SPACING = 1;
     private Configuration conf;
     private ArrayList<Location> locations;
-    private ArrayList<Centroid> centroids;
     private ArrayList<Plate> plates;
     private WeltschmerzNoise noise;
 
@@ -28,13 +22,11 @@ public class World {
         this.conf = configuration;
 
         locations = new ArrayList<>();
-        centroids = new ArrayList<>();
         plates = new ArrayList<>();
 
         for (double x = -conf.detail; x < conf.width + 2 *conf.detail; x += conf.detail) {
             for (double y = -conf.detail; y < conf.height + 2*conf.detail; y += conf.detail) {
-                Location location = new Location(x, y);
-                centroids.add(location.getCentroid());
+                Location location = new Location(x, y, 1);
                 locations.add(location);
             }
         }
@@ -43,17 +35,17 @@ public class World {
     }
 
     public void firstGeneration() {
-        generateBorders();
-        checkBorders();
-        generatePlates();
+/*        generatePlates();
+
+ */
         generateLand();
 
         for(Plate plate:getPlates()) {
             connectPlate(plate);
         }
        // createVolcanoes();
-        createHills();
-        createShoreline();
+       // createHills();
+        //createShoreline();
         System.out.println("First generation done");
     }
 
@@ -77,40 +69,14 @@ public class World {
         }
     }
 
-    private void checkBorders() {
-        for (Location location : locations) {
-            for (Border border : location.getBorders()) {
-                Location[] neighbors = location.getNeighbors();
-                if (neighbors.length == 1) {
-                    if (location.getCentroid().equals(border.getDatumA())) {
-                        border.setDatumB(null);
-                    } else if (location.getCentroid().equals(border.getDatumB())) {
-                        border.setDatumA(null);
-                    }
-                }
-            }
-        }
-    }
-
-    private void generateBorders() {
-        System.out.println("Generating borders");
-        Centroid[] copyCenters = new Centroid[centroids.size()];
-        centroids.toArray(copyCenters);
-        Voronoi voronoi = Fortune.ComputeGraph(copyCenters);
-
-        voronoi.getVoronoiArea(locations, conf.width, conf.height);
-
-        System.out.println("Borders generated");
-    }
-
     private void generateLand() {
         for (Location location : locations) {
             location.makeLand(noise, SPACING);
         }
 
-        while (isLocationEmpty()) {
+       /* while (isLocationEmpty()) {
             fillEmptyLocations();
-        }
+        }*/
         System.out.println("Generated Tectonic Plates");
     }
 

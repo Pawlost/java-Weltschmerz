@@ -3,7 +3,6 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,10 +31,10 @@ public class Canvas extends JPanel {
 
         Location polygon = locations[index];
 
-        for (Border border : polygon.getBorders()) {
+        /*for (Border border : polygon.getBorders()) {
             g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                     (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
-        }
+        }*/
 
         this.repaint();
     }
@@ -48,19 +47,19 @@ public class Canvas extends JPanel {
 
         Location polygon = locations[0];
 
-        Border border = polygon.getBorders()[index];
+        /*Border border = polygon.getBorders()[index];
         g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                 (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
-
+        */
         this.repaint();
     }
 
-    private void fillPolygon(Location location) {
+    private void fillRectangle(Location location) {
         Graphics g = image.getGraphics();
 
         g.setColor(location.getShape().color);
-
-        g.fillPolygon(location.getPolygon());
+        Rectangle chunk = location.getChunk();
+        g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
 
         this.repaint();
     }
@@ -68,14 +67,14 @@ public class Canvas extends JPanel {
     public void fillWorld() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (Location location : locations) {
-            fillPolygon(location);
+            fillRectangle(location);
         }
         MapIO.saveHeightmap(image);
         //drawWorld();
     }
 
     public void fillOnce(int index) {
-        fillPolygon(locations[index]);
+        fillRectangle(locations[index]);
     }
 
     public void drawWorld() {
@@ -84,12 +83,12 @@ public class Canvas extends JPanel {
 
         g.setColor(Color.BLACK);
 
-        for (Location polygon : locations) {
+/*        for (Location polygon : locations) {
             for (Border border : polygon.getBorders()) {
                 g.drawLine((int) border.getVertexA().getX(), (int) border.getVertexA().getY(),
                         (int) border.getVertexB().getX(), (int) border.getVertexB().getY());
             }
-        }
+        }*/
 
         this.repaint();
     }

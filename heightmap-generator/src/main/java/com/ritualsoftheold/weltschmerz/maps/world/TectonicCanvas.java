@@ -29,7 +29,8 @@ public class TectonicCanvas extends JPanel {
 
         for (Plate plate : world.getPlates()) {
             for (Location location : plate) {
-                g.drawPolygon(location.getPolygon());
+                Rectangle chunk = location.getChunk();
+                g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
             }
         }
 
@@ -44,7 +45,8 @@ public class TectonicCanvas extends JPanel {
         Plate plate = world.getPlates()[0];
         Location location = plate.get(index);
 
-        g.drawPolygon(location.getPolygon());
+        Rectangle chunk = location.getChunk();
+        g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
 
         this.repaint();
     }
@@ -62,7 +64,8 @@ public class TectonicCanvas extends JPanel {
             float b = rand.nextFloat();
             g.setColor(new Color(r, z, b));
             for (Location location : plate) {
-                g.fillPolygon(location.getPolygon());
+                Rectangle chunk = location.getChunk();
+                g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
             }
               /*  g.setColor(Color.BLACK);
                 for(Location location:plate.getBorderLocations()) {
@@ -82,7 +85,9 @@ public class TectonicCanvas extends JPanel {
         Plate plate = world.getPlates()[0];
         g.setColor(Color.GREEN);
         Location location = plate.get(index);
-        g.fillPolygon(location.getPolygon());
+
+        Rectangle chunk = location.getChunk();
+        g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
 
         drawWorld();
 

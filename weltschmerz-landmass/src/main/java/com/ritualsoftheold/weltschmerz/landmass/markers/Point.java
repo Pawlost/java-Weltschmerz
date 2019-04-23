@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.landmass.markers;
 
 public abstract class Point {
     double x;
@@ -18,7 +18,7 @@ public abstract class Point {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    public double dist(Centroid o) {
+    public double dist(Marker o) {
         final double dx = x - o.x;
         final double dy = y - o.y;
         return Math.sqrt(dx * dx + dy * dy);

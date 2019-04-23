@@ -13,6 +13,8 @@ public abstract class Generation {
 
     private static String getKey(int index) {
         switch (index) {
+            case 0:
+                return "OCEAN";
             case 1:
                 return "SEA";
             case 2:
@@ -21,10 +23,8 @@ public abstract class Generation {
                 return "PLAIN";
             case 4:
                 return "HILL";
-            case 5:
-                return "MOUNTAIN";
             default:
-                return "OCEAN";
+                return "MOUNTAIN";
         }
     }
 
