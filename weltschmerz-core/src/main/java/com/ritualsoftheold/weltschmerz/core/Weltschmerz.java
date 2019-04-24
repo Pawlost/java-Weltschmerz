@@ -8,6 +8,7 @@ import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Weltschmerz {
     //Generate map image
@@ -47,9 +48,11 @@ public class Weltschmerz {
     public int[] generatePlains(int chunkx, int chunky, int chunkz, int maxBlocks){
         ChunkNoise noise = new ChunkNoise(world.getLocations()[0]);
         int[] blocks = new int[maxBlocks];
-        if (chunky <= 56) {
-            for (int i = 0; i < maxBlocks; i++) {
-                blocks[i] = 3;
+        if (chunky <= 130) {
+            if(chunky<=70) {
+                Arrays.fill(blocks, 1);
+            }else{
+                Arrays.fill(blocks, 3);
             }
         }else {
             for (int i = 0; i < maxBlocks; i++) {
