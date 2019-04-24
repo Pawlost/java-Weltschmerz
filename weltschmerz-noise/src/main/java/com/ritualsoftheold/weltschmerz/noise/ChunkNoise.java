@@ -10,9 +10,9 @@ public class ChunkNoise {
     private ModuleFractal gen;
     private double max;
     private double min;
-    private static final int OCTAVES = 8;
-    private static final int FREQUENCY = 1000;
-    private static final int SAMPLES = 8;
+    private static final int OCTAVES = 3;
+    private static final float FREQUENCY = 0.1f;
+    private static final int SAMPLES = 1000;
     private  ModuleAutoCorrect mod;
 
     public ChunkNoise(Location location){

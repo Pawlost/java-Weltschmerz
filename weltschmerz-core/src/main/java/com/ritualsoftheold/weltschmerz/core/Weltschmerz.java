@@ -57,8 +57,8 @@ public class Weltschmerz {
                     blocks[i] = 3;
                 }else{
                     int x = i%64;
-                    int y = Math.round((i%4096)/64f - 1f);
-                    int z = Math.round(i/4096f - 0.5f);
+                    int z = i/4096;
+                    int y = (i - 4096 * z) / 64;
                     long size = Math.round(noise.getNoise(x, z));
                     if(size < y) {
                         blocks[i] = 1;
