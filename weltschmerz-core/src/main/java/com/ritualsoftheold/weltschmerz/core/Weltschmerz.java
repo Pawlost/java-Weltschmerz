@@ -52,12 +52,12 @@ public class Weltschmerz {
             if(chunky<=70) {
                 Arrays.fill(blocks, 1);
             }else{
-                Arrays.fill(blocks, 3);
+                Arrays.fill(blocks, 2);
             }
         }else {
             for (int i = 0; i < maxBlocks; i++) {
                 if(i%4096 < 64) {
-                    blocks[i] = 3;
+                    blocks[i] = 2;
                 }else{
                     int x = i%64;
                     int z = i/4096;
@@ -66,9 +66,9 @@ public class Weltschmerz {
                     if(size < y) {
                         blocks[i] = 1;
                     }else if (size == y){
-                        blocks[i] = 2;
-                    }else{
                         blocks[i] = 3;
+                    }else{
+                        blocks[i] = 2;
                     }
                 }
             }
