@@ -29,6 +29,8 @@ public class Weltschmerz {
 
     private Configuration configuration;
     private World world;
+    private ChunkNoise noise;
+    private int y;
 
     public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
@@ -38,41 +40,26 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
+    public void setSector(int x, int y, int z){
+        noise = new ChunkNoise(world.getLocations()[x + configuration.width * z]);
+        this.y = y;
+    }
+
     //For future use
     public void setMaterialID(){
     }
 
-    public int[] getChunk(int x, int y, int z, int maxBlocks){
-        return generatePlains(x, y, z, maxBlocks);
-    }
-    public int[] generatePlains(int chunkx, int chunky, int chunkz, int maxBlocks){
-        ChunkNoise noise = new ChunkNoise(world.getLocations()[0]);
-        int[] blocks = new int[maxBlocks];
-        if (chunky <= 130) {
-            if(chunky<=70) {
-                Arrays.fill(blocks, 1);
-            }else{
-                Arrays.fill(blocks, 2);
-            }
+    public int generateVoxel(int x, int y, int z) {
+        if (this.y <= 60) {
+            return 2;
         }else {
-            for (int i = 0; i < maxBlocks; i++) {
-                if(i%4096 < 64) {
-                    blocks[i] = 2;
-                }else{
-                    int x = i%64;
-                    int z = i/4096;
-                    int y = (i - 4096 * z) / 64;
-                    long size = Math.round(noise.getNoise(x, z));
-                    if(size < y) {
-                        blocks[i] = 1;
-                    }else if (size == y){
-                        blocks[i] = 3;
-                    }else{
-                        blocks[i] = 2;
-                    }
-                }
+            long size = Math.round(noise.getNoise(x, z));
+            if (size < y) {
+                return 1;
+            } else if (size == y) {
+                return 3;
             }
+            return 2;
         }
-        return blocks;
     }
 }
