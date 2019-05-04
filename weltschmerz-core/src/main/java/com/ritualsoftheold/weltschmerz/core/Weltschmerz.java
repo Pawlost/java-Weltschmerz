@@ -30,7 +30,8 @@ public class Weltschmerz {
     private Configuration configuration;
     private World world;
     private ChunkNoise noise;
-    private int y;
+    private int x;
+    private int z;
 
     public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
@@ -40,9 +41,11 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public void setSector(int x, int y, int z){
-        noise = new ChunkNoise(world.getLocations()[x + configuration.width * z]);
-        this.y = y;
+    public boolean setChunk(int x, int y, int z){
+        noise = new ChunkNoise(world.getLocations()[0]);
+        this.x = x;
+        this.z = z;
+        return y >= 60;
     }
 
     //For future use
@@ -50,16 +53,12 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        if (this.y <= 60) {
-            return 2;
-        }else {
-            long size = Math.round(noise.getNoise(x, z));
-            if (size < y) {
-                return 1;
-            } else if (size == y) {
-                return 3;
-            }
-            return 2;
+        long size = Math.round(noise.getNoise(x + this.x * 4, z + this.z * 4));
+        if (size < y) {
+            return 1;
+        } else if (size == y) {
+            return 3;
         }
+        return 2;
     }
 }
