@@ -45,7 +45,7 @@ public class Weltschmerz {
         noise = new ChunkNoise(world.getLocations()[0]);
         this.x = x;
         this.z = z;
-        return y >= 60;
+        return y >= 0;
     }
 
     //For future use
