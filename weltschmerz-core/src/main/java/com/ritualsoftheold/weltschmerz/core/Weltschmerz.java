@@ -8,12 +8,11 @@ import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 
 public class Weltschmerz {
     //Generate map image
     public static void main(String[] args) {
-        Weltschmerz weltschmerz = new Weltschmerz();
+        Weltschmerz weltschmerz = new Weltschmerz(0, 0);
 
         Configuration configuration = weltschmerz.configuration;
         BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
@@ -32,8 +31,12 @@ public class Weltschmerz {
     private ChunkNoise noise;
     private int x;
     private int z;
+    private int grassID;
+    private int dirtID;
 
-    public Weltschmerz(){
+    public Weltschmerz(int grassID, int dirtID){
+        this.grassID = grassID;
+        this.dirtID = dirtID;
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
@@ -57,8 +60,8 @@ public class Weltschmerz {
         if (size < y) {
             return 1;
         } else if (size == y) {
-            return 3;
+            return grassID;
         }
-        return 2;
+        return dirtID;
     }
 }
