@@ -44,11 +44,13 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public boolean setChunk(int x, int y, int z){
+    public void setSector(){
         noise = new ChunkNoise(world.getLocations()[0]);
+    }
+
+    public void setChunk(int x, int z){
         this.x = x;
         this.z = z;
-        return y >= 0;
     }
 
     //For future use
