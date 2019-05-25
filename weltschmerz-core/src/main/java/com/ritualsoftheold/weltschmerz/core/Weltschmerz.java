@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class Weltschmerz {
     //Generate map image
     public static void main(String[] args) {
-        Weltschmerz weltschmerz = new Weltschmerz(0, 0);
+        Weltschmerz weltschmerz = new Weltschmerz();
 
         Configuration configuration = weltschmerz.configuration;
         BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
@@ -27,16 +27,14 @@ public class Weltschmerz {
     }
 
     private Configuration configuration;
-    private World world;
+    public final World world;
     private ChunkNoise noise;
     private int x;
     private int z;
     private int grassID;
     private int dirtID;
 
-    public Weltschmerz(int grassID, int dirtID){
-        this.grassID = grassID;
-        this.dirtID = dirtID;
+    public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
@@ -52,7 +50,9 @@ public class Weltschmerz {
     }
 
     //For future use
-    public void setMaterialID(){
+    public void setMaterialID(int grassID, int dirtID){
+        this.grassID = grassID;
+        this.dirtID = dirtID;
     }
 
     public int generateVoxel(int x, int y, int z) {

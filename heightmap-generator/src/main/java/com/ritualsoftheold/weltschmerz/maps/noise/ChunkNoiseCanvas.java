@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ChunkNoiseCanvas extends JPanel {
-    private static final float SCALE = 1.0f;
     private BufferedImage image;
 
     public ChunkNoiseCanvas(int width, int height) {

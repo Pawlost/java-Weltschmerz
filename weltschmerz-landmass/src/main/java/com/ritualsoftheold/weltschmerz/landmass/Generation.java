@@ -43,10 +43,11 @@ public abstract class Generation {
                 level[3] += 1;
             } else if (e > shapes.get("HILL").min && e < shapes.get("HILL").max) {
                 level[4] += 1;
-            } else if (e > shapes.get("MOUNTAIN").min && e < shapes.get("MOUNTAIN").max) {
+            } else if (e > shapes.get("MOUNTAIN").min) {
                 level[5] += 1;
             }
         }
+
         int max = 0;
         int index = 0;
         for (int i = 0; i < level.length; i++) {
