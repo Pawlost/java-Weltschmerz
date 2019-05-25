@@ -10,9 +10,7 @@ public class Location {
     private Shape shape;
     private boolean isLand;
     private long seed;
-
     private ArrayList<Double> elevation;
-    ;
     private ArrayList<Location> neighbors;
     private Sector sector;
 
