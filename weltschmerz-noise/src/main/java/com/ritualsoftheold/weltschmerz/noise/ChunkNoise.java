@@ -50,4 +50,16 @@ public class ChunkNoise {
     public double getNoise(int x, int y){
         return mod.get(x, y);
     }
+
+    public double getY(){
+        return -10;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public double getMin() {
+        return min;
+    }
 }

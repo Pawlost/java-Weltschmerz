@@ -58,12 +58,24 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        long size = Math.round(noise.getNoise(x + this.x * 4, z + this.z * 4));
-        if (size < y) {
+        if (y < noise.getMin()){
+            return dirtID;
+        }
+
+        if (y > noise.getMax()){
             return 1;
+        }
+
+        long size = Math.round(noise.getNoise(x + this.x * 4, z + this.z * 4));
+        if (size > y) {
+            return dirtID;
         } else if (size == y) {
             return grassID;
         }
-        return dirtID;
+        return 1;
+    }
+
+    public double getY(){
+        return noise.getY();
     }
 }

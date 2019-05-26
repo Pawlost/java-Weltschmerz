@@ -85,4 +85,5 @@ public class WorldNoise extends Generation {
     public double getMax() {
         return max;
     }
+
 }
