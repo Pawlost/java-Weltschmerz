@@ -13,11 +13,11 @@ public class Canvas extends JPanel {
     private BufferedImage image;
     private int width;
     private int height;
-    private Location[] locations;
+    private Location[][] world;
 
     public Canvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        locations = world.getLocations();
+        this.world = world.getLocations();
         this.width = width;
         this.height = height;
     }
@@ -34,14 +34,16 @@ public class Canvas extends JPanel {
 
     public void fillWorld() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for (Location location : locations) {
-            fillRectangle(location);
+        for (Location[] locations : world) {
+            for (Location location : locations) {
+                fillRectangle(location);
+            }
         }
         MapIO.saveHeightmap(image);
     }
 
     public void fillOnce(int index) {
-        fillRectangle(locations[index]);
+        fillRectangle(world[index][index]);
     }
 
     public void paintComponent(Graphics g) {
