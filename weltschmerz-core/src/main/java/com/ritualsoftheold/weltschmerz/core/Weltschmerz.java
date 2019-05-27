@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.landmass.Configuration;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.land.Sector;
+import com.ritualsoftheold.weltschmerz.landmass.land.Position;
 import com.ritualsoftheold.weltschmerz.noise.ChunkNoise;
 import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
 
@@ -20,8 +20,8 @@ public class Weltschmerz {
         Graphics g = image.getGraphics();
         for (Location location : weltschmerz.world.getLocations()) {
             g.setColor(location.getShape().color);
-            Sector rectangle = location.getSector();
-            g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            Position rectangle = location.getPosition();
+            g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
         }
         MapIO.saveHeightmap(image);
     }
@@ -31,8 +31,11 @@ public class Weltschmerz {
     private ChunkNoise noise;
     private int x;
     private int z;
+    private int maxSectorWidth;
+    private int getMaxSectorHeight;
     private int grassID;
     private int dirtID;
+    private Location currentSector;
 
     public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
@@ -42,8 +45,21 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public void setSector(){
-        noise = new ChunkNoise(world.getLocations()[0]);
+    public void changeSector(){
+        currentSector = world.getLocations()[0];
+        noise = new ChunkNoise(currentSector);
+    }
+
+    public String getSectorName(){
+        return currentSector.getKey();
+    }
+
+    public int getPostionX(){
+        return currentSector.getPosition().x;
+    }
+
+    public int getPostionZ(){
+        return currentSector.getPosition().z;
     }
 
     public void setChunk(int x, int z){
@@ -76,6 +92,6 @@ public class Weltschmerz {
     }
 
     public double getY(){
-        return noise.getY();
+        return - 10;
     }
 }

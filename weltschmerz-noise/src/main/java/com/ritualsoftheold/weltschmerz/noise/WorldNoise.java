@@ -66,19 +66,12 @@ public class WorldNoise extends Generation {
 
     public void makeLand(Location location){
         if(location.getShape() == null) {
-            int postionX = location.getSector().x;
-            int postionY = location.getSector().y;
+            int postionX = location.getPosition().x;
+            int postionZ = location.getPosition().z;
 
-            int width = location.getSector().width;
-            int height = location.getSector().height;
+            location.getPosition().setY(getNoise(postionX, postionZ));
 
-           for (int x = postionX; x < width; x++) {
-                for (int y = postionY; y < height; y++) {
-                    location.addElevation(getNoise(x, y));
-                }
-            }
-
-            location.setShape(landGeneration(location.getElevation()));
+            location.setShape(landGeneration(location.getPosition().getY()));
         }
     }
 

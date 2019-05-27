@@ -10,14 +10,12 @@ public class Location {
     private Shape shape;
     private boolean isLand;
     private long seed;
-    private ArrayList<Double> elevation;
     private ArrayList<Location> neighbors;
-    private Sector sector;
+    private Position position;
 
-    public Location(int x, int y, long seed) {
-        sector = new Sector(x, y, 1, 1);
+    public Location(int x, int z, long seed) {
+        position = new Position(x, z, 1, 1);
         this.seed = seed;
-        elevation = new ArrayList<>();
         neighbors = new ArrayList<>();
     }
 
@@ -44,16 +42,8 @@ public class Location {
         return shape.key;
     }
 
-    public Sector getSector(){
-        return sector;
-    }
-
-    public void addElevation(double elevation){
-        this.elevation.add(elevation);
-    }
-
-    public ArrayList<Double> getElevation() {
-        return elevation;
+    public Position getPosition(){
+        return position;
     }
 
     public void setTectonicPlate(Plate tectonicPlate) {

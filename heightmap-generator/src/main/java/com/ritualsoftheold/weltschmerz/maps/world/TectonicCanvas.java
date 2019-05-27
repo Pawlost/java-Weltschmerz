@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.landmass.land.Sector;
+import com.ritualsoftheold.weltschmerz.landmass.land.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +30,8 @@ public class TectonicCanvas extends JPanel {
 
         for (Plate plate : world.getPlates()) {
             for (Location location : plate) {
-                Sector chunk = location.getSector();
-                g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
+                Position chunk = location.getPosition();
+                g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
             }
         }
 
@@ -46,8 +46,8 @@ public class TectonicCanvas extends JPanel {
         Plate plate = world.getPlates()[0];
         Location location = plate.get(index);
 
-        Sector chunk = location.getSector();
-        g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
+        Position chunk = location.getPosition();
+        g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
 
         this.repaint();
     }
@@ -65,8 +65,8 @@ public class TectonicCanvas extends JPanel {
             float b = rand.nextFloat();
             g.setColor(new Color(r, z, b));
             for (Location location : plate) {
-                Sector chunk = location.getSector();
-                g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
+                Position chunk = location.getPosition();
+                g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
             }
         }
         repaint();
@@ -82,8 +82,8 @@ public class TectonicCanvas extends JPanel {
         g.setColor(Color.GREEN);
         Location location = plate.get(index);
 
-        Sector chunk = location.getSector();
-        g.fillRect(chunk.x, chunk.y, chunk.width, chunk.height);
+        Position chunk = location.getPosition();
+        g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
 
         drawWorld();
 

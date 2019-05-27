@@ -51,10 +51,6 @@ public class ChunkNoise {
         return mod.get(x, y);
     }
 
-    public double getY(){
-        return -10;
-    }
-
     public double getMax() {
         return max;
     }

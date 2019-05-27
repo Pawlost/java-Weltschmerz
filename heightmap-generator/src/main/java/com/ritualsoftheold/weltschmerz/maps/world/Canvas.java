@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.land.Sector;
+import com.ritualsoftheold.weltschmerz.landmass.land.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,8 +26,8 @@ public class Canvas extends JPanel {
         Graphics g = image.getGraphics();
 
         g.setColor(location.getShape().color);
-        Sector sector = location.getSector();
-        g.fillRect(sector.x, sector.y, sector.width, sector.height);
+        Position position = location.getPosition();
+        g.fillRect(position.x, position.z, position.width, position.height);
 
         this.repaint();
     }

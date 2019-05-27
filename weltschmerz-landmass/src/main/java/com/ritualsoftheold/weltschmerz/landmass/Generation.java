@@ -28,37 +28,27 @@ public abstract class Generation {
         }
     }
 
-    public Shape landGeneration(ArrayList<Double> elevation) {
-        int[] level = new int[6];
-        Arrays.fill(level, 0);
-
-        for (double e : elevation) {
-            if (e < shapes.get("OCEAN").max) {
-                level[0] += 1;
-            } else if (e > shapes.get("SEA").min && e < shapes.get("SEA").max) {
-                level[1] += 1;
-            } else if (e > shapes.get("SHORELINE").min && e < shapes.get("SHORELINE").max) {
-                level[2] += 1;
-            } else if (e > shapes.get("PLAIN").min && e < shapes.get("PLAIN").max) {
-                level[3] += 1;
-            } else if (e > shapes.get("HILL").min && e < shapes.get("HILL").max) {
-                level[4] += 1;
-            } else if (e > shapes.get("MOUNTAIN").min) {
-                level[5] += 1;
-            }
+    public Shape landGeneration(double e) {
+        if (e < shapes.get("OCEAN").max) {
+            String key = getKey(0);
+            return shapes.get(key);
+        } else if (e > shapes.get("SEA").min && e < shapes.get("SEA").max) {
+            String key = getKey(1);
+            return shapes.get(key);
+        } else if (e > shapes.get("SHORELINE").min && e < shapes.get("SHORELINE").max) {
+            String key = getKey(2);
+            return shapes.get(key);
+        } else if (e > shapes.get("PLAIN").min && e < shapes.get("PLAIN").max) {
+            String key = getKey(3);
+            return shapes.get(key);
+        } else if (e > shapes.get("HILL").min && e < shapes.get("HILL").max) {
+            String key = getKey(4);
+            return shapes.get(key);
+        } else if (e > shapes.get("MOUNTAIN").min) {
+            String key = getKey(5);
+            return shapes.get(key);
         }
-
-        int max = 0;
-        int index = 0;
-        for (int i = 0; i < level.length; i++) {
-            if (level[i] > max) {
-                max = level[i];
-                index = i;
-            }
-        }
-
-        String key = getKey(index);
-        return shapes.get(key);
+        return null;
     }
 
     public Shape getShape(String key){
