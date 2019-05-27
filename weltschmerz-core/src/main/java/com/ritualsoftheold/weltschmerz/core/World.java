@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
     private Configuration conf;
-    private ArrayList<Location> locations;
+    private Location[][] world;
     private ArrayList<Plate> plates;
     private WorldNoise noise;
 
@@ -20,13 +20,13 @@ public class World {
         this.noise = noise;
         this.conf = configuration;
 
-        locations = new ArrayList<>();
+        world = new Location[conf.width + 1][conf.height + 1];
         plates = new ArrayList<>();
 
-        for (int x = -1; x < conf.width + 2; x++) {
-            for (int y = -1; y < conf.height + 2; y ++) {
+        for (int x = 0; x <= conf.width; x++) {
+            for (int y = 0; y <= conf.height; y ++) {
                 Location location = new Location(x, y, configuration.seed + 100 + x + y);
-                locations.add(location);
+                world[x][y] = location;
             }
         }
 
@@ -69,8 +69,10 @@ public class World {
     }
 
     private void generateLand() {
-        for (Location location : locations) {
-            noise.makeLand(location);
+        for (Location[] locations : world) {
+            for(Location location:locations) {
+                noise.makeLand(location);
+            }
         }
 
        /* while (isLocationEmpty()) {
@@ -95,33 +97,35 @@ public class World {
     }
 
     private void fillEmptyLocations() {
-        for (Location location : locations) {
-            int index = 0;
-            Location[] neighbors = location.getNeighbors();
+        for (Location[] locations : world) {
+            for (Location location : locations) {
+                int index = 0;
+                Location[] neighbors = location.getNeighbors();
 
-            check:
-            while (location.getTectonicPlate() == null) {
-                index++;
-                for (Location neighbor : neighbors) {
-                    if (neighbor.getTectonicPlate() != null) {
-                        Plate plate = neighbor.getTectonicPlate();
-                        plate.add(location);
-                        location.setTectonicPlate(plate);
-                        break check;
+                check:
+                while (location.getTectonicPlate() == null) {
+                    index++;
+                    for (Location neighbor : neighbors) {
+                        if (neighbor.getTectonicPlate() != null) {
+                            Plate plate = neighbor.getTectonicPlate();
+                            plate.add(location);
+                            location.setTectonicPlate(plate);
+                            break check;
+                        }
                     }
-                }
 
-                if (location.getNeighbors().length - 1 <= index){
-                    break;
-                }
+                    if (location.getNeighbors().length - 1 <= index) {
+                        break;
+                    }
 
-                neighbors = location.getNeighbors()[index].getNeighbors();
+                    neighbors = location.getNeighbors()[index].getNeighbors();
+                }
             }
         }
     }
 
     private void generatePlates() {
-        int range = locations.size();
+        int range = world.length;
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         for (int i = conf.tectonicPlates; i > 1; i--) {
@@ -130,83 +134,18 @@ public class World {
             int part = range / i;
             range -= part;
 
-            do {
-                int position = random.nextInt(locations.size());
+          /*  do {
+                int position = random.nextInt(world.length);
                 location = locations.get(position);
             } while (location.getTectonicPlate() != null);
 
+
             Plate plate = new Plate(location);
             location.setTectonicPlate(plate);
-            plate.generateTectonic(locations, part);
+            //plate.generateTectonic(locations, part);
             plates.add(plate);
+           */
         }
-    }
-
-    private void createShoreline() {
-        System.out.println("Creating shoreline");
-        for (Location location : locations) {
-            for (Location next : location.getNeighbors()) {
-                if (next.isLand() != location.isLand()) {
-                    if (location.isLand()) {
-                        location.setShape(noise.getShape("SHORELINE"));
-                    } else {
-                        location.setShape(noise.getShape("SEA"));
-                    }
-                    break;
-                }
-            }
-        }
-        for (Location location : locations) {
-            if (location.getKey().equals("SHORELINE") && checkShoreline(location, false)) {
-                location.setShape(noise.getShape("PLAIN"));
-            } else if (location.isLand() && checkShoreline(location, true)) {
-                location.setShape(noise.getShape("OCEAN"));
-                location.setLand(false);
-                for(Location neighbor:location.getNeighbors()){
-                    neighbor.setLand(false);
-                    neighbor.setShape(noise.getShape("OCEAN"));
-                }
-            }
-        }
-        System.out.println("Shoreline created");
-    }
-
-    private boolean checkShoreline(Location location, boolean get) {
-        for (Location next : location.getNeighbors()) {
-            if (next.isLand() == get) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void createHills() {
-        System.out.println("Creating Hills");
-        for (Location location:locations){
-            Location[] neighbors;
-            switch (location.getKey()){
-                case "MOUNTAIN":
-                   neighbors = location.getNeighbors();
-                    for(Location neighbor:neighbors){
-                   /*     if(neighbor.getShape().position < location.getShape().position){
-                            neighbor.setShape(noise.getShape("HILL"));
-                            neighbor.setLand(true);
-                        }*/
-                    }
-                    break;
-                case "HILL":
-                    neighbors = location.getNeighbors();
-                    for(Location neighbor:neighbors){
-                       /* if(neighbor.getShape().position < location.getShape().position){
-                            neighbor.setShape(noise.getShape("PLAIN"));
-                            neighbor.setLand(true);
-                        }*/
-                    }
-                    break;
-            }
-        }
-
-        System.out.println("Hills created");
     }
 
     private void createVolcanoes() {
@@ -232,17 +171,17 @@ public class World {
     }
 
     private boolean isLocationEmpty(){
-        for (Location location1 : locations) {
-            if(location1.getTectonicPlate() == null){
-                return true;
+        for (Location[] locations : world) {
+            for(Location location:locations) {
+                if(location.getTectonicPlate() == null){
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public Location[] getLocations() {
-        Location[] copy = new Location[locations.size()];
-        locations.toArray(copy);
-        return copy;
+    public Location[][] getLocations() {
+        return world;
     }
 }

@@ -29,31 +29,31 @@ public class ConfigParser {
 
     private static HashMap<String, Shape> parseShape(Config config){
         HashMap<String, Shape> shapes = new HashMap<>();
-        Shape shape = new Shape(0, config.getDouble("level.OCEAN"),
+        Shape shape = new Shape(0, config.getDouble("level.OCEAN"), -3,
                 false,"OCEAN", Color.BLUE);
         shapes.put("OCEAN", shape);
 
-        shape = new Shape(shapes.get("OCEAN").max, config.getDouble("level.SEA"),
+        shape = new Shape(shapes.get("OCEAN").max, config.getDouble("level.SEA"), -2,
                 false,"SEA", Color.CYAN);
         shapes.put("SEA", shape);
 
-        shape = new Shape(shapes.get("SEA").max, config.getDouble("level.SHORELINE"),
+        shape = new Shape(shapes.get("SEA").max, config.getDouble("level.SHORELINE"), -1,
                 true,"SHORELINE", Color.YELLOW);
         shapes.put("SHORELINE", shape);
 
-        shape = new Shape(shapes.get("SHORELINE").max, config.getDouble("level.PLAIN"),
+        shape = new Shape(shapes.get("SHORELINE").max, config.getDouble("level.PLAIN"), 0,
                 true,"PLAIN", Color.GREEN);
         shapes.put("PLAIN", shape);
 
-        shape = new Shape(shapes.get("PLAIN").max, config.getDouble("level.HILL"),
+        shape = new Shape(shapes.get("PLAIN").max, config.getDouble("level.HILL"), 1,
                 true,"HILL", Color.ORANGE);
         shapes.put("HILL", shape);
 
-        shape =  new  Shape(shapes.get("HILL").max, config.getDouble("level.MOUNTAIN"),
+        shape = new  Shape(shapes.get("HILL").max,  config.getDouble("level.MOUNTAIN"), 2,
                 true,"MOUNTAIN", Color.GRAY);
         shapes.put("MOUNTAIN", shape);
 
-        shape = new  Shape(shapes.get("HILL").max, config.getDouble("level.MOUNTAIN"),
+        shape = new  Shape(shapes.get("HILL").max,  config.getDouble("level.MOUNTAIN"), 1,
                 true,"VOLCANO", Color.RED);
         shapes.put("VOLCANO", shape);
 

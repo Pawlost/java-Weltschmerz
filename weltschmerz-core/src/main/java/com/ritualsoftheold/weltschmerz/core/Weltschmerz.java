@@ -18,10 +18,12 @@ public class Weltschmerz {
         BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics g = image.getGraphics();
-        for (Location location : weltschmerz.world.getLocations()) {
-            g.setColor(location.getShape().color);
-            Position rectangle = location.getPosition();
-            g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
+        for (Location[] locations : weltschmerz.world.getLocations()) {
+            for (Location location : locations) {
+                g.setColor(location.getShape().color);
+                Position rectangle = location.getPosition();
+                g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
+            }
         }
         MapIO.saveHeightmap(image);
     }
@@ -29,10 +31,9 @@ public class Weltschmerz {
     private Configuration configuration;
     public final World world;
     private ChunkNoise noise;
-    private int x;
-    private int z;
-    private int maxSectorWidth;
-    private int getMaxSectorHeight;
+    private Position chunkPosition;
+    public static final int DEFAULT_MAX_SECTOR_X = 256;
+    public static final int DEFAULT_MAX_SECTOR_Z = 256;
     private int grassID;
     private int dirtID;
     private Location currentSector;
@@ -45,8 +46,12 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public void changeSector(){
-        currentSector = world.getLocations()[0];
+    public void changeSector(int x, int z){
+        currentSector = world.getLocations()[x][z];
+        if(z == 1) {
+            currentSector = new Location(0, 0, 1);
+            currentSector.setShape(configuration.shapes.get("MOUNTAIN"));
+        }
         noise = new ChunkNoise(currentSector);
     }
 
@@ -54,17 +59,8 @@ public class Weltschmerz {
         return currentSector.getKey();
     }
 
-    public int getPostionX(){
-        return currentSector.getPosition().x;
-    }
-
-    public int getPostionZ(){
-        return currentSector.getPosition().z;
-    }
-
     public void setChunk(int x, int z){
-        this.x = x;
-        this.z = z;
+        chunkPosition = new Position(x, z, 16 + x, 16 + z);
     }
 
     //For future use
@@ -82,7 +78,7 @@ public class Weltschmerz {
             return 1;
         }
 
-        long size = Math.round(noise.getNoise(x + this.x * 4, z + this.z * 4));
+        long size = Math.round(noise.getNoise(x + chunkPosition.x * 4, z + chunkPosition.z * 4));
         if (size > y) {
             return dirtID;
         } else if (size == y) {
@@ -92,6 +88,6 @@ public class Weltschmerz {
     }
 
     public double getY(){
-        return - 10;
+        return currentSector.getShape().position * 16;
     }
 }
