@@ -1,8 +1,8 @@
-package com.ritualsoftheold.weltschmerz.noise;
+package com.ritualsoftheold.weltschmerz.noise.generator;
 
-import com.ritualsoftheold.weltschmerz.landmass.Configuration;
-import com.ritualsoftheold.weltschmerz.landmass.Generation;
-import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.Generation;
+import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
@@ -64,15 +64,12 @@ public class WorldNoise extends Generation {
         return (mod.get(nx, ny, nz, nw));
     }
 
-    public void makeLand(Location location){
-        if(location.getShape() == null) {
-            int postionX = location.getPosition().x;
-            int postionZ = location.getPosition().z;
-
-            location.getPosition().setY(getNoise(postionX, postionZ));
-
-            location.setShape(landGeneration(location.getPosition().getY()));
+    public Shape makeLand(Shape shape, int x, int z) {
+        if(shape == null) {
+            double y = getNoise(x, z);
+            shape = landGeneration(y);
         }
+        return shape;
     }
 
     public double getMax() {

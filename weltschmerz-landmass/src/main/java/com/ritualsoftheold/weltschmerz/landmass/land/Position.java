@@ -13,12 +13,4 @@ public class Position {
         this.width = x + width;
         this.height = z + height;
     }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getY() {
-        return y;
-    }
 }

@@ -1,32 +1,32 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.landmass.Shape;
+import com.ritualsoftheold.weltschmerz.landmass.Constants;
+import com.ritualsoftheold.weltschmerz.noise.Shape;
+import com.ritualsoftheold.weltschmerz.noise.generator.ChunkNoise;
 
 import java.util.ArrayList;
 
 public class Location {
 
+    private long seed;
     private Plate tectonicPlate;
     private Shape shape;
     private boolean isLand;
-    private long seed;
-    private ArrayList<Location> neighbors;
+    private Location[] neighbors;
     private Position position;
 
     public Location(int x, int z, long seed) {
         position = new Position(x, z, 1, 1);
         this.seed = seed;
-        neighbors = new ArrayList<>();
+        neighbors = new Location[4];
     }
 
     public Location[] getNeighbors() {
-        Location[] copyNeighbors = new Location[neighbors.size()];
-        neighbors.toArray(copyNeighbors);
-        return copyNeighbors;
+        return neighbors;
     }
 
-    public void addNeighbor(Location neighbor){
-        neighbors.add(neighbor);
+    public void addNeighbor(Location neighbor, int position){
+        neighbors[position] = neighbor;
     }
 
     public void setShape(Shape shape) {
@@ -36,6 +36,17 @@ public class Location {
 
     public Shape getShape() {
         return shape;
+    }
+
+    public double[][] getChunkValues(int posX, int posZ) {
+        double[][] chunkValues = new double[64][64];
+        ChunkNoise noise = new ChunkNoise(seed, shape.min, shape.max);
+        for (int x = 0; x < 64; x++) {
+            for (int z = 0; z < 64; z++) {
+                chunkValues[x][z] = noise.getNoise(x + posX * 4, z + posZ * 4);
+            }
+        }
+        return chunkValues;
     }
 
     public String getKey() {
@@ -60,9 +71,5 @@ public class Location {
 
     public void setLand(boolean land) {
         isLand = land;
-    }
-
-    public long getSeed() {
-        return seed;
     }
 }

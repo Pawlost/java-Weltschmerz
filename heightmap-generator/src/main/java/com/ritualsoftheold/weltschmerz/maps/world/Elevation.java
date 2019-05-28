@@ -2,9 +2,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.landmass.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
 
 import javax.swing.*;
 import java.awt.*;

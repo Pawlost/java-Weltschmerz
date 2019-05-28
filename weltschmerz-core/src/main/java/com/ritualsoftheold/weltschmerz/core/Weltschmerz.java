@@ -1,10 +1,10 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Position;
-import com.ritualsoftheold.weltschmerz.noise.ChunkNoise;
-import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
+import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,10 +30,7 @@ public class Weltschmerz {
 
     private Configuration configuration;
     public final World world;
-    private ChunkNoise noise;
-    private Position chunkPosition;
-    public static final int DEFAULT_MAX_SECTOR_X = 256;
-    public static final int DEFAULT_MAX_SECTOR_Z = 256;
+    private double[][] chunkValues;
     private int grassID;
     private int dirtID;
     private Location currentSector;
@@ -42,7 +39,6 @@ public class Weltschmerz {
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
-        world.firstGeneration();
         System.out.println("Map generated");
     }
 
@@ -52,7 +48,6 @@ public class Weltschmerz {
             currentSector = new Location(0, 0, 1);
             currentSector.setShape(configuration.shapes.get("MOUNTAIN"));
         }
-        noise = new ChunkNoise(currentSector);
     }
 
     public String getSectorName(){
@@ -60,7 +55,7 @@ public class Weltschmerz {
     }
 
     public void setChunk(int x, int z){
-        chunkPosition = new Position(x, z, 16 + x, 16 + z);
+        chunkValues = currentSector.getChunkValues(x, z);
     }
 
     //For future use
@@ -70,15 +65,15 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        if (y < noise.getMin()){
+        if (y < currentSector.getShape().min){
             return dirtID;
         }
 
-        if (y > noise.getMax()){
+        if (y > currentSector.getShape().max){
             return 1;
         }
 
-        long size = Math.round(noise.getNoise(x + chunkPosition.x * 4, z + chunkPosition.z * 4));
+        long size = Math.round(chunkValues[x][z]);
         if (size > y) {
             return dirtID;
         } else if (size == y) {
@@ -88,6 +83,6 @@ public class Weltschmerz {
     }
 
     public double getY(){
-        return currentSector.getShape().position * 16;
+        return currentSector.getShape().position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
     }
 }

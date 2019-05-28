@@ -1,7 +1,5 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.noise;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public abstract class Generation {

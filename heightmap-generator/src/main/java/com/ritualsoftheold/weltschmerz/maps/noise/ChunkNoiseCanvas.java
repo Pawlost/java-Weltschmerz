@@ -1,8 +1,8 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
-import com.ritualsoftheold.weltschmerz.landmass.Shape;
+import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.noise.ChunkNoise;
+import com.ritualsoftheold.weltschmerz.noise.generator.ChunkNoise;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +16,7 @@ public class ChunkNoiseCanvas extends JPanel {
     }
 
     public void updateImage() {
-        Location location = new Location(0, 0, 1635);
-        location.setShape(new Shape(0, 1));
-        ChunkNoise noise = new ChunkNoise(location);
+        ChunkNoise noise = new ChunkNoise(1635, 0, 1);
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 

@@ -1,4 +1,6 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.noise;
+
+import com.ritualsoftheold.weltschmerz.noise.Shape;
 
 import java.util.HashMap;
 

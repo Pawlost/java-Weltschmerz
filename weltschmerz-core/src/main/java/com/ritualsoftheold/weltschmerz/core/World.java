@@ -1,10 +1,9 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.landmass.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.WorldNoise;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,22 +29,39 @@ public class World {
             }
         }
 
-        System.out.println("Locations set");
-    }
-
-    public void firstGeneration() {
-/*        generatePlates();
-
- */
         generateLand();
+        connectNeighbors();
 
         for(Plate plate:getPlates()) {
             connectPlate(plate);
         }
-       // createVolcanoes();
-       // createHills();
-        //createShoreline();
-        System.out.println("First generation done");
+
+        System.out.println("Locations set");
+    }
+
+    private void connectNeighbors(){
+        for (int x = 0; x <= conf.width; x++) {
+            for (int z = 0; z <= conf.height; z++) {
+                Location location = world[x][z];
+                if (x > 0 && x < conf.width) {
+                    location.addNeighbor(world[x - 1][z], 0);
+                    location.addNeighbor(world[x + 1][z], 2);
+                } else if (x == 0){
+                    location.addNeighbor(world[conf.width][z], 0);
+                } else {
+                    location.addNeighbor(world[0][z], 2);
+                }
+
+                if (z > 0 && z < conf.height) {
+                    location.addNeighbor(world[x][z - 1], 1);
+                    location.addNeighbor(world[x][z + 1], 3);
+                } else if (z == 0){
+                    location.addNeighbor(world[x][conf.height], 1);
+                } else {
+                    location.addNeighbor(world[x][0], 3);
+                }
+            }
+        }
     }
 
     private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount){
@@ -71,7 +87,7 @@ public class World {
     private void generateLand() {
         for (Location[] locations : world) {
             for(Location location:locations) {
-                noise.makeLand(location);
+                location.setShape(noise.makeLand(location.getShape(), location.getPosition().x, location.getPosition().z));
             }
         }
 
@@ -146,22 +162,6 @@ public class World {
             plates.add(plate);
            */
         }
-    }
-
-    private void createVolcanoes() {
-        System.out.println("Creating volcanoes");
-        for (int v = 1; v <= conf.volcanoes; v++) {
-            int plateIndex = (int)Math.round(PrecisionMath.sigmoid(conf.seed, v)*conf.volcanoes);
-            ArrayList<Location> borderLocations = plates.get(plateIndex);
-            int locationIndex = (int)Math.round(PrecisionMath.sigmoid(conf.seed, v)*borderLocations.size());
-            Location location = borderLocations.get(locationIndex);
-            location.setShape(noise.getShape("VOLCANO"));
-            for (Location next : location.getNeighbors()) {
-                next.setShape(noise.getShape("MOUNTAIN"));
-                next.setLand(true);
-            }
-        }
-        System.out.println("Volcanoes created");
     }
 
     public Plate[] getPlates() {

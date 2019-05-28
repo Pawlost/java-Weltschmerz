@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.noise;
 
 import java.awt.*;
 

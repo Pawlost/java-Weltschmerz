@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.maps;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.landmass.Configuration;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.maps.noise.ChunkNoiseCanvas;
 import com.ritualsoftheold.weltschmerz.maps.noise.WorldNoiseCanvas;
 import com.ritualsoftheold.weltschmerz.maps.world.Canvas;
