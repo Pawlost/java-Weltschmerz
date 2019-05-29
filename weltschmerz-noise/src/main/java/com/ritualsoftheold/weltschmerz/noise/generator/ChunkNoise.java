@@ -14,10 +14,7 @@ public class ChunkNoise {
     private static final int SAMPLES = 1000;
     private  ModuleAutoCorrect mod;
 
-    public ChunkNoise(long seed, double min, double max){
-        this.min = min;
-        this.max = max;
-
+    public ChunkNoise(long seed){
         gen = new ModuleFractal();
         gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
@@ -25,11 +22,9 @@ public class ChunkNoise {
         gen.setFrequency(FREQUENCY);
         gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(seed);
-
-       generateNoise();
     }
 
-    private void generateNoise(){
+    public void generateNoise(double min, double max){
         mod = new ModuleAutoCorrect(min, max);
         mod.setSource(gen);// set source (can usually be either another Module or a double value; see specific module for details)
         mod.setSamples(SAMPLES); // set how many samples to take
@@ -38,13 +33,5 @@ public class ChunkNoise {
 
     public double getNoise(int x, int z){
         return mod.get(x, z);
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public double getMin() {
-        return min;
     }
 }

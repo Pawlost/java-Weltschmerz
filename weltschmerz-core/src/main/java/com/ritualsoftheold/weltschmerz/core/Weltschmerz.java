@@ -1,7 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
-import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Position;
 import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
@@ -42,12 +41,8 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public void changeSector(int x, int z){
-        currentSector = world.getLocations()[x][z];
-        if(z == 1) {
-            currentSector = new Location(0, 0, 1);
-            currentSector.setShape(configuration.shapes.get("MOUNTAIN"));
-        }
+    public void changeSector(int x, int z) {
+        currentSector = world.getLocations()[Math.abs(x)][Math.abs(z)];
     }
 
     public String getSectorName(){
@@ -65,11 +60,11 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        if (y < currentSector.getShape().min){
+        if (y < currentSector.getMin()){
             return dirtID;
         }
 
-        if (y > currentSector.getShape().max){
+        if (y > currentSector.getMax()){
             return 1;
         }
 
@@ -83,6 +78,6 @@ public class Weltschmerz {
     }
 
     public double getY(){
-        return currentSector.getShape().position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
+        return currentSector.getY();
     }
 }

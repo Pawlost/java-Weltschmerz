@@ -7,6 +7,10 @@ public class Position {
     public final int width;
     public final int height;
 
+    public Position(int x, int z){
+        this(x, z, 0 ,0);
+    }
+
     public Position(int x, int z, int width, int height){
         this.x = x;
         this.z = z;

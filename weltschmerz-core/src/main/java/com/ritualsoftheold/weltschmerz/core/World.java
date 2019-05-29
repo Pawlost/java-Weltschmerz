@@ -19,44 +19,62 @@ public class World {
         this.noise = noise;
         this.conf = configuration;
 
-        world = new Location[conf.width + 1][conf.height + 1];
+        world = new Location[conf.width][conf.height];
         plates = new ArrayList<>();
 
-        for (int x = 0; x <= conf.width; x++) {
-            for (int y = 0; y <= conf.height; y ++) {
-                Location location = new Location(x, y, configuration.seed + 100 + x + y);
-                world[x][y] = location;
+        for (int x = 0; x < conf.width; x++) {
+            for (int z = 0; z < conf.height; z++) {
+                Location location = new Location(x, z, configuration.seed + 100 + x + z);
+                world[x][z] = location;
             }
         }
 
         generateLand();
         connectNeighbors();
 
-        for(Plate plate:getPlates()) {
+        for (Location[] locations : world) {
+            for (Location location : locations) {
+                location.setChunks(false);
+            }
+        }
+
+        for (int x = world.length - 1; x >= 0; x--) {
+            for (int z = world[x].length - 1; z >= 0; z--) {
+                world[x][z].setChunks(true);
+            }
+        }
+
+        for (Plate plate : getPlates()) {
             connectPlate(plate);
         }
 
         System.out.println("Locations set");
     }
 
-    private void connectNeighbors(){
-        for (int x = 0; x <= conf.width; x++) {
-            for (int z = 0; z <= conf.height; z++) {
+    private void connectNeighbors() {
+        for (int x = 0; x < conf.width; x++) {
+            for (int z = 0; z < conf.height; z++) {
                 Location location = world[x][z];
-                if (x > 0 && x < conf.width) {
+                if (x > 0) {
                     location.addNeighbor(world[x - 1][z], 0);
+                } else {
+                    location.addNeighbor(world[conf.width - 1][z], 0);
+                }
+
+                if (x < conf.width - 1) {
                     location.addNeighbor(world[x + 1][z], 2);
-                } else if (x == 0){
-                    location.addNeighbor(world[conf.width][z], 0);
                 } else {
                     location.addNeighbor(world[0][z], 2);
                 }
 
-                if (z > 0 && z < conf.height) {
+                if (z > 0) {
                     location.addNeighbor(world[x][z - 1], 1);
+                } else {
+                    location.addNeighbor(world[x][conf.height - 1], 1);
+                }
+
+                if(z < conf.height - 1){
                     location.addNeighbor(world[x][z + 1], 3);
-                } else if (z == 0){
-                    location.addNeighbor(world[x][conf.height], 1);
                 } else {
                     location.addNeighbor(world[x][0], 3);
                 }
@@ -64,9 +82,9 @@ public class World {
         }
     }
 
-    private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount){
+    private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount) {
         amount--;
-        for (Location neighbor : location.getNeighbors()) {
+       /* for (Location neighbor : location.getNeighbors()) {
             if (!neighbor.isLand() || neighbor.getKey().equals("SEA")) {
                 Plate plate = neighbor.getTectonicPlate();
                 neighbor.setLand(true);
@@ -77,23 +95,20 @@ public class World {
                 collisionLocations.remove(neighbor);
                 movingPlate.add(neighbor);
             }
-        }
+        }*/
 
-        if(amount > 0){
+        if (amount > 0) {
             createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
         }
     }
 
     private void generateLand() {
-        for (Location[] locations : world) {
-            for(Location location:locations) {
+        for (int x = 0; x < world.length; x ++) {
+            for (int z = 0; z < world[x].length; z++) {
+                Location location = world[x][z];
                 location.setShape(noise.makeLand(location.getShape(), location.getPosition().x, location.getPosition().z));
             }
         }
-
-       /* while (isLocationEmpty()) {
-            fillEmptyLocations();
-        }*/
         System.out.println("Generated Land");
     }
 
@@ -170,10 +185,10 @@ public class World {
         return copyPlates;
     }
 
-    private boolean isLocationEmpty(){
+    private boolean isLocationEmpty() {
         for (Location[] locations : world) {
-            for(Location location:locations) {
-                if(location.getTectonicPlate() == null){
+            for (Location location : locations) {
+                if (location.getTectonicPlate() == null) {
                     return true;
                 }
             }
