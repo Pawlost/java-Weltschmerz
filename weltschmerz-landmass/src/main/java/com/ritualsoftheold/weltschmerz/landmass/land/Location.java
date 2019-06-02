@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.noise.Shape;
-import com.ritualsoftheold.weltschmerz.noise.generator.ChunkNoise;
+import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 
 public class Location {
 
@@ -15,7 +15,6 @@ public class Location {
     private Position currentChunk;
     private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X/16;
     private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z/16;
-    private static final float VOLATILITY = 3;
     private ChunkNoise noise;
 
     public Location(int x, int z, long seed) {
@@ -55,10 +54,10 @@ public class Location {
                                 position = chunkElevation[posX - 1][posZ];
                             }
 
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                                position = position - VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                                position = position + VOLATILITY;
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
+                                position = position - Constants.VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
+                                position = position + Constants.VOLATILITY;
                             }
                             chunkElevation[posX][posZ] = position;
                         }
@@ -75,10 +74,10 @@ public class Location {
                                 position = chunkElevation[posX][posZ - 1];
                             }
 
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                                position = position - VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                                position = position + VOLATILITY;
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
+                                position = position - Constants.VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
+                                position = position + Constants.VOLATILITY;
                             }
                             chunkElevation[posX][posZ] = position;
                         }
@@ -95,10 +94,10 @@ public class Location {
                                 position = chunkElevation[posX][posZ + 1];
                             }
 
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                                position = position - VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                                position = position + VOLATILITY;
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
+                                position = position - Constants.VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
+                                position = position + Constants.VOLATILITY;
                             }
                             chunkElevation[posX][posZ] = position;
 
@@ -116,10 +115,10 @@ public class Location {
                                 position = chunkElevation[posX + 1][posZ];
                             }
 
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                                position = position - VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                                position = position + VOLATILITY;
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
+                                position = position - Constants.VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
+                                position = position + Constants.VOLATILITY;
                             }
                             chunkElevation[posX][posZ] = position;
                         }
@@ -148,7 +147,7 @@ public class Location {
         }
 
         currentChunk = new Position(Math.abs(posX/16) % CHUNK_IN_SECTOR_X, Math.abs(posZ/16) % CHUNK_IN_SECTOR_Z);
-        noise.generateNoise(getMin(), getMax());
+        noise.generateNoise(shape.key, chunkElevation[currentChunk.x][currentChunk.z]);
         return (((int)(chunkElevation[currentChunk.x][currentChunk.z])/16)*16);
     }
 
@@ -170,19 +169,9 @@ public class Location {
     }
 
     public double getMin(){
-        double chunkElevationValue = chunkElevation[currentChunk.x][currentChunk.z];
-        if(chunkElevationValue < 0){
-            return Math.abs(shape.min) + ((16-(Math.abs(chunkElevationValue)%16))*4);
-        }else{
-            return Math.abs(shape.min) + ((Math.abs((chunkElevationValue)%16))*4);
-        }
+        return noise.getMin();
     }
     public double getMax(){
-        double chunkElevationValue = chunkElevation[currentChunk.x][currentChunk.z];
-        if(chunkElevationValue < 0){
-            return Math.abs(shape.max) + ((16-(Math.abs(chunkElevationValue)%16))*4);
-        }else{
-            return Math.abs(shape.max) + ((Math.abs((chunkElevationValue)%16))*4);
-        }
+        return noise.getMax();
     }
 }

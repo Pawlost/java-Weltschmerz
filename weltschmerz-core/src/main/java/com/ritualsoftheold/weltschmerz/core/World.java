@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.core;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -107,6 +107,9 @@ public class World {
             for (int z = 0; z < world[x].length; z++) {
                 Location location = world[x][z];
                 location.setShape(noise.makeLand(location.getShape(), location.position.x, location.position.z));
+              /*  if(x == 0 && z ==0){
+                    location.setShape(conf.shapes.get("MOUNTAIN"));
+                }*/
             }
         }
         System.out.println("Generated Land");

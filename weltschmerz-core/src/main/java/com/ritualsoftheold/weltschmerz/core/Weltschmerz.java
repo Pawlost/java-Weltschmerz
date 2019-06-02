@@ -4,7 +4,7 @@ import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
 
 import com.ritualsoftheold.weltschmerz.landmass.land.Position;
-import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

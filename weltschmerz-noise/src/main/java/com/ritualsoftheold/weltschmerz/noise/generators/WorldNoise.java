@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.noise.generator;
+package com.ritualsoftheold.weltschmerz.noise.generators;
 
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.Generation;

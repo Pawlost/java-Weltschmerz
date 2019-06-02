@@ -1,8 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
-import com.ritualsoftheold.weltschmerz.noise.Shape;
-import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.noise.generator.ChunkNoise;
+import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 
 import javax.swing.*;
 import java.awt.*;

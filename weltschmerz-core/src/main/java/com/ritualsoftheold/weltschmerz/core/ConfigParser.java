@@ -49,7 +49,7 @@ public class ConfigParser {
                 true,"HILL", Color.ORANGE);
         shapes.put("HILL", shape);
 
-        shape = new  Shape(shapes.get("HILL").max,  config.getDouble("level.MOUNTAIN"), 2,
+        shape = new  Shape(shapes.get("HILL").max, config.getDouble("level.MOUNTAIN"), 2,
                 true,"MOUNTAIN", Color.GRAY);
         shapes.put("MOUNTAIN", shape);
 
