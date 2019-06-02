@@ -26,7 +26,7 @@ public class Canvas extends JPanel {
         Graphics g = image.getGraphics();
 
         g.setColor(location.getShape().color);
-        Position position = location.getPosition();
+        Position position = location.position;
         g.fillRect(position.x, position.z, position.width, position.height);
 
         this.repaint();

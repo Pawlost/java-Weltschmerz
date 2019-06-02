@@ -15,7 +15,7 @@ public class World {
     private WorldNoise noise;
 
     public World(Configuration configuration, WorldNoise noise) {
-        System.out.println("Seting locations");
+        System.out.println("Setting locations");
         this.noise = noise;
         this.conf = configuration;
 
@@ -38,7 +38,7 @@ public class World {
             }
         }
 
-        for (int x = world.length - 1; x >= 0; x--) {
+       for (int x = world.length - 1; x >= 0; x--) {
             for (int z = world[x].length - 1; z >= 0; z--) {
                 world[x][z].setChunks(true);
             }
@@ -106,7 +106,10 @@ public class World {
         for (int x = 0; x < world.length; x ++) {
             for (int z = 0; z < world[x].length; z++) {
                 Location location = world[x][z];
-                location.setShape(noise.makeLand(location.getShape(), location.getPosition().x, location.getPosition().z));
+                location.setShape(noise.makeLand(location.getShape(), location.position.x, location.position.z));
+                if(location.position.x == 0 && location.position.z == 0){
+                    location.setShape(conf.shapes.get("OCEAN"));
+                }
             }
         }
         System.out.println("Generated Land");

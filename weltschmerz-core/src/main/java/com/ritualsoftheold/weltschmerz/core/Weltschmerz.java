@@ -1,7 +1,8 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+import com.ritualsoftheold.weltschmerz.noise.Configuration;
+
 import com.ritualsoftheold.weltschmerz.landmass.land.Position;
 import com.ritualsoftheold.weltschmerz.noise.generator.WorldNoise;
 
@@ -20,7 +21,7 @@ public class Weltschmerz {
         for (Location[] locations : weltschmerz.world.getLocations()) {
             for (Location location : locations) {
                 g.setColor(location.getShape().color);
-                Position rectangle = location.getPosition();
+                Position rectangle = location.position;
                 g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
             }
         }
@@ -46,11 +47,12 @@ public class Weltschmerz {
     }
 
     public String getSectorName(){
-        return currentSector.getKey();
+        return currentSector.getName();
     }
 
-    public void setChunk(int x, int z){
+    public float setChunk(int x, int z){
         chunkValues = currentSector.getChunkValues(x, z);
+        return currentSector.getY();
     }
 
     //For future use
@@ -77,7 +79,11 @@ public class Weltschmerz {
         return 1;
     }
 
-    public double getY(){
-        return currentSector.getY();
+    public int getSectorPostionX(){
+        return currentSector.position.x;
+    }
+
+    public int getSectorPostionZ(){
+        return currentSector.position.z;
     }
 }
