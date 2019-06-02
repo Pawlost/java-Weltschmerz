@@ -45,16 +45,19 @@ public class Location {
     public void setChunks(boolean reverse) {
         if (!shape.key.equals("MOUNTAIN") && !shape.key.equals("OCEAN")) {
             if (!reverse) {
-            for (int posX = 0; posX < chunkElevation.length; posX++) {
-                for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
+                for (int posX = 0; posX < chunkElevation.length; posX++) {
+                    for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
                         double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
                         if (position == chunkElevation[posX][posZ]) {
-                            if (posX ==  0) {
-                                position = neighbors[0].getChunkElevation()[chunkElevation.length - 1][posZ];
+                            if (posX == 0) {
+                                position = neighbors[0].chunkElevation[chunkElevation.length - 1][posZ];
                             } else {
                                 position = chunkElevation[posX - 1][posZ];
                             }
-                            if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
+
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
+                                position = position - VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
                                 position = position + VOLATILITY;
                             }
                             chunkElevation[posX][posZ] = position;
@@ -62,61 +65,66 @@ public class Location {
                     }
                 }
 
-            /*for (int posX = 0; posX < chunkElevation.length; posX++) {
-                for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
-                    double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                    if (position == chunkElevation[posX][posZ] && !shape.key.equals("MOUNTAIN") && !shape.key.equals("OCEAN")) {
-                        if (posZ == 0) {
-                            position = neighbors[1].getChunkElevation()[posX][0] - VOLATILITY;
-                        } else {
-                            position = chunkElevation[posX][posZ-1] + VOLATILITY;
-                        }
-                        chunkElevation[posX][posZ] = position;
-                    }
-                }
-            }*/
-            } else {
-          /* for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
-                for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
-                    double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                    if (position == chunkElevation[posX][posZ]) {
-                        if (posZ == chunkElevation[posX].length - 1) {
-                            position = neighbors[3].getChunkElevation()[posX][0];
-                        } else {
-                            position = chunkElevation[posX][posZ + 1];
-                        }
+                for (int posX = 0; posX < chunkElevation.length; posX++) {
+                    for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
+                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
+                        if (position == chunkElevation[posX][posZ]) {
+                            if (posZ == 0) {
+                                position = neighbors[1].chunkElevation[posX][chunkElevation[posX].length - 1];
+                            } else {
+                                position = chunkElevation[posX][posZ - 1];
+                            }
 
-                        if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                            position = position - VOLATILITY;
-                        } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                            position = position - VOLATILITY;
-                        }
-                        chunkElevation[posX][posZ] = position;
-
-                    }
-                }
-            }
-
-           for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
-                for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
-                    double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                    if (position == chunkElevation[posX][posZ] && !shape.key.equals("MOUNTAIN") && !shape.key.equals("OCEAN")) {
-                        if (posX == chunkElevation.length - 1) {
-                            position = neighbors[2].getChunkElevation()[0][posZ];
-                        } else {
-                            position = chunkElevation[posX + 1][posZ];
-                        }
-
-                        if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
-                            position = position - VOLATILITY;
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
+                                position = position - VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
+                                position = position + VOLATILITY;
+                            }
                             chunkElevation[posX][posZ] = position;
-                        } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
-                            position = position - VOLATILITY;
                         }
-                 chunkElevation[posX][posZ] = position;
                     }
                 }
-            }*/
+            } else {
+                for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
+                    for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
+                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
+                        if (position == chunkElevation[posX][posZ]) {
+                            if (posZ == chunkElevation[posX].length - 1) {
+                                position = neighbors[3].chunkElevation[posX][0];
+                            } else {
+                                position = chunkElevation[posX][posZ + 1];
+                            }
+
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
+                                position = position - VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
+                                position = position + VOLATILITY;
+                            }
+                            chunkElevation[posX][posZ] = position;
+
+                        }
+                    }
+                }
+
+                for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
+                    for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
+                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
+                        if (position == chunkElevation[posX][posZ]) {
+                            if (posX == chunkElevation.length - 1) {
+                                position = neighbors[2].chunkElevation[0][posZ];
+                            } else {
+                                position = chunkElevation[posX + 1][posZ];
+                            }
+
+                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + VOLATILITY) {
+                                position = position - VOLATILITY;
+                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - VOLATILITY) {
+                                position = position + VOLATILITY;
+                            }
+                            chunkElevation[posX][posZ] = position;
+                        }
+                    }
+                }
             }
         }
     }
@@ -151,6 +159,7 @@ public class Location {
         return chunkValues;
     }
 
+
     public String getName() {
         return shape.key;
     }
@@ -168,14 +177,20 @@ public class Location {
         return (((int)(chunkElevation[currentChunk.x][currentChunk.z])/16)*16);
     }
 
-    public double[][] getChunkElevation() {
-        return chunkElevation;
-    }
-
     public double getMin(){
-        return Math.abs(shape.min) + ((16-(Math.abs(chunkElevation[currentChunk.x][currentChunk.z])%16))*4);
+        double chunkElevationValue = chunkElevation[currentChunk.x][currentChunk.z];
+        if(chunkElevationValue < 0){
+            return Math.abs(shape.min) + ((16-(Math.abs(chunkElevationValue)%16))*4);
+        }else{
+            return Math.abs(shape.min) + ((Math.abs((chunkElevationValue)%16))*4);
+        }
     }
     public double getMax(){
-        return Math.abs(shape.max) + ((16-(Math.abs(chunkElevation[currentChunk.x][currentChunk.z])%16))*4);
+        double chunkElevationValue = chunkElevation[currentChunk.x][currentChunk.z];
+        if(chunkElevationValue < 0){
+            return Math.abs(shape.max) + ((16-(Math.abs(chunkElevationValue)%16))*4);
+        }else{
+            return Math.abs(shape.max) + ((Math.abs((chunkElevationValue)%16))*4);
+        }
     }
 }
