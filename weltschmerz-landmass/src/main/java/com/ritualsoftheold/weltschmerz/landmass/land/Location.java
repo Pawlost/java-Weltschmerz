@@ -16,11 +16,11 @@ public class Location {
     private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X/16;
     private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z/16;
     private static final float VOLATILITY = 3;
+    private ChunkNoise noise;
 
     public Location(int x, int z, long seed) {
         position = new Position(x, z, 1, 1);
         chunkElevation = new double[CHUNK_IN_SECTOR_X][CHUNK_IN_SECTOR_Z];
-
         this.seed = seed;
         neighbors = new Location[4];
     }
@@ -42,7 +42,7 @@ public class Location {
         }
     }
 
-    public void setChunks(boolean reverse) {
+    public void setElevation(boolean reverse) {
         if (!shape.key.equals("MOUNTAIN") && !shape.key.equals("OCEAN")) {
             if (!reverse) {
                 for (int posX = 0; posX < chunkElevation.length; posX++) {
@@ -133,9 +133,8 @@ public class Location {
         return shape;
     }
 
-    public double[][] getChunkValues(int posX, int posZ) {
-        double[][] chunkValues = new double[64][64];
-        ChunkNoise noise = new ChunkNoise(seed);
+    public float setChunk(int posX, int posZ) {
+        noise = new ChunkNoise(seed);
 
         if(posX > 0) {
             posX = posX % Constants.DEFAULT_MAX_SECTOR_X;
@@ -150,13 +149,11 @@ public class Location {
 
         currentChunk = new Position(Math.abs(posX/16) % CHUNK_IN_SECTOR_X, Math.abs(posZ/16) % CHUNK_IN_SECTOR_Z);
         noise.generateNoise(getMin(), getMax());
+        return (((int)(chunkElevation[currentChunk.x][currentChunk.z])/16)*16);
+    }
 
-        for (int x = 0; x < 64; x++) {
-            for (int z = 0; z < 64; z++) {
-                chunkValues[x][z] = noise.getNoise(x + posX * 4, z + posZ * 4);
-            }
-        }
-        return chunkValues;
+    public double getNoise(int x, int z){
+        return noise.getNoise(x + currentChunk.x * 16 * 4, z + currentChunk.z * 16 *4);
     }
 
 
@@ -170,11 +167,6 @@ public class Location {
 
     public Plate getTectonicPlate() {
         return tectonicPlate;
-    }
-
-    public float getY(){
-        System.out.println((int) (((chunkElevation[currentChunk.x][currentChunk.z])/16)*16));
-        return (((int)(chunkElevation[currentChunk.x][currentChunk.z])/16)*16);
     }
 
     public double getMin(){

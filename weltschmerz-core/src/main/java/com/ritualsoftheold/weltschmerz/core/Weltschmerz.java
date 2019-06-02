@@ -30,7 +30,6 @@ public class Weltschmerz {
 
     private Configuration configuration;
     public final World world;
-    private double[][] chunkValues;
     private int grassID;
     private int dirtID;
     private Location currentSector;
@@ -51,8 +50,7 @@ public class Weltschmerz {
     }
 
     public float setChunk(int x, int z){
-        chunkValues = currentSector.getChunkValues(x, z);
-        return currentSector.getY();
+        return currentSector.setChunk(x, z);
     }
 
     //For future use
@@ -70,7 +68,7 @@ public class Weltschmerz {
             return 1;
         }
 
-        long size = Math.round(chunkValues[x][z]);
+        long size = Math.round(currentSector.getNoise(x, z));
         if (size > y) {
             return dirtID;
         } else if (size == y) {

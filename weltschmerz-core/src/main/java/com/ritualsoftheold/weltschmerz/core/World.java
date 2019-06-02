@@ -34,13 +34,13 @@ public class World {
 
         for (Location[] locations : world) {
             for (Location location : locations) {
-                location.setChunks(false);
+                location.setElevation(false);
             }
         }
 
        for (int x = world.length - 1; x >= 0; x--) {
             for (int z = world[x].length - 1; z >= 0; z--) {
-                world[x][z].setChunks(true);
+                world[x][z].setElevation(true);
             }
         }
 
