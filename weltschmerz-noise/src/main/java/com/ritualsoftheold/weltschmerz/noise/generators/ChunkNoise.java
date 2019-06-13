@@ -6,25 +6,16 @@ import com.sudoplay.joise.module.ModuleFractal;
 
 public class ChunkNoise {
 
-    private ModuleFractal gen;
     private double max;
     private double min;
     private static final int OCTAVES = 3;
     private static final float FREQUENCY = 0.1f;
     private static final int SAMPLES = 1000;
     private  ModuleAutoCorrect mod;
+    private long seed;
 
-    public ChunkNoise(long seed){
-        gen = new ModuleFractal();
-        gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
-        gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
-        gen.setNumOctaves(OCTAVES);
-        gen.setFrequency(FREQUENCY);
-        gen.setType(ModuleFractal.FractalType.FBM);
-        gen.setSeed(seed);
-    }
-
-    public void generateNoise(String level, double chunkElevationValue) {
+    public ChunkNoise(long seed, String level, double chunkElevationValue){
+        this.seed = seed;
         switch (level) {
             case "MOUNTAIN":
                 min = 0;
@@ -48,7 +39,16 @@ public class ChunkNoise {
         }else{
             max = Math.abs(max) + ((Math.abs((chunkElevationValue)%16))*4);
         }
+    }
 
+    public void generateNoise() {
+        ModuleFractal gen = new ModuleFractal();
+        gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
+        gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+        gen.setNumOctaves(OCTAVES);
+        gen.setFrequency(FREQUENCY);
+        gen.setType(ModuleFractal.FractalType.FBM);
+        gen.setSeed(seed);
         mod = new ModuleAutoCorrect(min, max);
         mod.setSource(gen);// set source (can usually be either another Module or a double value; see specific module for details)
         mod.setSamples(SAMPLES); // set how many samples to take
@@ -63,7 +63,7 @@ public class ChunkNoise {
         return max;
     }
 
-    public double getNoise(int x, int z){
+    public double getNoise(double x, double z){
         return mod.get(x, z);
     }
 }

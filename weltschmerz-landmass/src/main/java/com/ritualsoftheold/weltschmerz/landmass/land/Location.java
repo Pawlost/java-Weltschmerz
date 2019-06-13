@@ -4,6 +4,8 @@ import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 
+import java.util.ArrayList;
+
 public class Location {
 
     private long seed;
@@ -12,9 +14,10 @@ public class Location {
     private Location[] neighbors;
     private double[][] chunkElevation;
     public final Position position;
-    private Position currentChunk;
-    private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X/16;
-    private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z/16;
+    private int posX;
+    private int posZ;
+    private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X / 16;
+    private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z / 16;
     private ChunkNoise noise;
 
     public Location(int x, int z, long seed) {
@@ -28,7 +31,7 @@ public class Location {
         return neighbors;
     }
 
-    public void addNeighbor(Location neighbor, int position){
+    public void addNeighbor(Location neighbor, int position) {
         neighbors[position] = neighbor;
     }
 
@@ -133,28 +136,93 @@ public class Location {
     }
 
     public float setChunk(int posX, int posZ) {
-        noise = new ChunkNoise(seed);
-
-        if(posX > 0) {
+        if (posX > 0) {
             posX = posX % Constants.DEFAULT_MAX_SECTOR_X;
-        }else{
-            posX = ((Constants.DEFAULT_MAX_SECTOR_X * Math.abs(posX/Constants.DEFAULT_MAX_SECTOR_X)) + posX)% Constants.DEFAULT_MAX_SECTOR_X;
+        } else {
+            posX = ((Constants.DEFAULT_MAX_SECTOR_X * Math.abs(posX / Constants.DEFAULT_MAX_SECTOR_X)) + posX) % Constants.DEFAULT_MAX_SECTOR_X;
         }
-        if(posX > 0) {
+        if (posZ > 0) {
             posZ = posZ % Constants.DEFAULT_MAX_SECTOR_Z;
-        }else{
-            posZ = ((Constants.DEFAULT_MAX_SECTOR_Z * Math.abs(posZ/Constants.DEFAULT_MAX_SECTOR_X)) + posZ)% Constants.DEFAULT_MAX_SECTOR_Z;
+        } else {
+            posZ = ((Constants.DEFAULT_MAX_SECTOR_Z * Math.abs(posZ / Constants.DEFAULT_MAX_SECTOR_X)) + posZ) % Constants.DEFAULT_MAX_SECTOR_Z;
         }
 
-        currentChunk = new Position(Math.abs(posX/16) % CHUNK_IN_SECTOR_X, Math.abs(posZ/16) % CHUNK_IN_SECTOR_Z);
-        noise.generateNoise(shape.key, chunkElevation[currentChunk.x][currentChunk.z]);
-        return (((int)(chunkElevation[currentChunk.x][currentChunk.z])/16)*16);
+        this.posX = Math.abs(posX / 16) % CHUNK_IN_SECTOR_X;
+        this.posZ = Math.abs(posZ / 16) % CHUNK_IN_SECTOR_Z;
+        noise = new ChunkNoise(seed, shape.key, chunkElevation[this.posX][this.posZ]);
+        return (((int) (chunkElevation[this.posX][this.posZ]) / 16) * 16);
     }
 
-    public double getNoise(int x, int z){
-        return noise.getNoise(x + currentChunk.x * 16 * 4, z + currentChunk.z * 16 *4);
+    public void generateNoise(){
+        noise.generateNoise();
     }
 
+    public double getNoise(int x, int z) {
+        double heightX1;
+        double heightX2;
+        double heightZ1;
+        double heightZ2;
+
+        if (posX > 0) {
+            heightX1 = chunkElevation[posX - 1][posZ];
+        } else {
+            int index = neighbors[0].chunkElevation.length - 1;
+            neighbors[0].setChunk(index, posZ);
+            heightX1 = neighbors[0].getMin();
+        }
+
+        if (posX < chunkElevation.length - 1) {
+            heightX2 = chunkElevation[posX + 1][posZ];
+        } else {
+            neighbors[2].setChunk(0, posZ);
+            heightX2 = neighbors[2].getMin();
+        }
+
+        if (posZ > 0) {
+            heightZ1 = chunkElevation[posX][posZ - 1];
+        } else {
+            int index = neighbors[1].chunkElevation[posX].length - 1;
+            neighbors[1].setChunk(posX, index);
+            heightZ1 = neighbors[1].getMin();
+        }
+
+        if (posZ < chunkElevation[posZ].length - 1) {
+            heightZ2 = chunkElevation[posX][posZ + 1];
+        } else {
+            neighbors[3].setChunk(posX, 0);
+            heightZ2 = neighbors[3].getMin();
+        }
+
+        //double lenghtZ1 = (256 * noise.getMin()) / heightZ1;
+        //  double lenghtZ2 = (256 * noise.getMin()) / heightZ2;
+/*
+        ArrayList<Double> values = new ArrayList<>();
+
+        values.add((heightX1 * x); / (256 * CHUNK_IN_SECTOR_X));
+        values.add((heightZ1 * z) / (256 * CHUNK_IN_SECTOR_Z));
+        values.add((heightX2 * x) / (256 * CHUNK_IN_SECTOR_X));
+        values.add((heightZ2 * z) / (256 * CHUNK_IN_SECTOR_Z));
+*/
+        heightX1 = (heightX1 * x) / (256 * (CHUNK_IN_SECTOR_X));
+        heightZ1 = (heightZ1 * z) / (256 * (CHUNK_IN_SECTOR_Z));
+        heightX2 = (heightX2 * x) / (256 * (CHUNK_IN_SECTOR_X));
+        heightZ2 = (heightZ2 * z) / (256 * (CHUNK_IN_SECTOR_Z));
+
+        double finalHeight = 0;
+        if (heightX1 > heightX2) {
+            finalHeight += heightX1;
+        } else if  (heightX2 > heightX1)  {
+            finalHeight += heightX2;
+        }
+
+        if (heightZ1 > heightZ2) {
+            finalHeight += heightZ1;
+        } else if (heightZ2 > heightZ1)  {
+            finalHeight += heightZ2;
+        }
+
+        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight;
+    }
 
     public String getName() {
         return shape.key;
@@ -168,10 +236,11 @@ public class Location {
         return tectonicPlate;
     }
 
-    public double getMin(){
+    public double getMin() {
         return noise.getMin();
     }
-    public double getMax(){
+
+    public double getMax() {
         return noise.getMax();
     }
 }

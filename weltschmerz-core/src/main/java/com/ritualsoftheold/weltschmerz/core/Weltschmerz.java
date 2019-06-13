@@ -50,7 +50,9 @@ public class Weltschmerz {
     }
 
     public float setChunk(int x, int z){
-        return currentSector.setChunk(x, z);
+        float y = currentSector.setChunk(x, z);
+        currentSector.generateNoise();
+        return y;
     }
 
     //For future use
@@ -60,21 +62,21 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        if (y < currentSector.getMin()){
+        /*if (y < currentSector.getMin()){
             return dirtID;
         }
 
         if (y > currentSector.getMax()){
             return 1;
-        }
-
+        }*/
         long size = Math.round(currentSector.getNoise(x, z));
         if (size > y) {
             return dirtID;
         } else if (size == y) {
             return grassID;
+        }else {
+            return 1;
         }
-        return 1;
     }
 
     public int getSectorPostionX(){

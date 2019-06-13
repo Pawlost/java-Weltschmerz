@@ -14,7 +14,7 @@ public class ChunkNoiseCanvas extends JPanel {
     }
 
     public void updateImage() {
-        ChunkNoise noise = new ChunkNoise(1635);
+        ChunkNoise noise = new ChunkNoise(1635, "", 1);
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 

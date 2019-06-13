@@ -107,9 +107,9 @@ public class World {
             for (int z = 0; z < world[x].length; z++) {
                 Location location = world[x][z];
                 location.setShape(noise.makeLand(location.getShape(), location.position.x, location.position.z));
-              /*  if(x == 0 && z ==0){
+                if(x == 0 && z ==0){
                     location.setShape(conf.shapes.get("MOUNTAIN"));
-                }*/
+                }
             }
         }
         System.out.println("Generated Land");
