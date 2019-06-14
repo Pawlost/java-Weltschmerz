@@ -3,8 +3,7 @@ package com.ritualsoftheold.weltschmerz.landmass.land;
 import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
-
-import java.util.ArrayList;
+import org.checkerframework.checker.signedness.qual.Constant;
 
 public class Location {
 
@@ -193,35 +192,25 @@ public class Location {
             heightZ2 = neighbors[3].getMin();
         }
 
-        //double lenghtZ1 = (256 * noise.getMin()) / heightZ1;
-        //  double lenghtZ2 = (256 * noise.getMin()) / heightZ2;
-/*
-        ArrayList<Double> values = new ArrayList<>();
-
-        values.add((heightX1 * x); / (256 * CHUNK_IN_SECTOR_X));
-        values.add((heightZ1 * z) / (256 * CHUNK_IN_SECTOR_Z));
-        values.add((heightX2 * x) / (256 * CHUNK_IN_SECTOR_X));
-        values.add((heightZ2 * z) / (256 * CHUNK_IN_SECTOR_Z));
-*/
-        heightX1 = (heightX1 * x) / (256 * (CHUNK_IN_SECTOR_X));
-        heightZ1 = (heightZ1 * z) / (256 * (CHUNK_IN_SECTOR_Z));
-        heightX2 = (heightX2 * x) / (256 * (CHUNK_IN_SECTOR_X));
-        heightZ2 = (heightZ2 * z) / (256 * (CHUNK_IN_SECTOR_Z));
+        heightX1 = ((heightX1 * x) / ((256 * CHUNK_IN_SECTOR_X) + (256 + Constants.VOLATILITY)));
+        heightZ1 = ((heightZ1 * z) / ((256 * CHUNK_IN_SECTOR_Z) + (256 + Constants.VOLATILITY)));
+        heightX2 = ((heightX2 * x) / ((256 * CHUNK_IN_SECTOR_X) + (256 + Constants.VOLATILITY)));
+        heightZ2 = ((heightZ2 * z) / ((256 * CHUNK_IN_SECTOR_Z) + (256 + Constants.VOLATILITY)));
 
         double finalHeight = 0;
         if (heightX1 > heightX2) {
             finalHeight += heightX1;
-        } else if  (heightX2 > heightX1)  {
+        } else if (heightX2 > heightX1) {
             finalHeight += heightX2;
         }
 
         if (heightZ1 > heightZ2) {
             finalHeight += heightZ1;
-        } else if (heightZ2 > heightZ1)  {
+        } else if (heightZ2 > heightZ1) {
             finalHeight += heightZ2;
         }
 
-        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight;
+        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight + (Constants.VOLATILITY * 4);
     }
 
     public String getName() {
