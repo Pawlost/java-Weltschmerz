@@ -13,5 +13,6 @@ allprojects {
     // In this section you declare the dependencies for your production and test code
     dependencies {
         testCompile 'junit:junit:4.12'
+        compile 'com.squidpony:squidlib-util:3.0.0-b9'
     }
 }

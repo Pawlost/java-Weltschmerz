@@ -1,85 +1,53 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Point;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
+import squidpony.squidmath.XoRoRNG;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
     private Configuration conf;
-    private Location[][] world;
+    private HashMap<Point,Location> world;
+    private ArrayList<Point> points;
     private ArrayList<Plate> plates;
     private WorldNoise noise;
+    private XoRoRNG random;
 
     public World(Configuration configuration, WorldNoise noise) {
         System.out.println("Setting locations");
         this.noise = noise;
         this.conf = configuration;
+        this.random = new XoRoRNG(conf.seed);
 
-        world = new Location[conf.width][conf.height];
+        world = new HashMap<Point, Location>();
+        points = new ArrayList<>();
         plates = new ArrayList<>();
 
-        for (int x = 0; x < conf.width; x++) {
-            for (int z = 0; z < conf.height; z++) {
-                Location location = new Location(x, z, configuration.seed + 100 + x + z);
-                world[x][z] = location;
-            }
+        for (int spread = 0; spread < conf.detail; spread++) {
+            int x = random.nextInt();
+            int y = random.nextInt();
+            Point point = new Point(x, y);
+
+            points.add(point);
+
+            Location location = new Location(point, random.nextLong());
+
+            world.put(point, location);
         }
 
         generateLand();
-        connectNeighbors();
-
-        for (Location[] locations : world) {
-            for (Location location : locations) {
-                location.setElevation(false);
-            }
-        }
-
-       for (int x = world.length - 1; x >= 0; x--) {
-            for (int z = world[x].length - 1; z >= 0; z--) {
-                world[x][z].setElevation(true);
-            }
-        }
-
+        /*
         for (Plate plate : getPlates()) {
             connectPlate(plate);
         }
-
+*/
         System.out.println("Locations set");
-    }
-
-    private void connectNeighbors() {
-        for (int x = 0; x < conf.width; x++) {
-            for (int z = 0; z < conf.height; z++) {
-                Location location = world[x][z];
-                if (x > 0) {
-                    location.addNeighbor(world[x - 1][z], 0);
-                } else {
-                    location.addNeighbor(world[conf.width - 1][z], 0);
-                }
-
-                if (x < conf.width - 1) {
-                    location.addNeighbor(world[x + 1][z], 2);
-                } else {
-                    location.addNeighbor(world[0][z], 2);
-                }
-
-                if (z > 0) {
-                    location.addNeighbor(world[x][z - 1], 1);
-                } else {
-                    location.addNeighbor(world[x][conf.height - 1], 1);
-                }
-
-                if(z < conf.height - 1){
-                    location.addNeighbor(world[x][z + 1], 3);
-                } else {
-                    location.addNeighbor(world[x][0], 3);
-                }
-            }
-        }
     }
 
     private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount) {
@@ -103,15 +71,10 @@ public class World {
     }
 
     private void generateLand() {
-        for (int x = 0; x < world.length; x ++) {
-            for (int z = 0; z < world[x].length; z++) {
-                Location location = world[x][z];
-                location.setShape(noise.makeLand(location.getShape(), location.position.x, location.position.z));
-                if(x == 0 && z ==0){
-                    location.setShape(conf.shapes.get("MOUNTAIN"));
-                }
-            }
+        for (Location location:world.values()) {
+            location.setShape(noise.makeLand(location.getShape(), location.position));
         }
+        world.get(points.get(0)).setShape(conf.shapes.get("MOUNTAIN"));
         System.out.println("Generated Land");
     }
 
@@ -131,7 +94,7 @@ public class World {
     }
 
     private void fillEmptyLocations() {
-        for (Location[] locations : world) {
+   /*     for (Location[] locations : world) {
             for (Location location : locations) {
                 int index = 0;
                 Location[] neighbors = location.getNeighbors();
@@ -156,10 +119,10 @@ public class World {
                 }
             }
         }
-    }
+    }*/
 
     private void generatePlates() {
-        int range = world.length;
+      /*  int range = world.length;
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         for (int i = conf.tectonicPlates; i > 1; i--) {

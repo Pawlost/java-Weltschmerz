@@ -1,9 +1,9 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.landmass.Constants;
+import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Point;
 import com.ritualsoftheold.weltschmerz.noise.Shape;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
-import org.checkerframework.checker.signedness.qual.Constant;
 
 public class Location {
 
@@ -12,15 +12,15 @@ public class Location {
     private Shape shape;
     private Location[] neighbors;
     private double[][] chunkElevation;
-    public final Position position;
+    public final Polygon position;
     private int posX;
     private int posZ;
     private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X / 16;
     private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z / 16;
     private ChunkNoise noise;
 
-    public Location(int x, int z, long seed) {
-        position = new Position(x, z, 1, 1);
+    public Location(Polygon point, long seed) {
+        this.position = point;
         chunkElevation = new double[CHUNK_IN_SECTOR_X][CHUNK_IN_SECTOR_Z];
         this.seed = seed;
         neighbors = new Location[4];

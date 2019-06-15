@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.core;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.noise.Configuration;
 
-import com.ritualsoftheold.weltschmerz.landmass.land.Position;
+import com.ritualsoftheold.weltschmerz.landmass.land.Polygon;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ public class Weltschmerz {
         for (Location[] locations : weltschmerz.world.getLocations()) {
             for (Location location : locations) {
                 g.setColor(location.getShape().color);
-                Position rectangle = location.position;
+                Polygon rectangle = location.position;
                 g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
             }
         }

@@ -7,6 +7,7 @@ import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
 
+
 public class WorldNoise extends Generation {
 
     private ModuleFractal gen;
@@ -64,11 +65,12 @@ public class WorldNoise extends Generation {
         return (mod.get(nx, ny, nz, nw));
     }
 
-    public Shape makeLand(Shape shape, int x, int z) {
-        if(shape == null) {
+    public Shape makeLand(Shape shape, Polygon polygon) {
+       if(shape == null) {
             double y = getNoise(x, z);
             shape = landGeneration(y);
         }
+
         return shape;
     }
 

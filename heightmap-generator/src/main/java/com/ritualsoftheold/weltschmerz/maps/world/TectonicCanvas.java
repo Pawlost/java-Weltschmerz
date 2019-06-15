@@ -3,7 +3,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.landmass.land.Position;
+import com.ritualsoftheold.weltschmerz.landmass.land.Polygon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public class TectonicCanvas extends JPanel {
 
         for (Plate plate : world.getPlates()) {
             for (Location location : plate) {
-                Position chunk = location.position;
+                Polygon chunk = location.position;
                 g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
             }
         }
@@ -46,7 +46,7 @@ public class TectonicCanvas extends JPanel {
         Plate plate = world.getPlates()[0];
         Location location = plate.get(index);
 
-        Position chunk = location.position;
+        Polygon chunk = location.position;
         g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
 
         this.repaint();
@@ -65,7 +65,7 @@ public class TectonicCanvas extends JPanel {
             float b = rand.nextFloat();
             g.setColor(new Color(r, z, b));
             for (Location location : plate) {
-                Position chunk = location.position;
+                Polygon chunk = location.position;
                 g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
             }
         }
@@ -82,7 +82,7 @@ public class TectonicCanvas extends JPanel {
         g.setColor(Color.GREEN);
         Location location = plate.get(index);
 
-        Position chunk = location.position;
+        Polygon chunk = location.position;
         g.fillRect(chunk.x, chunk.z, chunk.width, chunk.height);
 
         drawWorld();
