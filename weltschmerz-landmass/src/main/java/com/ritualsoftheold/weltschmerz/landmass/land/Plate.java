@@ -23,7 +23,7 @@ public class Plate extends ArrayList<Location>{
         this.add(centroid);
         main:
         while (this.size() < range && isFreeTectonicPlate(range, world)) {
-            Location[] neighbors = centroid.getNeighbors();
+            //Location[] neighbors = centroid.getNeighbors();
             int loop = 0;
 
             while (this.contains(centroid)) {
@@ -31,26 +31,26 @@ public class Plate extends ArrayList<Location>{
                     break main;
                 }
                 centroid = this.get(loop);
-                for (Location location : neighbors) {
+                /*for (Location location : neighbors) {
                     if (!this.contains(location) && location.getTectonicPlate() == null) {
                         centroid = location;
                     }
-                }
+                }*/
                 loop++;
             }
 
-            for (Location location : neighbors) {
+            /*for (Location location : neighbors) {
                 if (location.getTectonicPlate() == null) {
                     this.add(location);
                     location.setTectonicPlate(this);
                 }
-            }
+            }*/
         }
     }
 
     public void makeNeighborPlates(){
         for(Location location:this) {
-            Location[] neighbors = location.getNeighbors();
+         /*   Location[] neighbors = location.getNeighbors();
             for(Location neighbor:neighbors){
                 if(neighbor.getTectonicPlate() != this) {
                     borderLocations.add(location);
@@ -58,7 +58,7 @@ public class Plate extends ArrayList<Location>{
                         neighborPlates.add(neighbor.getTectonicPlate());
                     }
                 }
-            }
+            }*/
         }
     }
 

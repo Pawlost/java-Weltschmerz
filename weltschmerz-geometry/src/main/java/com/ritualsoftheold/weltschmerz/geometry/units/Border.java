@@ -1,12 +1,12 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.geometry.units;
 
 public class Border{
     private Vertex VertexA;
     private Vertex VertexB;
-    private Centroid leftDatum;
-    private Centroid rightDatum;
+    private Point leftDatum;
+    private Point rightDatum;
 
-    public Border(Vertex a, Vertex b, Centroid ld, Centroid rd) {
+    public Border(Vertex a, Vertex b, Point ld, Point rd) {
         if (a.isNaN() || b.isNaN())
                throw new IllegalArgumentException("Undefined vertices" + " not allowed in an Edge.");
 
@@ -32,19 +32,19 @@ public class Border{
         return VertexB;
     }
 
-    public Centroid getDatumA() {
+    public Point getDatumA() {
         return leftDatum;
     }
 
-    public Centroid getDatumB() {
+    public Point getDatumB() {
         return rightDatum;
     }
 
-    public void setDatumA(Centroid leftDatum) {
+    public void setDatumA(Point leftDatum) {
         this.leftDatum = leftDatum;
     }
 
-    public void setDatumB(Centroid rightDatum) {
+    public void setDatumB(Point rightDatum) {
         this.rightDatum = rightDatum;
     }
 

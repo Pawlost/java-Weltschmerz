@@ -2,10 +2,10 @@ package com.ritualsoftheold.weltschmerz.maps;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.maps.noise.ChunkNoiseCanvas;
 import com.ritualsoftheold.weltschmerz.maps.noise.WorldNoiseCanvas;
-import com.ritualsoftheold.weltschmerz.maps.world.Canvas;
+import com.ritualsoftheold.weltschmerz.maps.world.ElevationCanvas;
 import com.ritualsoftheold.weltschmerz.maps.world.TectonicCanvas;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class All {
         framePlate.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Weltschmerz weltschmerz = new Weltschmerz();
-        com.ritualsoftheold.weltschmerz.maps.world.Canvas canvas = new Canvas(width, height, weltschmerz.world);
+        ElevationCanvas canvas = new ElevationCanvas(width, height, weltschmerz.world);
         TectonicCanvas tectonicCanvas = new TectonicCanvas(configuration.width, configuration.height,
                 weltschmerz.world);
 

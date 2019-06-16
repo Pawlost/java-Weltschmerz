@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.Shape;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.typesafe.config.Config;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ public class ConfigParser {
 
         configuration.volcanoes = conf.getInt("elevation.volcanoes");
         configuration.tectonicPlates = conf.getInt("elevation.tectonicPlates");
-        configuration.islandSize = conf.getInt("elevation.mountainLenght");
+        //configuration.islandSize = conf.getInt("elevation.mountainLenght");
 
         configuration.shapes = parseShape(conf);
         return configuration;

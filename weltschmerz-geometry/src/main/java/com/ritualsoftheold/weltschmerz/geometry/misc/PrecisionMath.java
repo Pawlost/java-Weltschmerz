@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.geometry.misc;
 
 public class PrecisionMath {
     private static double precision = 10000000000.0;

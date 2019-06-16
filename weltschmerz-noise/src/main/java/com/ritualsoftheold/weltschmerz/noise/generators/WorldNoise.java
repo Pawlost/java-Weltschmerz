@@ -1,8 +1,9 @@
 package com.ritualsoftheold.weltschmerz.noise.generators;
 
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.noise.Generation;
-import com.ritualsoftheold.weltschmerz.noise.Shape;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
@@ -67,7 +68,7 @@ public class WorldNoise extends Generation {
 
     public Shape makeLand(Shape shape, Polygon polygon) {
        if(shape == null) {
-            double y = getNoise(x, z);
+            double y = getNoise((int)polygon.centroid.x, (int)polygon.centroid.y);
             shape = landGeneration(y);
         }
 

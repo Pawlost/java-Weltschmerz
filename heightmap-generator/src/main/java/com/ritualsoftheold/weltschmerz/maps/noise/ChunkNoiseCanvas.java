@@ -15,13 +15,14 @@ public class ChunkNoiseCanvas extends JPanel {
 
     public void updateImage() {
         ChunkNoise noise = new ChunkNoise(1635, "", 1);
+        noise.generateNoise();
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 float c = (float) (noise.getNoise(x, y));
-                this.image.setRGB(x, y, new Color(c, c, c).getRGB());
+                this.image.setRGB(x, y, new Color(c/14, c/14, c/14).getRGB());
             }
         }
 

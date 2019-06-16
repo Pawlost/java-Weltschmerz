@@ -1,7 +1,7 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.nodes;
+package com.ritualsoftheold.weltschmerz.geometry.fortune.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.units.VoronoiBorder;
 
 public class BorderNode extends Node {
 
@@ -16,10 +16,10 @@ public class BorderNode extends Node {
 
 
     public double Cut(double ys, double x) {
-         double l0 = Edge.LeftData.getX();
-         double l1 = Edge.LeftData.getY();
-         double r0 = Edge.RightData.getX();
-         double r1 = Edge.RightData.getY();
+         double l0 = Edge.LeftData.x;
+         double l1 = Edge.LeftData.y;
+         double r0 = Edge.RightData.x;
+         double r1 = Edge.RightData.y;
 
         double delta;
         if (!Flipped)

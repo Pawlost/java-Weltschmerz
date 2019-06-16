@@ -1,6 +1,7 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.nodes;
+package com.ritualsoftheold.weltschmerz.geometry.fortune.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vertex;
 
 public abstract class Node {
 
@@ -139,30 +140,30 @@ public abstract class Node {
     }
 
 
-    public static Vertex circumCircleCenter(Centroid left, Centroid middle, Centroid right) {
+    public static Vertex circumCircleCenter(Point left, Point middle, Point right) {
         if (left == middle || middle == right || left == right)
             throw new IllegalArgumentException("Need three different points!");
-        double tx = (left.getX() + right.getX()) / 2;
-        double ty = (left.getY() + right.getY()) / 2;
+        double tx = (left.x + right.x) / 2;
+        double ty = (left.y + right.y) / 2;
 
-        double vx = (middle.getX() + right.getX()) / 2;
-        double vy = (middle.getY() + right.getY()) / 2;
+        double vx = (middle.x + right.x) / 2;
+        double vy = (middle.y + right.y) / 2;
 
         double ux, uy, wx, wy;
 
-        if (left.getX() == right.getX()) {
+        if (left.x == right.x) {
             ux = 1;
             uy = 0;
         } else {
-            ux = (right.getY() - left.getY()) / (left.getX() - right.getX());
+            ux = (right.y - left.y) / (left.x - right.x);
             uy = 1;
         }
 
-        if (middle.getX() == right.getX()) {
+        if (middle.x == right.x) {
             wx = -1;
             wy = 0;
         } else {
-            wx = (middle.getY() - right.getY()) / (middle.getX() - right.getX());
+            wx = (middle.y - right.y) / (middle.x - right.x);
             wy = -1;
         }
 

@@ -1,16 +1,19 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.landmass.Constants;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Point;
-import com.ritualsoftheold.weltschmerz.noise.Shape;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
+
+import java.util.ArrayList;
 
 public class Location {
 
-    private long seed;
+    public final long seed;
     private Plate tectonicPlate;
     private Shape shape;
-    private Location[] neighbors;
+    private ArrayList<Location> neighbors;
     private double[][] chunkElevation;
     public final Polygon position;
     private int posX;
@@ -19,19 +22,19 @@ public class Location {
     private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z / 16;
     private ChunkNoise noise;
 
-    public Location(Polygon point, long seed) {
-        this.position = point;
+    public Location(Point point, long seed) {
+        this.position = new Polygon(point);
         chunkElevation = new double[CHUNK_IN_SECTOR_X][CHUNK_IN_SECTOR_Z];
         this.seed = seed;
-        neighbors = new Location[4];
+        neighbors = new ArrayList<>();
     }
 
-    public Location[] getNeighbors() {
+    public ArrayList<Location> getNeighbors() {
         return neighbors;
     }
 
-    public void addNeighbor(Location neighbor, int position) {
-        neighbors[position] = neighbor;
+    public void setNeighbors(ArrayList<Location> neighbors) {
+        this.neighbors = neighbors;
     }
 
     public void setShape(Shape shape) {
@@ -51,7 +54,7 @@ public class Location {
                         double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
                         if (position == chunkElevation[posX][posZ]) {
                             if (posX == 0) {
-                                position = neighbors[0].chunkElevation[chunkElevation.length - 1][posZ];
+                           //     position = neighbors[0].chunkElevation[chunkElevation.length - 1][posZ];
                             } else {
                                 position = chunkElevation[posX - 1][posZ];
                             }
@@ -71,7 +74,7 @@ public class Location {
                         double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
                         if (position == chunkElevation[posX][posZ]) {
                             if (posZ == 0) {
-                                position = neighbors[1].chunkElevation[posX][chunkElevation[posX].length - 1];
+                           //     position = neighbors[1].chunkElevation[posX][chunkElevation[posX].length - 1];
                             } else {
                                 position = chunkElevation[posX][posZ - 1];
                             }
@@ -91,7 +94,7 @@ public class Location {
                         double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
                         if (position == chunkElevation[posX][posZ]) {
                             if (posZ == chunkElevation[posX].length - 1) {
-                                position = neighbors[3].chunkElevation[posX][0];
+                             //   position = neighbors[3].chunkElevation[posX][0];
                             } else {
                                 position = chunkElevation[posX][posZ + 1];
                             }
@@ -112,7 +115,7 @@ public class Location {
                         double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
                         if (position == chunkElevation[posX][posZ]) {
                             if (posX == chunkElevation.length - 1) {
-                                position = neighbors[2].chunkElevation[0][posZ];
+                         //       position = neighbors[2].chunkElevation[0][posZ];
                             } else {
                                 position = chunkElevation[posX + 1][posZ];
                             }
@@ -165,7 +168,7 @@ public class Location {
         if (posX > 0) {
             heightX1 = chunkElevation[posX - 1][posZ];
         } else {
-            int index = neighbors[0].chunkElevation.length - 1;
+           /* int index = neighbors[0].chunkElevation.length - 1;
             neighbors[0].setChunk(index, posZ);
             heightX1 = neighbors[0].getMin();
         }
@@ -209,8 +212,11 @@ public class Location {
         } else if (heightZ2 > heightZ1) {
             finalHeight += heightZ2;
         }
-
+            */
+        }
+        double finalHeight = 0;
         return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight + (Constants.VOLATILITY * 4);
+
     }
 
     public String getName() {

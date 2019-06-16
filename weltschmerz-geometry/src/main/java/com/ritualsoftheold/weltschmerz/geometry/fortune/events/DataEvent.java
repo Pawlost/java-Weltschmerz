@@ -1,21 +1,22 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.events;
+package com.ritualsoftheold.weltschmerz.geometry.fortune.events;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.BorderNode;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.BorderNode;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.Node;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vertex;
+import com.ritualsoftheold.weltschmerz.geometry.units.VoronoiBorder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class DataEvent extends Event {
 
-    private Centroid DataPoint;
+    private Point DataPoint;
 
-    public DataEvent(Centroid centroid) {
-        this.DataPoint = centroid;
+    public DataEvent(Point Point) {
+        this.DataPoint = Point;
     }
 
     //Will return the new root (unchanged except in start-up)
@@ -31,7 +32,7 @@ public class DataEvent extends Event {
         }
 
         // 1. Find the node to be replaced
-        DataNode C = Node.findDataNode(root, ys, DataPoint.getX());
+        DataNode C = Node.findDataNode(root, ys, DataPoint.x);
 
         // 2. Create the subtree (ONE Edge, but two VEdgeNodes)
         VoronoiBorder VE = new VoronoiBorder();
@@ -42,9 +43,9 @@ public class DataEvent extends Event {
         edgeList.add(VE);
 
         Node SubRoot;
-        if (PrecisionMath.eq(VE.LeftData.getY(), VE.RightData.getY())) {
+        if (PrecisionMath.eq(VE.LeftData.y, VE.RightData.y)) {
             DataNode l, r;
-            if (VE.LeftData.getX() < VE.RightData.getX()) {
+            if (VE.LeftData.x < VE.RightData.x) {
                 l = new DataNode(VE.LeftData);
                 r = new DataNode(VE.RightData);
                 SubRoot = new BorderNode(VE, false, l, r);
@@ -85,15 +86,15 @@ public class DataEvent extends Event {
 
     @Override
     public double getX() {
-        return DataPoint.getX();
+        return DataPoint.x;
     }
 
     @Override
     public double getY() {
-        return DataPoint.getY();
+        return DataPoint.y;
     }
 
-    public Centroid getDatum() {
+    public Point getDatum() {
         return DataPoint;
     }
 }

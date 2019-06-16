@@ -1,10 +1,9 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.events;
+package com.ritualsoftheold.weltschmerz.geometry.fortune.events;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
+import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.units.VoronoiBorder;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.Node;
 
 import java.util.ArrayList;
 import java.util.HashSet;

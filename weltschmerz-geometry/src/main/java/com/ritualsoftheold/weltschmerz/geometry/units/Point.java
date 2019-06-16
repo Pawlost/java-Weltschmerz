@@ -1,6 +1,8 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.geometry.units;
 
 public class Point {
+    static final Point UNKNOWN = new Point(Double.NaN, Double.NaN);
+
     public final double x;
     public final double y;
 
@@ -9,7 +11,7 @@ public class Point {
         this.y = y;
     }
 
-    public boolean isNaN() {
+    boolean isNaN() {
         return Double.isNaN(x) || Double.isNaN(y);
     }
 
@@ -24,6 +26,6 @@ public class Point {
     }
 
     public Point clone() throws CloneNotSupportedException {
-        return new Point(x, y);
+        return (Point) super.clone();
     }
 }

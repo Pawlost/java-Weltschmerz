@@ -1,9 +1,8 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 
-import com.ritualsoftheold.weltschmerz.landmass.land.Polygon;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.awt.*;
@@ -18,12 +17,9 @@ public class Weltschmerz {
         BufferedImage image = new BufferedImage(configuration.width, configuration.height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics g = image.getGraphics();
-        for (Location[] locations : weltschmerz.world.getLocations()) {
-            for (Location location : locations) {
-                g.setColor(location.getShape().color);
-                Polygon rectangle = location.position;
-                g.fillRect(rectangle.x, rectangle.z, rectangle.width, rectangle.height);
-            }
+        for (Location location : weltschmerz.world.getLocations()) {
+            g.setColor(location.getShape().color);
+            g.drawPolygon(location.position.getSwingPolygon());
         }
         MapIO.saveHeightmap(image);
     }
@@ -42,7 +38,7 @@ public class Weltschmerz {
     }
 
     public void changeSector(int x, int z) {
-        currentSector = world.getLocations()[Math.abs(x)][Math.abs(z)];
+        //currentSector = world.getLocations()[Math.abs(x)][Math.abs(z)];
     }
 
     public String getSectorName(){
@@ -79,11 +75,11 @@ public class Weltschmerz {
         }
     }
 
-    public int getSectorPostionX(){
-        return currentSector.position.x;
+    public double getSectorPostionX(){
+        return currentSector.position.centroid.x;
     }
 
-    public int getSectorPostionZ(){
-        return currentSector.position.z;
+    public double getSectorPostionZ(){
+        return currentSector.position.centroid.y;
     }
 }

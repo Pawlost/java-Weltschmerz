@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import javax.swing.*;

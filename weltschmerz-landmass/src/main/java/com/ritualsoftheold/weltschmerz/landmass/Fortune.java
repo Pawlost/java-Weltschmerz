@@ -1,33 +1,33 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.algorithms;
+package com.ritualsoftheold.weltschmerz.landmass;
 
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.Voronoi;
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.events.CircleEvent;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.events.DataEvent;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.events.Event;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Border;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.VoronoiBorder;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.DataNode;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.nodes.Node;
+import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.events.CircleEvent;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.events.DataEvent;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.events.Event;
+import com.ritualsoftheold.weltschmerz.geometry.units.Border;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vertex;
+import com.ritualsoftheold.weltschmerz.geometry.units.VoronoiBorder;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.DataNode;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.nodes.Node;
 
 import java.util.*;
 
 public abstract class Fortune {
-    public static Voronoi ComputeGraph(Centroid[] vertices){
+    public static Graph ComputeGraph(Set<Point> points){
         PriorityQueue<Event> queue = new PriorityQueue<>();
-        for (Centroid v : vertices) {
-            DataEvent ev = new DataEvent(v);
+        for (Point p : points) {
+            DataEvent ev = new DataEvent(p);
             if (!queue.contains(ev)) {
                 queue.add(ev);
             }
         }
-        return ComputeVoronoiGraph(queue);
+        return computeVoronoiGraph(queue);
     }
 
-    private static Voronoi ComputeVoronoiGraph(PriorityQueue<Event> queue) {
+    private static Graph computeVoronoiGraph(PriorityQueue<Event> queue) {
         HashMap<DataNode, CircleEvent> CurrentCircles = new HashMap<>();
         HashSet<VoronoiBorder> edgeList = new HashSet<>();
 
@@ -58,10 +58,10 @@ public abstract class Fortune {
             }
 
             if (VE instanceof DataEvent) {
-                Centroid centroid = ((DataEvent) VE).getDatum();
+                Point point = ((DataEvent) VE).getDatum();
                 for (final CircleEvent VCE : CurrentCircles.values()) {
-                    double dist = centroid.dist(VCE.center);
-                    double offs = VCE.getY() - VCE.center.getY();
+                    double dist = point.dist(VCE.center);
+                    double offs = VCE.getY() - VCE.center.y;
                     if (PrecisionMath.lt(dist, offs))
                         VCE.Valid = false;
                 }
@@ -73,9 +73,9 @@ public abstract class Fortune {
                 continue;
             if (VE.VVertexB == Vertex.UNKNOWN) {
                 VE.AddVertex(Vertex.INFINITE);
-                if (PrecisionMath.eq(VE.LeftData.getY(), VE.RightData.getY())
-                        && VE.LeftData.getX() < VE.RightData.getX()) {
-                    Centroid T = VE.LeftData;
+                if (PrecisionMath.eq(VE.LeftData.y, VE.RightData.y)
+                        && VE.LeftData.x < VE.RightData.x) {
+                    Point T = VE.LeftData;
                     VE.LeftData = VE.RightData;
                     VE.RightData = T;
                 }
@@ -98,16 +98,21 @@ public abstract class Fortune {
         for (VoronoiBorder VE : MinuteEdges)
             edgeList.remove(VE);
 
-        Multimap<Centroid, Border> finalEdges = ArrayListMultimap.create();
+        Multimap<Point, Border> finalEdges = HashMultimap.create();
+        Multimap<Point, Vertex> finalVertices = HashMultimap.create();
         for (VoronoiBorder VE : edgeList) {
             if(VE.isPartlyInfinite()) {
                 Border border = VE.toEdge();
                 finalEdges.put(border.getDatumA(), border);
                 finalEdges.put(border.getDatumB(), border);
+                finalVertices.put(border.getDatumA(), border.getVertexA());
+                finalVertices.put(border.getDatumA(), border.getVertexB());
+                finalVertices.put(border.getDatumB(), border.getVertexA());
+                finalVertices.put(border.getDatumB(), border.getVertexB());
             }
         }
 
-        return new Voronoi(finalEdges);
+        return new Graph(finalEdges, finalVertices);
     }
 
 }

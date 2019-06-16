@@ -1,5 +1,7 @@
 package com.ritualsoftheold.weltschmerz.noise;
 
+import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
+
 import java.util.HashMap;
 
 public abstract class Generation {

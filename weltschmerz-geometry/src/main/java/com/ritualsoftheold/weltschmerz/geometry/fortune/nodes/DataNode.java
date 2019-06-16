@@ -1,13 +1,14 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.nodes;
+package com.ritualsoftheold.weltschmerz.geometry.fortune.nodes;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Vertex;
-import com.ritualsoftheold.weltschmerz.landmass.fortune.events.CircleEvent;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vertex;
+import com.ritualsoftheold.weltschmerz.geometry.fortune.events.CircleEvent;
 
 public class DataNode extends Node {
 
-    public Centroid point;
+    public Point point;
 
-    public DataNode(Centroid point) {
+    public DataNode(Point point) {
         this.point = point;
     }
 
@@ -28,12 +29,12 @@ public class DataNode extends Node {
         return null;
     }
 
-    private static int ccw(Centroid P0, Centroid P1, Centroid P2) {
+    private static int ccw(Point P0, Point P1, Point P2) {
         double dx1, dx2, dy1, dy2;
-        dx1 = P1.getX() - P0.getX();
-        dy1 = P1.getY() - P0.getY();
-        dx2 = P2.getX() - P0.getX();
-        dy2 = P2.getY() - P0.getY();
+        dx1 = P1.x - P0.x;
+        dy1 = P1.y - P0.y;
+        dx2 = P2.x - P0.x;
+        dy2 = P2.y - P0.y;
         if (dx1 * dy2 > dy1 * dx2)
             return +1;
         if (dx1 * dy2 < dy1 * dx2)

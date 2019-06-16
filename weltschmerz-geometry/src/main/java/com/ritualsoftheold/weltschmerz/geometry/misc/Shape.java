@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.noise;
+package com.ritualsoftheold.weltschmerz.geometry.misc;
 
 import java.awt.*;
 

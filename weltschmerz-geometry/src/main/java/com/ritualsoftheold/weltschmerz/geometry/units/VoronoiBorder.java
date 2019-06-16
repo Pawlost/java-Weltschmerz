@@ -1,8 +1,8 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.geometry.units;
 
 public class VoronoiBorder {
 
-    public Centroid RightData = Centroid.UNKNOWN, LeftData = Centroid.UNKNOWN;
+    public Point RightData = Point.UNKNOWN, LeftData = Point.UNKNOWN;
     public Vertex VVertexA = Vertex.UNKNOWN, VVertexB = Vertex.UNKNOWN;
 
     public boolean Done = false;

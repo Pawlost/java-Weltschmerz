@@ -1,20 +1,20 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.landmass.fortune.geometry.Point;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.landmass.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
-import com.ritualsoftheold.weltschmerz.noise.Configuration;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 import squidpony.squidmath.XoRoRNG;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class World {
     private Configuration conf;
-    private HashMap<Point,Location> world;
-    private ArrayList<Point> points;
+    private HashMap<Point, Location> world;
     private ArrayList<Plate> plates;
     private WorldNoise noise;
     private XoRoRNG random;
@@ -25,21 +25,19 @@ public class World {
         this.conf = configuration;
         this.random = new XoRoRNG(conf.seed);
 
-        world = new HashMap<Point, Location>();
-        points = new ArrayList<>();
+        world = new HashMap<>();
         plates = new ArrayList<>();
 
-        for (int spread = 0; spread < conf.detail; spread++) {
-            int x = random.nextInt();
-            int y = random.nextInt();
+        for (int spread = 0; spread <= conf.detail; spread++) {
+            int x = random.nextInt(-conf.width,conf.width);
+            int y = random.nextInt(-conf.height, conf.height);
             Point point = new Point(x, y);
-
-            points.add(point);
-
             Location location = new Location(point, random.nextLong());
-
             world.put(point, location);
         }
+        world = Fortune.ComputeGraph(world.keySet()).smoothLocation(world, 10);
+        Fortune.ComputeGraph(world.keySet()).getVoronoiArea(world);
+
 
         generateLand();
         /*
@@ -66,7 +64,7 @@ public class World {
         }*/
 
         if (amount > 0) {
-            createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
+           // createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
         }
     }
 
@@ -74,7 +72,7 @@ public class World {
         for (Location location:world.values()) {
             location.setShape(noise.makeLand(location.getShape(), location.position));
         }
-        world.get(points.get(0)).setShape(conf.shapes.get("MOUNTAIN"));
+        world.get(world.keySet().toArray()[0]).setShape(conf.shapes.get("MOUNTAIN"));
         System.out.println("Generated Land");
     }
 
@@ -118,8 +116,8 @@ public class World {
                     neighbors = location.getNeighbors()[index].getNeighbors();
                 }
             }
-        }
-    }*/
+        }*/
+    }
 
     private void generatePlates() {
       /*  int range = world.length;
@@ -141,8 +139,7 @@ public class World {
             location.setTectonicPlate(plate);
             //plate.generateTectonic(locations, part);
             plates.add(plate);
-           */
-        }
+        }           */
     }
 
     public Plate[] getPlates() {
@@ -152,17 +149,15 @@ public class World {
     }
 
     private boolean isLocationEmpty() {
-        for (Location[] locations : world) {
-            for (Location location : locations) {
-                if (location.getTectonicPlate() == null) {
-                    return true;
-                }
+        for (Location location : world.values()) {
+            if (location.getTectonicPlate() == null) {
+                return true;
             }
         }
         return false;
     }
 
-    public Location[][] getLocations() {
-        return world;
+    public Collection<Location> getLocations() {
+        return world.values();
     }
 }

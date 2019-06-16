@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.noise;
+package com.ritualsoftheold.weltschmerz.geometry.misc;
 
 import java.util.HashMap;
 
@@ -11,6 +11,6 @@ public class Configuration {
     public int samples = 15;
     public int volcanoes = 0;
     public int tectonicPlates = 20;
-    public int detail = 1000;
+    public int detail = 5000;
     public HashMap<String, Shape> shapes;
 }

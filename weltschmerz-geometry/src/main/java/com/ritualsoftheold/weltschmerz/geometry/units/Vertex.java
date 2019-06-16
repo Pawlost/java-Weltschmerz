@@ -1,6 +1,6 @@
-package com.ritualsoftheold.weltschmerz.landmass.fortune.geometry;
+package com.ritualsoftheold.weltschmerz.geometry.units;
 
-import com.ritualsoftheold.weltschmerz.landmass.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
 
 public class Vertex extends Point implements Comparable<Vertex> {
 
@@ -14,6 +14,7 @@ public class Vertex extends Point implements Comparable<Vertex> {
     }
 
     public Vertex(double x, double y, boolean allowOdd) {
+        super(x, y);
         if (!allowOdd) {
             if (Double.isInfinite(x) || Double.isInfinite(y))
                 throw new IllegalArgumentException("Infinite co-ordinates" +
@@ -22,9 +23,6 @@ public class Vertex extends Point implements Comparable<Vertex> {
                 throw new IllegalArgumentException("NaN co-ordinates" +
                         " not allowed in a Vertex.");
         }
-
-        this.x = x;
-        this.y = y;
     }
 
     @Override
