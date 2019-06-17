@@ -6,11 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ChunkNoiseCanvas extends JPanel {
+public class ChunkNoiseCanvas extends JPanel implements Scrollable {
     private BufferedImage image;
+    private int width;
+    private int height;
 
     public ChunkNoiseCanvas(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.width = width;
+        this.height = height;
     }
 
     public void updateImage() {
@@ -35,5 +39,35 @@ public class ChunkNoiseCanvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(this.image, null, null);
         g2.dispose();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
     }
 }

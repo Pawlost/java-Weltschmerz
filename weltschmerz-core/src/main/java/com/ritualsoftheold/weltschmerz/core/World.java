@@ -6,11 +6,11 @@ import com.ritualsoftheold.weltschmerz.landmass.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
+import jdk.jshell.execution.LoaderDelegate;
+import org.checkerframework.checker.units.qual.A;
 import squidpony.squidmath.XoRoRNG;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class World {
     private Configuration conf;
@@ -29,15 +29,16 @@ public class World {
         plates = new ArrayList<>();
 
         for (int spread = 0; spread <= conf.detail; spread++) {
-            int x = random.nextInt(-conf.width,conf.width);
-            int y = random.nextInt(-conf.height, conf.height);
+            double x = random.nextInt(-1,conf.width) + random.nextDouble();
+            double y = random.nextInt(-1, conf.height) + random.nextDouble();
             Point point = new Point(x, y);
             Location location = new Location(point, random.nextLong());
             world.put(point, location);
         }
+
         world = Fortune.ComputeGraph(world.keySet()).smoothLocation(world, 10);
         Fortune.ComputeGraph(world.keySet()).getVoronoiArea(world);
-
+        System.out.println("Locations set");
 
         generateLand();
         /*
@@ -45,7 +46,6 @@ public class World {
             connectPlate(plate);
         }
 */
-        System.out.println("Locations set");
     }
 
     private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount) {
@@ -69,10 +69,37 @@ public class World {
     }
 
     private void generateLand() {
+        Set<Location> anotherLocations = new HashSet<>();
+        Set<Location> done = new HashSet<>();
         for (Location location:world.values()) {
-            location.setShape(noise.makeLand(location.getShape(), location.position));
+            for(Point point:location.position.getNeighborPoints()){
+                location.add(world.get(point));
+            }
+            if(location.setShape(noise.makeLand(location.getShape(), location.position))){
+                anotherLocations.addAll(location.getNeighbors());
+                done.add(location);
+            }
+
+            if(location.position.center.x > 0 && location.position.center.x < 80
+                    && location.position.center.y > 0 && location.position.center.y < 80){
+                location.setShape(conf.shapes.get("MOUNTAIN"));
+                anotherLocations.addAll(location.getNeighbors());
+                done.add(location);
+            }
         }
-        world.get(world.keySet().toArray()[0]).setShape(conf.shapes.get("MOUNTAIN"));
+
+        while (!anotherLocations.isEmpty()){
+            for(Location location:new HashSet<>(anotherLocations)){
+                if(!done.contains(location)){
+                    location.setElevation();
+                    anotherLocations.remove(location);
+                    done.add(location);
+                    anotherLocations.addAll(location.getNeighbors());
+                }else{
+                    anotherLocations.remove(location);
+                }
+            }
+        }
         System.out.println("Generated Land");
     }
 
@@ -159,5 +186,9 @@ public class World {
 
     public Collection<Location> getLocations() {
         return world.values();
+    }
+
+    public HashMap<Point, Location> getWorld() {
+        return world;
     }
 }

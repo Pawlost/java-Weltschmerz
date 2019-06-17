@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.ritualsoftheold.weltschmerz.landmass.Zone;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 
@@ -28,26 +29,25 @@ public class Weltschmerz {
     public final World world;
     private int grassID;
     private int dirtID;
-    private Location currentSector;
+    private Zone currentZone;
+    private Location currentLocation;
 
     public Weltschmerz(){
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
+        currentZone = new Zone(world.getWorld());
         System.out.println("Map generated");
     }
 
-    public void changeSector(int x, int z) {
-        //currentSector = world.getLocations()[Math.abs(x)][Math.abs(z)];
-    }
-
     public String getSectorName(){
-        return currentSector.getName();
+        return currentLocation.getName();
     }
 
-    public float setChunk(int x, int z){
-        float y = currentSector.setChunk(x, z);
-        currentSector.generateNoise();
+    public double setChunk(int x, int z){
+        currentLocation = currentZone.updatePlayerPosition(x, z);
+        double y = currentLocation.setChunk(x, z);
+        currentLocation.generateNoise();
         return y;
     }
 
@@ -65,21 +65,14 @@ public class Weltschmerz {
         if (y > currentSector.getMax()){
             return 1;
         }*/
-        long size = Math.round(currentSector.getNoise(x, z));
+       /* long size = Math.round(currentLocation.getNoise(x, z));
         if (size > y) {
             return dirtID;
         } else if (size == y) {
             return grassID;
         }else {
             return 1;
-        }
-    }
-
-    public double getSectorPostionX(){
-        return currentSector.position.centroid.x;
-    }
-
-    public double getSectorPostionZ(){
-        return currentSector.position.centroid.y;
+        }*/
+        return dirtID;
     }
 }

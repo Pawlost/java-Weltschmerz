@@ -2,7 +2,6 @@ package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
-import com.ritualsoftheold.weltschmerz.landmass.Constants;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 
@@ -11,124 +10,52 @@ import java.util.ArrayList;
 public class Location {
 
     public final long seed;
+    private double centerChunkElevation;
+    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 128;
     private Plate tectonicPlate;
     private Shape shape;
     private ArrayList<Location> neighbors;
-    private double[][] chunkElevation;
     public final Polygon position;
     private int posX;
     private int posZ;
-    private static final int CHUNK_IN_SECTOR_X = Constants.DEFAULT_MAX_SECTOR_X / 16;
-    private static final int CHUNK_IN_SECTOR_Z = Constants.DEFAULT_MAX_SECTOR_Z / 16;
+    public static final float VOLATILITY = 3;
     private ChunkNoise noise;
 
     public Location(Point point, long seed) {
-        this.position = new Polygon(point);
-        chunkElevation = new double[CHUNK_IN_SECTOR_X][CHUNK_IN_SECTOR_Z];
+        this.position = new Polygon(point, null);
         this.seed = seed;
         neighbors = new ArrayList<>();
     }
+
+    public Location(Polygon polygon, long seed) {
+        this.position = polygon;
+        this.seed = seed;
+        neighbors = new ArrayList<>();
+    }
+
 
     public ArrayList<Location> getNeighbors() {
         return neighbors;
     }
 
-    public void setNeighbors(ArrayList<Location> neighbors) {
-        this.neighbors = neighbors;
+    public void add(Location neighbor) {
+        this.neighbors.add(neighbor);
     }
 
-    public void setShape(Shape shape) {
+    public boolean setShape(Shape shape) {
         this.shape = shape;
-        for (int posX = 0; posX < chunkElevation.length; posX++) {
-            for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
-                chunkElevation[posX][posZ] = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-            }
-        }
+
+        centerChunkElevation = shape.position * MAX_SECTOR_HEIGHT_DIFFERENCE;
+        return shape.key.equals("MOUNTAIN") || shape.key.equals("OCEAN");
     }
 
-    public void setElevation(boolean reverse) {
-        if (!shape.key.equals("MOUNTAIN") && !shape.key.equals("OCEAN")) {
-            if (!reverse) {
-                for (int posX = 0; posX < chunkElevation.length; posX++) {
-                    for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
-                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                        if (position == chunkElevation[posX][posZ]) {
-                            if (posX == 0) {
-                           //     position = neighbors[0].chunkElevation[chunkElevation.length - 1][posZ];
-                            } else {
-                                position = chunkElevation[posX - 1][posZ];
-                            }
+    public void setElevation() {
+        for (Location neighbor:neighbors){
+            double dist = position.center.dist(neighbor.position.center);
+            double newCenterChunkElevation = ((neighbor.getCenterChunkElevation() - centerChunkElevation) * ((VOLATILITY * dist) - dist))/(VOLATILITY * dist);
 
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
-                                position = position - Constants.VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
-                                position = position + Constants.VOLATILITY;
-                            }
-                            chunkElevation[posX][posZ] = position;
-                        }
-                    }
-                }
-
-                for (int posX = 0; posX < chunkElevation.length; posX++) {
-                    for (int posZ = 0; posZ < chunkElevation[posX].length; posZ++) {
-                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                        if (position == chunkElevation[posX][posZ]) {
-                            if (posZ == 0) {
-                           //     position = neighbors[1].chunkElevation[posX][chunkElevation[posX].length - 1];
-                            } else {
-                                position = chunkElevation[posX][posZ - 1];
-                            }
-
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
-                                position = position - Constants.VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
-                                position = position + Constants.VOLATILITY;
-                            }
-                            chunkElevation[posX][posZ] = position;
-                        }
-                    }
-                }
-            } else {
-                for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
-                    for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
-                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                        if (position == chunkElevation[posX][posZ]) {
-                            if (posZ == chunkElevation[posX].length - 1) {
-                             //   position = neighbors[3].chunkElevation[posX][0];
-                            } else {
-                                position = chunkElevation[posX][posZ + 1];
-                            }
-
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
-                                position = position - Constants.VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
-                                position = position + Constants.VOLATILITY;
-                            }
-                            chunkElevation[posX][posZ] = position;
-
-                        }
-                    }
-                }
-
-                for (int posX = chunkElevation.length - 1; posX >= 0; posX--) {
-                    for (int posZ = chunkElevation[posX].length - 1; posZ >= 0; posZ--) {
-                        double position = shape.position * Constants.MAX_SECTOR_HEIGHT_DIFFERENCE;
-                        if (position == chunkElevation[posX][posZ]) {
-                            if (posX == chunkElevation.length - 1) {
-                         //       position = neighbors[2].chunkElevation[0][posZ];
-                            } else {
-                                position = chunkElevation[posX + 1][posZ];
-                            }
-
-                            if (position + chunkElevation[posX][posZ] > chunkElevation[posX][posZ] + Constants.VOLATILITY) {
-                                position = position - Constants.VOLATILITY;
-                            } else if (position + chunkElevation[posX][posZ] < chunkElevation[posX][posZ] - Constants.VOLATILITY) {
-                                position = position + Constants.VOLATILITY;
-                            }
-                            chunkElevation[posX][posZ] = position;
-                        }
-                    }
-                }
+            if(newCenterChunkElevation > centerChunkElevation){
+                centerChunkElevation = newCenterChunkElevation;
             }
         }
     }
@@ -137,8 +64,8 @@ public class Location {
         return shape;
     }
 
-    public float setChunk(int posX, int posZ) {
-        if (posX > 0) {
+    public double setChunk(int posX, int posZ) {
+     /*   if (posX > 0) {
             posX = posX % Constants.DEFAULT_MAX_SECTOR_X;
         } else {
             posX = ((Constants.DEFAULT_MAX_SECTOR_X * Math.abs(posX / Constants.DEFAULT_MAX_SECTOR_X)) + posX) % Constants.DEFAULT_MAX_SECTOR_X;
@@ -148,11 +75,24 @@ public class Location {
         } else {
             posZ = ((Constants.DEFAULT_MAX_SECTOR_Z * Math.abs(posZ / Constants.DEFAULT_MAX_SECTOR_X)) + posZ) % Constants.DEFAULT_MAX_SECTOR_Z;
         }
+*/
+        //this.posX = Math.abs(posX / 16) % CHUNK_IN_SECTOR_X;
+        //this.posZ = Math.abs(posZ / 16) % CHUNK_IN_SECTOR_Z;
+      //  noise = new ChunkNoise(seed, shape.key, chunkElevation[this.posX][this.posZ]);
+      //  return (((int) (chunkElevation[this.posX][this.posZ]) / 16) * 16);
 
-        this.posX = Math.abs(posX / 16) % CHUNK_IN_SECTOR_X;
-        this.posZ = Math.abs(posZ / 16) % CHUNK_IN_SECTOR_Z;
-        noise = new ChunkNoise(seed, shape.key, chunkElevation[this.posX][this.posZ]);
-        return (((int) (chunkElevation[this.posX][this.posZ]) / 16) * 16);
+        double chunkElevation = shape.position * MAX_SECTOR_HEIGHT_DIFFERENCE;
+        for (Location neighbor:neighbors){
+            double dist = neighbor.position.center.dist(new Point(posX, posZ));
+            double newChunkElevation = ((neighbor.getCenterChunkElevation() - centerChunkElevation) * ((VOLATILITY * dist) - dist))/(VOLATILITY * dist);
+
+            if(newChunkElevation > chunkElevation){
+                chunkElevation = newChunkElevation;
+            }
+        }
+
+        System.out.println("Elevation: " + chunkElevation);
+        return (chunkElevation/16)*16;
     }
 
     public void generateNoise(){
@@ -166,18 +106,22 @@ public class Location {
         double heightZ2;
 
         if (posX > 0) {
-            heightX1 = chunkElevation[posX - 1][posZ];
+         //   heightX1 = chunkElevation[posX - 1][posZ];
         } else {
-           /* int index = neighbors[0].chunkElevation.length - 1;
+        /*   int index = neighbors[0].chunkElevation.length - 1;
             neighbors[0].setChunk(index, posZ);
             heightX1 = neighbors[0].getMin();
-        }
 
+         */
+        }
+/*
         if (posX < chunkElevation.length - 1) {
             heightX2 = chunkElevation[posX + 1][posZ];
         } else {
-            neighbors[2].setChunk(0, posZ);
+            /*neighbors[2].setChunk(0, posZ);
             heightX2 = neighbors[2].getMin();
+
+
         }
 
         if (posZ > 0) {
@@ -212,10 +156,11 @@ public class Location {
         } else if (heightZ2 > heightZ1) {
             finalHeight += heightZ2;
         }
-            */
+
         }
+        */
         double finalHeight = 0;
-        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight + (Constants.VOLATILITY * 4);
+        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight + (VOLATILITY * 4);
 
     }
 
@@ -237,5 +182,9 @@ public class Location {
 
     public double getMax() {
         return noise.getMax();
+    }
+
+    public double getCenterChunkElevation(){
+        return centerChunkElevation;
     }
 }

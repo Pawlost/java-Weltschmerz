@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class ElevationCanvas extends JPanel {
+public class ElevationCanvas extends JPanel implements Scrollable {
     private BufferedImage image;
     private int width;
     private int height;
@@ -39,7 +39,6 @@ public class ElevationCanvas extends JPanel {
         g.setColor(Color.BLACK);
 
         for(Border border : location.position.getBorders()){
-
             g.drawLine((int)border.getVertexA().x, (int)border.getVertexA().y, (int)border.getVertexB().x, (int)border.getVertexB().y);
         }
 
@@ -59,5 +58,34 @@ public class ElevationCanvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(this.image, null, null);
         g2.dispose();
+    }
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+        return new Dimension(width, height);
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
     }
 }

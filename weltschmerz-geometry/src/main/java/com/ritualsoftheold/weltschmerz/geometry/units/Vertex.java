@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.geometry.units;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
 
-public class Vertex extends Point implements Comparable<Vertex> {
+public class Vertex extends Point {
 
     public static final Vertex INFINITE =
             new Vertex(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, true);
