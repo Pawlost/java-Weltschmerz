@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.noise.generators;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.noise.Generation;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
@@ -66,9 +67,9 @@ public class WorldNoise extends Generation {
         return (mod.get(nx, ny, nz, nw));
     }
 
-    public Shape makeLand(Shape shape, Polygon polygon) {
+    public Shape makeLand(Shape shape, Point centroid) {
        if(shape == null) {
-            double y = getNoise((int)polygon.centroid.x, (int)polygon.centroid.y);
+            double y = getNoise((int)centroid.x, (int)centroid.y);
             shape = landGeneration(y);
         }
 

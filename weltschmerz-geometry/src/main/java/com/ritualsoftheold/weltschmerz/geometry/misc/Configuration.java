@@ -11,6 +11,6 @@ public class Configuration {
     public int samples = 15;
     public int volcanoes = 0;
     public int tectonicPlates = 20;
-    public int detail = 1000;
+    public int detail = 25000;
     public HashMap<String, Shape> shapes;
 }

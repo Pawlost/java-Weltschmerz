@@ -1,51 +1,23 @@
 package com.ritualsoftheold.weltschmerz.geometry.units;
 
 public class Border{
-    private Vertex VertexA;
-    private Vertex VertexB;
-    private Point leftDatum;
-    private Point rightDatum;
+    public final Vertex vertexA;
+    public final Vertex vertexB;
+    public final Point datumA;
+    public final Point datumB;
+    public final Vector vector;
 
     public Border(Vertex a, Vertex b, Point ld, Point rd) {
         if (a.isNaN() || b.isNaN())
                throw new IllegalArgumentException("Undefined vertices" + " not allowed in an Edge.");
 
-        leftDatum = ld;
-        rightDatum = rd;
-        VertexA = a;
-        VertexB = b;
-    }
-
-    public void setVertexA(Vertex vertexA) {
-        VertexA = vertexA;
-    }
-
-    public void setVertexB(Vertex vertexB) {
-        VertexB = vertexB;
-    }
-
-    public Vertex getVertexA() {
-        return VertexA;
-    }
-
-    public Vertex getVertexB() {
-        return VertexB;
-    }
-
-    public Point getDatumA() {
-        return leftDatum;
-    }
-
-    public Point getDatumB() {
-        return rightDatum;
-    }
-
-    public void setDatumA(Point leftDatum) {
-        this.leftDatum = leftDatum;
-    }
-
-    public void setDatumB(Point rightDatum) {
-        this.rightDatum = rightDatum;
+        double x = a.x - b.x;
+        double y = a.y - b.y;
+        vector = new Vector(x, y, a);
+        datumA = ld;
+        datumB = rd;
+        vertexA = a;
+        vertexB = b;
     }
 
     @Override
@@ -55,13 +27,8 @@ public class Border{
 
         Border o = (Border) obj;
 
-        if(VertexA.equals(o.VertexA) && VertexB.equals(o.VertexB)){
+        if(vertexA.equals(o.vertexA) && vertexB.equals(o.vertexB)){
             return true;
-        }else return VertexA.equals(o.VertexB) && VertexB.equals(o.VertexA);
-    }
-
-    @Override
-    public Border clone() {
-        return new Border(VertexA, VertexB, null, null);
+        }else return vertexA.equals(o.vertexB) && vertexB.equals(o.vertexA);
     }
 }

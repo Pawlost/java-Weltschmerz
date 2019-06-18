@@ -73,30 +73,26 @@ public class World {
         Set<Location> done = new HashSet<>();
         for (Location location:world.values()) {
             for(Point point:location.position.getNeighborPoints()){
-                location.add(world.get(point));
-            }
-            if(location.setShape(noise.makeLand(location.getShape(), location.position))){
-                anotherLocations.addAll(location.getNeighbors());
-                done.add(location);
+                if(world.get(point) != null) {
+                    location.add(world.get(point));
+                }
             }
 
-            if(location.position.center.x > 0 && location.position.center.x < 80
-                    && location.position.center.y > 0 && location.position.center.y < 80){
-                location.setShape(conf.shapes.get("MOUNTAIN"));
+            if(location.setShape(noise.makeLand(location.getShape(), location.position.centroid))){
                 anotherLocations.addAll(location.getNeighbors());
-                done.add(location);
+                anotherLocations.add(location);
             }
         }
 
-        while (!anotherLocations.isEmpty()){
-            for(Location location:new HashSet<>(anotherLocations)){
-                if(!done.contains(location)){
-                    location.setElevation();
-                    anotherLocations.remove(location);
-                    done.add(location);
-                    anotherLocations.addAll(location.getNeighbors());
-                }else{
-                    anotherLocations.remove(location);
+        while (!anotherLocations.isEmpty()) {
+            for (Location location : new HashSet<>(anotherLocations)) {
+                location.setElevation();
+                anotherLocations.remove(location);
+                done.add(location);
+                for (Location neigbor : location.getNeighbors()) {
+                    if (!done.contains(neigbor)) {
+                        anotherLocations.add(neigbor);
+                    }
                 }
             }
         }

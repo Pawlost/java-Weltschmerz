@@ -1,9 +1,12 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
+import com.ritualsoftheold.weltschmerz.geometry.units.Border;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
+
 
 import java.util.ArrayList;
 
@@ -18,7 +21,7 @@ public class Location {
     public final Polygon position;
     private int posX;
     private int posZ;
-    public static final float VOLATILITY = 3;
+    public static final float VOLATILITY = 16;
     private ChunkNoise noise;
 
     public Location(Point point, long seed) {
@@ -44,17 +47,15 @@ public class Location {
 
     public boolean setShape(Shape shape) {
         this.shape = shape;
-
         centerChunkElevation = shape.position * MAX_SECTOR_HEIGHT_DIFFERENCE;
         return shape.key.equals("MOUNTAIN") || shape.key.equals("OCEAN");
     }
 
     public void setElevation() {
-        for (Location neighbor:neighbors){
+        for (Location neighbor : neighbors) {
             double dist = position.center.dist(neighbor.position.center);
-            double newCenterChunkElevation = ((neighbor.getCenterChunkElevation() - centerChunkElevation) * ((VOLATILITY * dist) - dist))/(VOLATILITY * dist);
-
-            if(newCenterChunkElevation > centerChunkElevation){
+            double newCenterChunkElevation = (neighbor.centerChunkElevation * ((dist*VOLATILITY) - dist))/(dist*VOLATILITY);
+            if (newCenterChunkElevation > centerChunkElevation) {
                 centerChunkElevation = newCenterChunkElevation;
             }
         }
@@ -65,34 +66,48 @@ public class Location {
     }
 
     public double setChunk(int posX, int posZ) {
-     /*   if (posX > 0) {
-            posX = posX % Constants.DEFAULT_MAX_SECTOR_X;
-        } else {
-            posX = ((Constants.DEFAULT_MAX_SECTOR_X * Math.abs(posX / Constants.DEFAULT_MAX_SECTOR_X)) + posX) % Constants.DEFAULT_MAX_SECTOR_X;
-        }
-        if (posZ > 0) {
-            posZ = posZ % Constants.DEFAULT_MAX_SECTOR_Z;
-        } else {
-            posZ = ((Constants.DEFAULT_MAX_SECTOR_Z * Math.abs(posZ / Constants.DEFAULT_MAX_SECTOR_X)) + posZ) % Constants.DEFAULT_MAX_SECTOR_Z;
-        }
-*/
-        //this.posX = Math.abs(posX / 16) % CHUNK_IN_SECTOR_X;
-        //this.posZ = Math.abs(posZ / 16) % CHUNK_IN_SECTOR_Z;
-      //  noise = new ChunkNoise(seed, shape.key, chunkElevation[this.posX][this.posZ]);
-      //  return (((int) (chunkElevation[this.posX][this.posZ]) / 16) * 16);
+        Point chunk = new Point(posX, posZ);
+        double chunkElevation = 0;
+        for (Location neighbor : neighbors) {
+            Border border = position.getBorders().get(neighbor.position.centroid);
+            Vector vector = new Vector(position.center.x - neighbor.position.center.x, position.center.y - neighbor.position.center.y,
+                    position.center);
+            Point point = border.vector.getIntersection(vector);
+            double wholeDist = position.center.dist(neighbor.position.center);
+            double minChunkElevation;
+            double minLocalChunkElevation = (centerChunkElevation * (wholeDist - point.dist(position.center))) / wholeDist;
+            double minOuterChunkELevation = (neighbor.centerChunkElevation * (wholeDist - point.dist(neighbor.position.center))) / wholeDist;
 
-        double chunkElevation = shape.position * MAX_SECTOR_HEIGHT_DIFFERENCE;
-        for (Location neighbor:neighbors){
-            double dist = neighbor.position.center.dist(new Point(posX, posZ));
-            double newChunkElevation = ((neighbor.getCenterChunkElevation() - centerChunkElevation) * ((VOLATILITY * dist) - dist))/(VOLATILITY * dist);
+            if (minLocalChunkElevation > minOuterChunkELevation) {
+                minChunkElevation = minLocalChunkElevation;
+            } else {
+                minChunkElevation = minOuterChunkELevation;
+            }
 
-            if(newChunkElevation > chunkElevation){
+            if (neighbor.centerChunkElevation > centerChunkElevation && minChunkElevation < centerChunkElevation) {
+                minChunkElevation = centerChunkElevation;
+            }
+
+            double localChunkElevation = (centerChunkElevation * (wholeDist - chunk.dist(position.center))) / wholeDist;
+            double outerChunkElevation = (neighbor.centerChunkElevation * (wholeDist - chunk.dist(neighbor.position.center))) / wholeDist;
+
+            double newChunkElevation;
+            if (localChunkElevation > outerChunkElevation) {
+                newChunkElevation = localChunkElevation;
+            } else {
+                newChunkElevation = outerChunkElevation;
+            }
+
+            if (minChunkElevation < newChunkElevation && chunkElevation < newChunkElevation) {
                 chunkElevation = newChunkElevation;
+            } else if (minChunkElevation > chunkElevation) {
+                chunkElevation = minChunkElevation;
             }
         }
 
-        System.out.println("Elevation: " + chunkElevation);
-        return (chunkElevation/16)*16;
+        System.out.println(((int) (chunkElevation / 16)) * 16);
+
+        return ((int) (chunkElevation / 16)) * 16;
     }
 
     public void generateNoise(){

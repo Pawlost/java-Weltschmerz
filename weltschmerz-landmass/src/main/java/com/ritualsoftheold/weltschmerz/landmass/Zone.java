@@ -19,8 +19,7 @@ public class Zone extends ArrayList<Location> {
 
     public Location updatePlayerPosition(double x, double z){
         for(Location location:world.values()){
-            if(location.position.getBounds().x < x && location.position.getBounds().y < z &&
-                    location.position.getBounds().width > x && location.position.getBounds().height > z){
+            if(location.position.contains(x, z)){
                 return location;
             }
         }

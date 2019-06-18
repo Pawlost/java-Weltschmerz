@@ -103,12 +103,12 @@ public abstract class Fortune {
         for (VoronoiBorder VE : edgeList) {
             if(VE.isPartlyInfinite()) {
                 Border border = VE.toEdge();
-                finalEdges.put(border.getDatumA(), border);
-                finalEdges.put(border.getDatumB(), border);
-                finalVertices.put(border.getDatumA(), border.getVertexA());
-                finalVertices.put(border.getDatumA(), border.getVertexB());
-                finalVertices.put(border.getDatumB(), border.getVertexA());
-                finalVertices.put(border.getDatumB(), border.getVertexB());
+                finalEdges.put(border.datumA, border);
+                finalEdges.put(border.datumB, border);
+                finalVertices.put(border.datumA, border.vertexA);
+                finalVertices.put(border.datumA, border.vertexB);
+                finalVertices.put(border.datumB, border.vertexA);
+                finalVertices.put(border.datumB, border.vertexB);
             }
         }
 

@@ -38,11 +38,15 @@ public class ElevationCanvas extends JPanel implements Scrollable {
         Graphics g = image.getGraphics();
         g.setColor(Color.BLACK);
 
-        for(Border border : location.position.getBorders()){
-            g.drawLine((int)border.getVertexA().x, (int)border.getVertexA().y, (int)border.getVertexB().x, (int)border.getVertexB().y);
+        for(Border border : location.position.getBorders().values()){
+          g.drawLine((int)border.vertexA.x, (int)border.vertexA.y, (int)border.vertexB.x, (int)border.vertexB.y);
         }
 
-        this.repaint();    }
+       g.setColor(Color.RED);
+        g.drawOval((int)location.position.center.x, (int)location.position.center.y, 8, 8);
+
+        this.repaint();
+    }
 
     public void fillWorld() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

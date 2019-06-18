@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,17 +34,23 @@ public class Polygon {
 
     public void addBorder(Set<Border> borders) {
         for (Border border : borders) {
-            if (border.getDatumA() == centroid || border.getDatumB() == centroid) {
-                this.borders.put(border.getVertexA(), border);
-                this.borders.put(border.getVertexB(), border);
+            if (border.datumA == centroid || border.datumB == centroid) {
+                this.borders.put(border.vertexA, border);
+                this.borders.put(border.vertexB, border);
             }
         }
     }
 
-    public Border[] getBorders() {
-        Border[] borders = new Border[this.borders.size()];
-        this.borders.values().toArray(borders);
-        return borders;
+    public HashMap<Point, Border> getBorders() {
+        HashMap<Point, Border> cloneBorders = new HashMap<>();
+        for(Border border : borders.values()){
+            if(border.datumA != centroid) {
+                cloneBorders.put(border.datumA, border);
+            }else if (border.datumB != centroid){
+                cloneBorders.put(border.datumB, border);
+            }
+        }
+        return cloneBorders;
     }
 
     public Rectangle getBounds() {
@@ -57,11 +64,11 @@ public class Polygon {
         for (Vertex key : borders.keySet()) {
             if (borders.containsKey(key)) {
                 Border border = (Border) borders.get(key).toArray()[0];
-                polygon.addPoint((int) Math.round(border.getVertexB().x), (int) Math.round(border.getVertexB().y));
-                polygon.addPoint((int) Math.round(border.getVertexA().x), (int) Math.round(border.getVertexA().y));
-                addPoints(border.getDatumA(), border.getDatumB());
+                polygon.addPoint((int) Math.round(border.vertexB.x), (int) Math.round(border.vertexB.y));
+                polygon.addPoint((int) Math.round(border.vertexA.x), (int) Math.round(border.vertexA.y));
+                addPoints(border.datumA, border.datumB);
                 removeBorders.remove(border);
-                vertex = border.getVertexA();
+                vertex = border.vertexA;
                 break;
             }
         }
@@ -70,17 +77,17 @@ public class Polygon {
             previousVertex = vertex;
             for (Border anotherBorder : borders.get(vertex)) {
                 if (removeBorders.contains(anotherBorder)) {
-                    if (anotherBorder.getVertexA() != vertex && borders.containsKey(vertex)) {
+                    if (anotherBorder.vertexA != vertex && borders.containsKey(vertex)) {
                         removeBorders.remove(anotherBorder);
-                        vertex = anotherBorder.getVertexA();
+                        vertex = anotherBorder.vertexA;
                         polygon.addPoint((int) Math.round(vertex.x), (int) Math.round(vertex.y));
-                        addPoints(anotherBorder.getDatumA(), anotherBorder.getDatumB());
+                        addPoints(anotherBorder.datumA, anotherBorder.datumB);
                         break;
-                    } else if (anotherBorder.getVertexB() != vertex) {
+                    } else if (anotherBorder.vertexB != vertex) {
                         removeBorders.remove(anotherBorder);
-                        vertex = anotherBorder.getVertexB();
+                        vertex = anotherBorder.vertexB;
                         polygon.addPoint((int) Math.round(vertex.x), (int) Math.round(vertex.y));
-                        addPoints(anotherBorder.getDatumA(), anotherBorder.getDatumB());
+                        addPoints(anotherBorder.datumA, anotherBorder.datumB);
                         break;
                     }
                 }
@@ -88,10 +95,10 @@ public class Polygon {
 
             if (vertex == previousVertex) {
                 for (Border border : new ArrayList<>(removeBorders)) {
-                    if (border.getVertexA() == vertex) {
-                        vertex = border.getVertexB();
-                    } else if (border.getVertexB() == vertex) {
-                        vertex = border.getVertexA();
+                    if (border.vertexA == vertex) {
+                        vertex = border.vertexB;
+                    } else if (border.vertexB == vertex) {
+                        vertex = border.vertexA;
                     } else {
                         removeBorders.remove(border);
                     }

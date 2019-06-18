@@ -19,10 +19,32 @@ public class Graph {
     }
 
     public void getVoronoiArea(HashMap<Point, Location> locations) {
-        for (Location location : new ArrayList<>(locations.values())) {
-            Set<Border> borders = new HashSet<>(allBorders.get(location.position.centroid));
-            location.position.addBorder(borders);
-            location.position.createPolygon();
+        for (Point point : new ArrayList<>(locations.keySet())) {
+            Set<Border> borders = new HashSet<>(allBorders.get(point));
+            HashSet<Vertex> vertices = new HashSet<>(allVertices.get(point));
+            double centerX = 0;
+            double centerY = 0;
+
+            for (Vertex vertex : vertices) {
+                centerX += vertex.x;
+                centerY += vertex.y;
+            }
+
+            centerX /= vertices.size();
+            centerY /= vertices.size();
+            if (centerX > -1 || centerY > -1) {
+                Point center = new Point(centerX, centerY);
+                Polygon polygon = new Polygon(point, center);
+
+                Location location = new Location(polygon, locations.get(point).seed);
+
+                location.position.addBorder(borders);
+                location.position.createPolygon();
+
+                locations.replace(point, location);
+            }else{
+                locations.remove(point);
+            }
         }
     }
 
@@ -43,9 +65,7 @@ public class Graph {
 
             if (centerX > -1 || centerY > -1) {
                 Point centroid = new Point(location.position.centroid.x + centerX / (2 * smooth), location.position.centroid.y + centerY / (2 * smooth));
-                Point center = new Point(((location.position.centroid.x + centerX)/16)*16, ((location.position.centroid.y + centerY)/16)*16);
-                Polygon polygon = new Polygon(centroid, center);
-                location = new Location(polygon, location.seed);
+                location = new Location(centroid, location.seed);
                 locationHashMap.put(centroid, location);
             }
         }

@@ -21,6 +21,8 @@ public class Weltschmerz {
         for (Location location : weltschmerz.world.getLocations()) {
             g.setColor(location.getShape().color);
             g.drawPolygon(location.position.getSwingPolygon());
+            g.setColor(Color.RED);
+            g.drawOval((int) location.position.center.x, (int) location.position.center.y, 2, 2);
         }
         MapIO.saveHeightmap(image);
     }
@@ -32,7 +34,7 @@ public class Weltschmerz {
     private Zone currentZone;
     private Location currentLocation;
 
-    public Weltschmerz(){
+    public Weltschmerz() {
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
@@ -40,19 +42,33 @@ public class Weltschmerz {
         System.out.println("Map generated");
     }
 
-    public String getSectorName(){
-        return currentLocation.getName();
+    public String getSectorName() {
+        if (currentLocation != null) {
+            return currentLocation.getName();
+        }
+        return "";
     }
 
-    public double setChunk(int x, int z){
-        currentLocation = currentZone.updatePlayerPosition(x, z);
-        double y = currentLocation.setChunk(x, z);
-        currentLocation.generateNoise();
-        return y;
+    public String getCenterPosition() {
+        if (currentLocation != null) {
+            return String.valueOf(currentLocation.getCenterChunkElevation());
+        }
+        return "";
+    }
+
+    public double setChunk(int x, int z) {
+        currentLocation = currentZone.updatePlayerPosition(x/16, z/16);
+        if (currentLocation != null) {
+            double y = currentLocation.setChunk(x/16, z/16);
+            // currentLocation.generateNoise();
+            return y;
+        }
+
+        return 0;
     }
 
     //For future use
-    public void setMaterialID(int grassID, int dirtID){
+    public void setMaterialID(int grassID, int dirtID) {
         this.grassID = grassID;
         this.dirtID = dirtID;
     }
