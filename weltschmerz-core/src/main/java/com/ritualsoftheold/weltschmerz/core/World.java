@@ -81,6 +81,11 @@ public class World {
             if(location.setShape(noise.makeLand(location.getShape(), location.position.centroid))){
                 anotherLocations.addAll(location.getNeighbors());
                 anotherLocations.add(location);
+            }else if(location.position.center.x > 0 && location.position.center.y > 0
+            && location.position.center.x < 100 && location.position.center.y < 100) {
+                location.setShape(conf.shapes.get("MOUNTAIN"));
+                anotherLocations.addAll(location.getNeighbors());
+                anotherLocations.add(location);
             }
         }
 

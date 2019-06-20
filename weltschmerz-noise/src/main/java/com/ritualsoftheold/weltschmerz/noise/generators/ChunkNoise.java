@@ -39,9 +39,7 @@ public class ChunkNoise {
         }else{
             max = Math.abs(max) + ((Math.abs((chunkElevationValue)%16))*4);
         }
-    }
 
-    public void generateNoise() {
         ModuleFractal gen = new ModuleFractal();
         gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);

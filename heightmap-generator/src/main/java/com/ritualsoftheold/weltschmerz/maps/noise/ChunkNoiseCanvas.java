@@ -19,7 +19,6 @@ public class ChunkNoiseCanvas extends JPanel implements Scrollable {
 
     public void updateImage() {
         ChunkNoise noise = new ChunkNoise(1635, "", 1);
-        noise.generateNoise();
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 

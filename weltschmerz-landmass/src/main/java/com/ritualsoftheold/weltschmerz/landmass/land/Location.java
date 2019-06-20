@@ -2,8 +2,8 @@ package com.ritualsoftheold.weltschmerz.landmass.land;
 
 import com.ritualsoftheold.weltschmerz.geometry.units.Border;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
-import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
+import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 
@@ -19,15 +19,10 @@ public class Location {
     private Shape shape;
     private ArrayList<Location> neighbors;
     public final Polygon position;
-    private int posX;
-    private int posZ;
-    public static final float VOLATILITY = 16;
-    private ChunkNoise noise;
+    public static final float VOLATILITY = 2;
 
     public Location(Point point, long seed) {
-        this.position = new Polygon(point, null);
-        this.seed = seed;
-        neighbors = new ArrayList<>();
+        this(new Polygon(point, null), seed);
     }
 
     public Location(Polygon polygon, long seed) {
@@ -54,129 +49,70 @@ public class Location {
     public void setElevation() {
         for (Location neighbor : neighbors) {
             double dist = position.center.dist(neighbor.position.center);
-            double newCenterChunkElevation = (neighbor.centerChunkElevation * ((dist*VOLATILITY) - dist))/(dist*VOLATILITY);
-            if (newCenterChunkElevation > centerChunkElevation) {
-                centerChunkElevation = newCenterChunkElevation;
-            }
+            centerChunkElevation += (neighbor.centerChunkElevation * ((dist * VOLATILITY) - dist)) / (dist * VOLATILITY);
         }
+        centerChunkElevation = centerChunkElevation/(neighbors.size()-1);
     }
 
     public Shape getShape() {
         return shape;
     }
 
-    public double setChunk(int posX, int posZ) {
-        Point chunk = new Point(posX, posZ);
+    public Chunk setChunk(int posX, int posZ) {
         double chunkElevation = 0;
+        Point chunk = new Point(posX, posZ);
         for (Location neighbor : neighbors) {
-            Border border = position.getBorders().get(neighbor.position.centroid);
-            Vector vector = new Vector(position.center.x - neighbor.position.center.x, position.center.y - neighbor.position.center.y,
-                    position.center);
-            Point point = border.vector.getIntersection(vector);
             double wholeDist = position.center.dist(neighbor.position.center);
-            double minChunkElevation;
-            double minLocalChunkElevation = (centerChunkElevation * (wholeDist - point.dist(position.center))) / wholeDist;
-            double minOuterChunkELevation = (neighbor.centerChunkElevation * (wholeDist - point.dist(neighbor.position.center))) / wholeDist;
+            double localChunkElevation = 0;
 
-            if (minLocalChunkElevation > minOuterChunkELevation) {
-                minChunkElevation = minLocalChunkElevation;
-            } else {
-                minChunkElevation = minOuterChunkELevation;
+            Border mainBorder = position.getBorders().get(neighbor.position.centroid);
+            Vector vector = new Vector(position.center.x - neighbor.position.center.x,
+                    position.center.y - neighbor.position.center.y, position.center);
+
+            Point intersection = vector.getIntersection(mainBorder.vector);
+            java.awt.Polygon polygon = new java.awt.Polygon();
+            java.awt.Polygon neighborPolygon = new java.awt.Polygon();
+
+            neighborPolygon.addPoint((int) position.center.x, (int) position.center.y);
+            neighborPolygon.addPoint((int) mainBorder.vertexA.x, (int) mainBorder.vertexA.y);
+            neighborPolygon.addPoint((int) neighbor.position.center.x, (int) neighbor.position.center.y);
+            neighborPolygon.addPoint((int) mainBorder.vertexB.x, (int) mainBorder.vertexB.y);
+
+
+            polygon.addPoint((int) position.center.x, (int) position.center.y);
+            for (Location polygonNeigbor : neighbors) {
+                if (polygonNeigbor.centerChunkElevation > centerChunkElevation) {
+                    Border border = position.getBorders().get(neighbor.position.centroid);
+                    polygon.addPoint((int) polygonNeigbor.position.center.x, (int) polygonNeigbor.position.center.y);
+                    polygon.addPoint((int) border.vertexA.x, (int) border.vertexA.y);
+                    polygon.addPoint((int) border.vertexB.x, (int) border.vertexB.y);
+
+                }
+            }
+            int newChunkElevation = ((int) (centerChunkElevation) / 16) * 16;
+            int newChunkElevationNeighbor = ((int) (neighbor.centerChunkElevation) / 16) * 16;
+           // System.out.println(newChunkElevation);
+            double outerChunkElevation = 0;
+            double localIntersection = 0;
+
+            if (newChunkElevation > newChunkElevationNeighbor) {
+                localChunkElevation = (newChunkElevation * (wholeDist - chunk.dist(position.center))) / wholeDist;
+            } else  if (newChunkElevation < newChunkElevationNeighbor) {
+                localChunkElevation = (newChunkElevationNeighbor * (wholeDist - chunk.dist(neighbor.position.center))) / wholeDist;
+            }else if(polygon.contains((int) chunk.x, (int)chunk.y)){
+                localChunkElevation = (newChunkElevation * (wholeDist - intersection.dist(position.center))) / wholeDist;
             }
 
-            if (neighbor.centerChunkElevation > centerChunkElevation && minChunkElevation < centerChunkElevation) {
-                minChunkElevation = centerChunkElevation;
+            if (outerChunkElevation > localChunkElevation) {
+                localChunkElevation = outerChunkElevation;
             }
 
-            double localChunkElevation = (centerChunkElevation * (wholeDist - chunk.dist(position.center))) / wholeDist;
-            double outerChunkElevation = (neighbor.centerChunkElevation * (wholeDist - chunk.dist(neighbor.position.center))) / wholeDist;
-
-            double newChunkElevation;
-            if (localChunkElevation > outerChunkElevation) {
-                newChunkElevation = localChunkElevation;
-            } else {
-                newChunkElevation = outerChunkElevation;
-            }
-
-            if (minChunkElevation < newChunkElevation && chunkElevation < newChunkElevation) {
-                chunkElevation = newChunkElevation;
-            } else if (minChunkElevation > chunkElevation) {
-                chunkElevation = minChunkElevation;
+            if (localIntersection < localChunkElevation && chunkElevation < localChunkElevation) {
+                chunkElevation = localChunkElevation;
             }
         }
-
-        System.out.println(((int) (chunkElevation / 16)) * 16);
-
-        return ((int) (chunkElevation / 16)) * 16;
-    }
-
-    public void generateNoise(){
-        noise.generateNoise();
-    }
-
-    public double getNoise(int x, int z) {
-        double heightX1;
-        double heightX2;
-        double heightZ1;
-        double heightZ2;
-
-        if (posX > 0) {
-         //   heightX1 = chunkElevation[posX - 1][posZ];
-        } else {
-        /*   int index = neighbors[0].chunkElevation.length - 1;
-            neighbors[0].setChunk(index, posZ);
-            heightX1 = neighbors[0].getMin();
-
-         */
-        }
-/*
-        if (posX < chunkElevation.length - 1) {
-            heightX2 = chunkElevation[posX + 1][posZ];
-        } else {
-            /*neighbors[2].setChunk(0, posZ);
-            heightX2 = neighbors[2].getMin();
-
-
-        }
-
-        if (posZ > 0) {
-            heightZ1 = chunkElevation[posX][posZ - 1];
-        } else {
-            int index = neighbors[1].chunkElevation[posX].length - 1;
-            neighbors[1].setChunk(posX, index);
-            heightZ1 = neighbors[1].getMin();
-        }
-
-        if (posZ < chunkElevation[posZ].length - 1) {
-            heightZ2 = chunkElevation[posX][posZ + 1];
-        } else {
-            neighbors[3].setChunk(posX, 0);
-            heightZ2 = neighbors[3].getMin();
-        }
-
-        heightX1 = ((heightX1 * x) / ((256 * CHUNK_IN_SECTOR_X) + (256 + Constants.VOLATILITY)));
-        heightZ1 = ((heightZ1 * z) / ((256 * CHUNK_IN_SECTOR_Z) + (256 + Constants.VOLATILITY)));
-        heightX2 = ((heightX2 * x) / ((256 * CHUNK_IN_SECTOR_X) + (256 + Constants.VOLATILITY)));
-        heightZ2 = ((heightZ2 * z) / ((256 * CHUNK_IN_SECTOR_Z) + (256 + Constants.VOLATILITY)));
-
-        double finalHeight = 0;
-        if (heightX1 > heightX2) {
-            finalHeight += heightX1;
-        } else if (heightX2 > heightX1) {
-            finalHeight += heightX2;
-        }
-
-        if (heightZ1 > heightZ2) {
-            finalHeight += heightZ1;
-        } else if (heightZ2 > heightZ1) {
-            finalHeight += heightZ2;
-        }
-
-        }
-        */
-        double finalHeight = 0;
-        return noise.getNoise(x + posX * 16, z + posZ * 16) - finalHeight + (VOLATILITY * 4);
-
+        ChunkNoise noise = new ChunkNoise(seed, shape.key, chunkElevation);
+        return new Chunk(new Point(chunk.x, chunk.y), chunkElevation, noise, shape.key, centerChunkElevation, position.center);
     }
 
     public String getName() {
@@ -191,15 +127,7 @@ public class Location {
         return tectonicPlate;
     }
 
-    public double getMin() {
-        return noise.getMin();
-    }
-
-    public double getMax() {
-        return noise.getMax();
-    }
-
-    public double getCenterChunkElevation(){
+    public double getCenterChunkElevation() {
         return centerChunkElevation;
     }
 }
