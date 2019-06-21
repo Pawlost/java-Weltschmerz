@@ -2,7 +2,6 @@ package com.ritualsoftheold.weltschmerz.noise.generators;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
-import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.noise.Generation;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
@@ -19,6 +18,7 @@ public class WorldNoise extends Generation {
     private double min;
     private ModuleAutoCorrect mod;
     private int samples;
+    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 128;
 
     public WorldNoise(Configuration configuration){
         super(configuration.shapes);
@@ -26,8 +26,8 @@ public class WorldNoise extends Generation {
         this.worldHeight = configuration.height;
         this.worldWidth = configuration.width;
         this.samples = configuration.samples;
-        this.max = getShape("MOUNTAIN").max;
-        this.min = getShape("OCEAN").min;
+        this.max = getShape("MOUNTAIN").max * MAX_SECTOR_HEIGHT_DIFFERENCE;
+        this.min = getShape("OCEAN").min * MAX_SECTOR_HEIGHT_DIFFERENCE;
 
         init(configuration.seed, configuration.octaves, configuration.frequency);
         generateNoise();

@@ -6,6 +6,7 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 
 import java.util.ArrayList;
@@ -14,18 +15,19 @@ public class Location {
 
     public final long seed;
     private double centerChunkElevation;
-    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 128;
     private Plate tectonicPlate;
     private Shape shape;
     private ArrayList<Location> neighbors;
     public final Polygon position;
+    private WorldNoise worldNoise;
     public static final float VOLATILITY = 2;
 
     public Location(Point point, long seed) {
-        this(new Polygon(point, null), seed);
+        this(new Polygon(point, null), seed, null);
     }
 
-    public Location(Polygon polygon, long seed) {
+    public Location(Polygon polygon, long seed, WorldNoise worldNoise) {
+        this.worldNoise = worldNoise;
         this.position = polygon;
         this.seed = seed;
         neighbors = new ArrayList<>();
@@ -42,7 +44,7 @@ public class Location {
 
     public boolean setShape(Shape shape) {
         this.shape = shape;
-        centerChunkElevation = shape.position * MAX_SECTOR_HEIGHT_DIFFERENCE;
+        centerChunkElevation = shape.position * WorldNoise.MAX_SECTOR_HEIGHT_DIFFERENCE;
         return shape.key.equals("MOUNTAIN") || shape.key.equals("OCEAN");
     }
 
@@ -59,7 +61,7 @@ public class Location {
     }
 
     public Chunk setChunk(int posX, int posZ) {
-        double chunkElevation = 0;
+       /* double chunkElevation = 0;
         Point chunk = new Point(posX, posZ);
         for (Location neighbor : neighbors) {
             double wholeDist = position.center.dist(neighbor.position.center);
@@ -110,9 +112,10 @@ public class Location {
             if (localIntersection < localChunkElevation && chunkElevation < localChunkElevation) {
                 chunkElevation = localChunkElevation;
             }
-        }
-        ChunkNoise noise = new ChunkNoise(seed, shape.key, chunkElevation);
-        return new Chunk(new Point(chunk.x, chunk.y), chunkElevation, noise, shape.key, centerChunkElevation, position.center);
+        }*/
+       double elevation = worldNoise.getNoise(posX, posZ);
+        ChunkNoise noise = new ChunkNoise(seed, shape.key, elevation);
+        return new Chunk(new Point(posX, posZ), elevation, noise, shape.key);
     }
 
     public String getName() {

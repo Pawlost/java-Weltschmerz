@@ -3,6 +3,7 @@ package com.ritualsoftheold.weltschmerz.landmass;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.landmass.land.Chunk;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Zone extends ArrayList<Location> {
     public static final int PRELOAD = 5;
     private Chunk currentChunk;
     private MultiKeyMap<Integer, Chunk> chunks;
+    private WorldNoise worldNoise;
     Point currentPosition;
 
     public Zone (HashMap<Point, Location> world) {

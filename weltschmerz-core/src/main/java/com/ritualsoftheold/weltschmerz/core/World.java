@@ -37,7 +37,7 @@ public class World {
         }
 
         world = Fortune.ComputeGraph(world.keySet()).smoothLocation(world, 10);
-        Fortune.ComputeGraph(world.keySet()).getVoronoiArea(world);
+        Fortune.ComputeGraph(world.keySet()).getVoronoiArea(world, noise);
         System.out.println("Locations set");
 
         generateLand();

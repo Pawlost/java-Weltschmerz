@@ -6,6 +6,7 @@ import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vertex;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ public class Graph {
         allVertices = points;
     }
 
-    public void getVoronoiArea(HashMap<Point, Location> locations) {
+    public void getVoronoiArea(HashMap<Point, Location> locations, WorldNoise worldNoise) {
         for (Point point : new ArrayList<>(locations.keySet())) {
             Set<Border> borders = new HashSet<>(allBorders.get(point));
             HashSet<Vertex> vertices = new HashSet<>(allVertices.get(point));
@@ -36,7 +37,7 @@ public class Graph {
                 Point center = new Point(centerX, centerY);
                 Polygon polygon = new Polygon(point, center);
 
-                Location location = new Location(polygon, locations.get(point).seed);
+                Location location = new Location(polygon, locations.get(point).seed, worldNoise);
 
                 location.position.addBorder(borders);
                 location.position.createPolygon();

@@ -55,14 +55,15 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-        long size = Math.round(currentZone.getNoise(x, z));
+     /*   long size = Math.round(currentZone.getNoise(x, z));
         if (size > y) {
             return dirtID;
         } else if (size == y) {
             return grassID;
         }else {
             return 1;
-        }
+        }*/
+     return dirtID;
     }
 
     public String getSectorName() {
