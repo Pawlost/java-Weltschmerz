@@ -41,6 +41,7 @@ public class WorldNoise extends Generation {
         gen.setFrequency(frequency);
         gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(seed);
+        System.out.println("Noise generated");
     }
 
     private void generateNoise(){

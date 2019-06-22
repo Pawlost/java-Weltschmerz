@@ -17,14 +17,14 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable {
   private int height;
 
   public WorldNoiseCanvas(int width, int height) {
-    this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+   // this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     this.width = width;
     this.height = height;
   }
 
   public void updateImage(Configuration configuration) {
     WorldNoise noise = new WorldNoise(configuration);
-    int width = this.image.getWidth();
+   /* int width = this.image.getWidth();
     int height = this.image.getHeight();
 
     for (int x = 0; x < width; x++) {
@@ -34,7 +34,7 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable {
       }
     }
     MapIO.saveHeightmap(image);
-    this.repaint();
+    this.repaint();*/
   }
 
   public void paintComponent(Graphics g) {

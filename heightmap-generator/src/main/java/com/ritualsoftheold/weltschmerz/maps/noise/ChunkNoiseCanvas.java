@@ -12,14 +12,14 @@ public class ChunkNoiseCanvas extends JPanel implements Scrollable {
     private int height;
 
     public ChunkNoiseCanvas(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+     //   this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;
     }
 
     public void updateImage() {
         ChunkNoise noise = new ChunkNoise(1635, "", 1);
-        int width = this.image.getWidth();
+/*        int width = this.image.getWidth();
         int height = this.image.getHeight();
 
         for (int x = 0; x < width; x++) {
@@ -31,6 +31,7 @@ public class ChunkNoiseCanvas extends JPanel implements Scrollable {
 
         //MapIO.saveHeightmap(image);
         this.repaint();
+        */
     }
 
     public void paintComponent(Graphics g) {

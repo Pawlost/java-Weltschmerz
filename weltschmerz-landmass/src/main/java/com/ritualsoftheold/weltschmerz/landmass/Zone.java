@@ -65,7 +65,7 @@ public class Zone extends ArrayList<Location> {
 
     public int getChunkLocation (int x, int z){
         currentChunk = chunks.get(x, z);
-    currentChunk.findNeighbors(chunks);
+        currentChunk.findNeighbors(chunks);
         return currentChunk.getElevation();
     }
 

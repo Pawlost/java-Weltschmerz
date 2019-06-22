@@ -19,7 +19,7 @@ public class ChunkNoise {
         switch (level) {
             case "MOUNTAIN":
                 min = 0;
-                max = 15;
+                max = 4;
                 break;
             default:
                 min = 0;

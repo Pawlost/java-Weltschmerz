@@ -19,29 +19,52 @@ public class Chunk {
         this.sectorName = sectorName;
     }
     public double getNoise(int x, int z) {
-        double heightX1 = ((chunkNeighbor[0].getMin()) * x) / (256);
-        double heightX2 = ((chunkNeighbor[1].getMin()) * x) / (256);
-        double heightZ1 = ((chunkNeighbor[2].getMin()) * z) / (256);
-        double heightZ2 = ((chunkNeighbor[3].getMin()) * z) / (256);
+        double heightX1 = chunkNeighbor[0].getMin();
+        double heightX2 = chunkNeighbor[1].getMin();
+        double heightZ1 = chunkNeighbor[2].getMin();
+        double heightZ2 = chunkNeighbor[3].getMin();
 
+        if(chunkNeighbor[0].getElevation() < getElevation()){
+            heightX1 += (getElevation() - chunkNeighbor[0].getElevation());
+        }else if(chunkNeighbor[0].getElevation() > getElevation()) {
+            heightX1 += ((chunkNeighbor[0].getElevation() - getElevation()));
+        }
+        if(chunkNeighbor[1].getElevation() < getElevation()){
+            heightX2 += (getElevation() - chunkNeighbor[1].getElevation());
+        }else  if(chunkNeighbor[1].getElevation() > getElevation()){
+            heightX2 += ((chunkNeighbor[1].getElevation() - getElevation()));
+        }
+
+        if(chunkNeighbor[2].getElevation() >  getElevation()){
+            heightZ1 += (chunkNeighbor[2].getElevation() - getElevation());
+        }else    if(chunkNeighbor[2].getElevation() <  getElevation()){
+            heightZ1 += ((getElevation() - chunkNeighbor[2].getElevation()));
+        }
+
+        if(chunkNeighbor[3].getElevation() > getElevation()){
+            heightZ2 += (chunkNeighbor[3].getElevation() - getElevation()) ;
+        }else if(chunkNeighbor[3].getElevation() < getElevation()) {
+            heightZ2 += ((getElevation() - chunkNeighbor[3].getElevation()));
+        }
+
+        heightX1 = ((heightX1) * x) / (256);
+        heightX2 = ((heightX2) * x) / (256);
+        heightZ1 = ((heightZ1) * z) / (256);
+        heightZ2 = ((heightZ2) * z) / (256);
         double finalHeight = 0;
-
-        if (heightZ1 > heightZ2) {
-            finalHeight += heightZ1;
-        } else if (heightZ2 > heightZ1) {
-            finalHeight += heightZ2;
-        }
-
-        if (heightX1 > heightX2) {
+        if(heightX1 > heightX2){
             finalHeight += heightX1;
-        } else if (heightX2 > heightX1) {
-            finalHeight += heightX2;
+        }else if(heightX2 > heightX1){
+            finalHeight += heightX1;
         }
 
-        if(finalHeight < 0){
-            finalHeight = 0;
+        if(heightZ1 > heightZ2){
+            finalHeight -= heightZ1;
+        }else if(heightZ2 > heightZ1){
+            finalHeight -= heightZ2;
         }
-        return noise.getNoise(x + position.x * 16, z + position.y * 16) - finalHeight;
+
+        return noise.getNoise(x + position.x * 256, z + position.y * 256) - finalHeight;
     }
 
 
