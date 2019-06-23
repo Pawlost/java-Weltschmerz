@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Zone extends ArrayList<Location> {
     private HashMap<Point, Location> world;
-    public static final int PRELOAD = 5;
+    private static final int PRELOAD = 5;
     private Chunk currentChunk;
     private MultiKeyMap<Integer, Chunk> chunks;
     private WorldNoise worldNoise;
@@ -27,6 +27,7 @@ public class Zone extends ArrayList<Location> {
                 for (Location location : world.values()) {
                     if (location.position.contains(x, z)) {
                         chunks.put(x, z, location.setChunk(x, z));
+                        break;
                     }
                 }
             }
@@ -36,36 +37,17 @@ public class Zone extends ArrayList<Location> {
 
     public void updatePlayerPosition(int posX, int posZ) {
         for (Location location : world.values()) {
-            if (!chunks.containsKey(posX + 1, posZ)) {
-                if (location.position.contains(posX + 1, posZ)) {
-                    chunks.put(posX + 1, posZ, location.setChunk(posX + 1, posZ));
+            if (!chunks.containsKey(posX, posZ)) {
+                if (location.position.contains(posX, posZ)) {
+                    chunks.put(posX, posZ, location.setChunk(posX, posZ));
+                    break;
                 }
             }
-
-            if (!chunks.containsKey(posX - 1, posZ)) {
-                if (location.position.contains(posX - 1, posZ)) {
-                    chunks.put(posX - 1, posZ, location.setChunk(posX - 1, posZ));
-                }
-            }
-
-            if (!chunks.containsKey(posX, posZ + 1)) {
-                if (location.position.contains(posX, posZ + 1)) {
-                    chunks.put(posX, posZ + 1, location.setChunk(posX, posZ + 1));
-                }
-            }
-
-            if (!chunks.containsKey(posX, posZ - 1)) {
-                if (location.position.contains(posX, posZ - 1)) {
-                    chunks.put(posX, posZ - 1, location.setChunk(posX, posZ - 1));
-                }
-            }
-
         }
     }
 
     public int getChunkLocation (int x, int z){
         currentChunk = chunks.get(x, z);
-        currentChunk.findNeighbors(chunks);
         return currentChunk.getElevation();
     }
 

@@ -61,61 +61,17 @@ public class Location {
     }
 
     public Chunk setChunk(int posX, int posZ) {
-       /* double chunkElevation = 0;
-        Point chunk = new Point(posX, posZ);
-        for (Location neighbor : neighbors) {
-            double wholeDist = position.center.dist(neighbor.position.center);
-            double localChunkElevation = 0;
-
-            Border mainBorder = position.getBorders().get(neighbor.position.centroid);
-            Vector vector = new Vector(position.center.x - neighbor.position.center.x,
-                    position.center.y - neighbor.position.center.y, position.center);
-
-            Point intersection = vector.getIntersection(mainBorder.vector);
-            java.awt.Polygon polygon = new java.awt.Polygon();
-            java.awt.Polygon neighborPolygon = new java.awt.Polygon();
-
-            neighborPolygon.addPoint((int) position.center.x, (int) position.center.y);
-            neighborPolygon.addPoint((int) mainBorder.vertexA.x, (int) mainBorder.vertexA.y);
-            neighborPolygon.addPoint((int) neighbor.position.center.x, (int) neighbor.position.center.y);
-            neighborPolygon.addPoint((int) mainBorder.vertexB.x, (int) mainBorder.vertexB.y);
-
-
-            polygon.addPoint((int) position.center.x, (int) position.center.y);
-            for (Location polygonNeigbor : neighbors) {
-                if (polygonNeigbor.centerChunkElevation > centerChunkElevation) {
-                    Border border = position.getBorders().get(neighbor.position.centroid);
-                    polygon.addPoint((int) polygonNeigbor.position.center.x, (int) polygonNeigbor.position.center.y);
-                    polygon.addPoint((int) border.vertexA.x, (int) border.vertexA.y);
-                    polygon.addPoint((int) border.vertexB.x, (int) border.vertexB.y);
-
+        double elevation = 0;
+      /*  for (int x = 0; x < 64; x++) {
+            for (int z = 0; z < 64; z++) {
+                double newElevation = worldNoise.getNoise(x + posX * 64, z + posZ * 64);
+                if (newElevation/16 > elevation && newElevation%16 == 0) {
+                    elevation = newElevation;
                 }
             }
-            int newChunkElevation = ((int) (centerChunkElevation) / 16) * 16;
-            int newChunkElevationNeighbor = ((int) (neighbor.centerChunkElevation) / 16) * 16;
-           // System.out.println(newChunkElevation);
-            double outerChunkElevation = 0;
-            double localIntersection = 0;
-
-            if (newChunkElevation > newChunkElevationNeighbor) {
-                localChunkElevation = (newChunkElevation * (wholeDist - chunk.dist(position.center))) / wholeDist;
-            } else  if (newChunkElevation < newChunkElevationNeighbor) {
-                localChunkElevation = (newChunkElevationNeighbor * (wholeDist - chunk.dist(neighbor.position.center))) / wholeDist;
-            }else if(polygon.contains((int) chunk.x, (int)chunk.y)){
-                localChunkElevation = (newChunkElevation * (wholeDist - intersection.dist(position.center))) / wholeDist;
-            }
-
-            if (outerChunkElevation > localChunkElevation) {
-                localChunkElevation = outerChunkElevation;
-            }
-
-            if (localIntersection < localChunkElevation && chunkElevation < localChunkElevation) {
-                chunkElevation = localChunkElevation;
-            }
         }*/
-       double elevation = worldNoise.getNoise(posX, posZ);
-        ChunkNoise noise = new ChunkNoise(seed, shape.key, elevation);
-        return new Chunk(new Point(posX, posZ), elevation, noise, shape.key);
+
+        return new Chunk(new Point(posX, posZ), 0, worldNoise, shape.key);
     }
 
     public String getName() {
