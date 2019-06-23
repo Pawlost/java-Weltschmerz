@@ -32,20 +32,22 @@ public class Weltschmerz {
     private int grassID;
     private int dirtID;
     private Zone currentZone;
+    private WorldNoise noise;
+    private int posY;
 
     public Weltschmerz() {
         configuration = MapIO.loadMapConfig();
-        WorldNoise noise = new WorldNoise(configuration);
+        noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
-        currentZone = new Zone(world.getWorld());
+        currentZone = new Zone(noise);
         System.out.println("Map generated");
     }
 
-    public double setChunk(int x, int z) {
+    public void setChunk(int x, int y, int z) {
         x = x/16;
         z = z/16;
-        currentZone.updatePlayerPosition(x, z);
-        return currentZone.getChunkLocation(x, z);
+        posY = y/16;
+        currentZone.updatePlayerPosition(x, posY, z);
     }
 
     //For future use
@@ -55,7 +57,20 @@ public class Weltschmerz {
     }
 
     public int generateVoxel(int x, int y, int z) {
-       long size = Math.round(currentZone.getNoise(x, z));
+       if(posY > noise.getMax()){
+          return  1;
+       }
+
+        if(posY < noise.getMin()){
+            return  dirtID;
+        }
+
+        long size = Math.round(currentZone.getNoise(x, z));
+
+        if(size == 0){
+            return 1;
+        }
+
         if (size > y) {
             return dirtID;
         } else if (size == y) {
@@ -63,9 +78,5 @@ public class Weltschmerz {
         }else {
             return 1;
         }
-    }
-
-    public String getSectorName() {
-        return currentZone.getSectorName();
     }
 }

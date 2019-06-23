@@ -18,7 +18,7 @@ public class WorldNoise extends Generation {
     private double min;
     private ModuleAutoCorrect mod;
     private int samples;
-    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 128*64;
+    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 64;
 
     public WorldNoise(Configuration configuration){
         super(configuration.shapes);
@@ -27,7 +27,7 @@ public class WorldNoise extends Generation {
         this.worldWidth = configuration.width;
         this.samples = configuration.samples;
         this.max = getShape("MOUNTAIN").max * MAX_SECTOR_HEIGHT_DIFFERENCE;
-        this.min = getShape("OCEAN").min * MAX_SECTOR_HEIGHT_DIFFERENCE;
+        this.min = getShape("OCEAN").position * MAX_SECTOR_HEIGHT_DIFFERENCE;
 
         init(configuration.seed, configuration.octaves, configuration.frequency);
         generateNoise();
@@ -79,6 +79,10 @@ public class WorldNoise extends Generation {
 
     public double getMax() {
         return max;
+    }
+
+    public double getMin() {
+        return min;
     }
 
 }

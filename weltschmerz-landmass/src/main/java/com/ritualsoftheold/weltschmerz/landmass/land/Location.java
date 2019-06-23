@@ -60,20 +60,6 @@ public class Location {
         return shape;
     }
 
-    public Chunk setChunk(int posX, int posZ) {
-        double elevation = 0;
-      /*  for (int x = 0; x < 64; x++) {
-            for (int z = 0; z < 64; z++) {
-                double newElevation = worldNoise.getNoise(x + posX * 64, z + posZ * 64);
-                if (newElevation/16 > elevation && newElevation%16 == 0) {
-                    elevation = newElevation;
-                }
-            }
-        }*/
-
-        return new Chunk(new Point(posX, posZ), 0, worldNoise, shape.key);
-    }
-
     public String getName() {
         return shape.key;
     }

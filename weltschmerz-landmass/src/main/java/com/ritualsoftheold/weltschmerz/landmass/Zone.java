@@ -1,61 +1,36 @@
 package com.ritualsoftheold.weltschmerz.landmass;
 
-import com.ritualsoftheold.weltschmerz.geometry.units.Point;
-import com.ritualsoftheold.weltschmerz.landmass.land.Chunk;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
-import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Zone extends ArrayList<Location> {
-    private HashMap<Point, Location> world;
-    private static final int PRELOAD = 5;
-    private Chunk currentChunk;
-    private MultiKeyMap<Integer, Chunk> chunks;
     private WorldNoise worldNoise;
-    Point currentPosition;
+    private int posX;
+    private int posY;
+    private int posZ;
 
-    public Zone (HashMap<Point, Location> world) {
-        this.world = world;
-        chunks = new MultiKeyMap<>();
-        currentPosition = new Point(0, 0);
-        System.out.println("Setting zone");
-        for (int x = 0; x < PRELOAD; x++) {
-            for (int z = 0; z < PRELOAD; z++) {
-                for (Location location : world.values()) {
-                    if (location.position.contains(x, z)) {
-                        chunks.put(x, z, location.setChunk(x, z));
-                        break;
-                    }
-                }
-            }
-        }
-        System.out.println("Zone set");
+    public Zone (WorldNoise worldNoise) {
+        this.worldNoise = worldNoise;
     }
 
-    public void updatePlayerPosition(int posX, int posZ) {
-        for (Location location : world.values()) {
-            if (!chunks.containsKey(posX, posZ)) {
-                if (location.position.contains(posX, posZ)) {
-                    chunks.put(posX, posZ, location.setChunk(posX, posZ));
-                    break;
-                }
-            }
-        }
-    }
-
-    public int getChunkLocation (int x, int z){
-        currentChunk = chunks.get(x, z);
-        return currentChunk.getElevation();
-    }
-
-    public String getSectorName(){
-        return currentChunk.sectorName;
+    public void updatePlayerPosition(int posX, int posY, int posZ) {
+        this.posX = posX;
+        this.posY = posY;
+        this.posZ = posZ;
     }
 
     public double getNoise(int x, int z){
-        return currentChunk.getNoise(x, z);
+        double voxelElevation = (worldNoise.getNoise(x + (int) posX * 64, z + (int) posZ* 64));
+        if (((int)(voxelElevation/64))*64 < (posY+1)*64) {
+            if (((int)(voxelElevation/64))*64 > (posY-1)*64) {
+                return voxelElevation%64;
+            }else{
+                return 0;
+            }
+        }else{
+            return  64;
+        }
     }
 }
