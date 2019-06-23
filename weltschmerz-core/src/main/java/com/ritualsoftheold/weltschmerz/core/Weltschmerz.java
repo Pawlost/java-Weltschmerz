@@ -32,12 +32,11 @@ public class Weltschmerz {
     private int grassID;
     private int dirtID;
     private Zone currentZone;
-    private WorldNoise noise;
     private int posY;
 
     public Weltschmerz() {
         configuration = MapIO.loadMapConfig();
-        noise = new WorldNoise(configuration);
+        WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
         currentZone = new Zone(noise);
         System.out.println("Map generated");
@@ -46,37 +45,16 @@ public class Weltschmerz {
     public void setChunk(int x, int y, int z) {
         x = x/16;
         z = z/16;
-        posY = y/16;
-        currentZone.updatePlayerPosition(x, posY, z);
+        posY = y*4;
+        currentZone.updatePlayerPosition(x, z);
     }
 
     //For future use
     public void setMaterialID(int grassID, int dirtID) {
-        this.grassID = grassID;
-        this.dirtID = dirtID;
+        currentZone.setMaterials(dirtID, grassID);
     }
 
     public int generateVoxel(int x, int y, int z) {
-       if(posY > noise.getMax()){
-          return  1;
-       }
-
-        if(posY < noise.getMin()){
-            return  dirtID;
-        }
-
-        long size = Math.round(currentZone.getNoise(x, z));
-
-        if(size == 0){
-            return 1;
-        }
-
-        if (size > y) {
-            return dirtID;
-        } else if (size == y) {
-            return grassID;
-        }else {
-            return 1;
-        }
+        return currentZone.getNoise(x, y+posY, z);
     }
 }
