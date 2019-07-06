@@ -5,9 +5,16 @@ import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
+import scala.Int;
+import xerial.larray.LArray;
+import xerial.larray.LByteArray;
+import xerial.larray.LIntArray;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.Arrays;
 
 public class Weltschmerz {
     //Generate map image
@@ -31,30 +38,27 @@ public class Weltschmerz {
     public final World world;
     private int grassID;
     private int dirtID;
-    private Zone currentZone;
-    private int posY;
+    private Zone zone;
 
     public Weltschmerz() {
         configuration = MapIO.loadMapConfig();
         WorldNoise noise = new WorldNoise(configuration);
         world = new World(configuration, noise);
-        currentZone = new Zone(noise);
+        zone = new Zone(noise);
         System.out.println("Map generated");
     }
 
-    public void setChunk(int x, int y, int z) {
+    public LByteArray getChunk(int x, int y, int z, LByteArray chunk) {
         x = x/16;
         z = z/16;
-        posY = y*4;
-        currentZone.updatePlayerPosition(x, z);
+        y = y * 4;
+        ByteBuffer blockBuffer = zone.getChunk(x, y, z, (int)chunk.size());
+        chunk.write(blockBuffer);
+        return chunk;
     }
 
     //For future use
     public void setMaterialID(int grassID, int dirtID) {
-        currentZone.setMaterials(dirtID, grassID);
-    }
-
-    public int generateVoxel(int x, int y, int z) {
-        return currentZone.getNoise(x, y+posY, z);
+        zone.setMaterials(dirtID, grassID);
     }
 }
