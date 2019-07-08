@@ -57,6 +57,10 @@ public class Weltschmerz {
         return chunk;
     }
 
+    public boolean isDifferent(){
+        return zone.isDifferent();
+    }
+
     //For future use
     public void setMaterialID(int grassID, int dirtID) {
         zone.setMaterials(dirtID, grassID);

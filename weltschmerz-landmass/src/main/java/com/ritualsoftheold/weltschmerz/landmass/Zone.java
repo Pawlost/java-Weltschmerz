@@ -11,6 +11,7 @@ public class Zone extends ArrayList<Location> {
     private WorldNoise worldNoise;
     private int dirtID;
     private int grassID;
+    private boolean isDifferent;
 
 
     public Zone (WorldNoise worldNoise) {
@@ -24,7 +25,7 @@ public class Zone extends ArrayList<Location> {
         blockBuffer.put(fill);
 
         MultiKeyMap<Integer, ByteBuffer> blocks = new MultiKeyMap<>();
-        boolean isDifferent = false;
+        isDifferent = false;
 
         for(int z = 0; z < 64; z++) {
             for (int x = 0; x < 64; x++) {
@@ -33,7 +34,7 @@ public class Zone extends ArrayList<Location> {
                 if (y / 64 > posY / 64) {
                     byte[] underArray = new byte[64];
                     Arrays.fill(underArray, (byte) dirtID);
-                    bb.put(underArray); 
+                    bb.put(underArray);
                     blocks.put(z, x, bb);
                 }else if(y / 64 == posY / 64){
                     byte[] underArray = new byte[(y%64)];
@@ -77,5 +78,9 @@ public class Zone extends ArrayList<Location> {
     public void setMaterials(int dirtID, int grassID){
         this.dirtID = dirtID;
         this.grassID = grassID;
+    }
+
+    public boolean isDifferent(){
+        return isDifferent;
     }
 }
