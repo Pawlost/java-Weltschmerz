@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.noise;
+package com.ritualsoftheold.weltschmerz.maps.temperature;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
@@ -6,28 +6,36 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import javax.swing.*;
 import java.awt.*;
 
-public class Noise {
+
+public class Temperature {
     public static void main(String... args) {
         Weltschmerz weltschmerz = new Weltschmerz();
-        new Noise(weltschmerz);
+        new Temperature(weltschmerz);
     }
 
-    public Noise (Weltschmerz weltschmerz){
+    public Temperature(Weltschmerz weltschmerz){
         Configuration configuration = weltschmerz.getConfiguration();
+
         int width = configuration.longitude;
         int height = configuration.latitude;
 
         //Creates frame for heigh map
-        JFrame worldFrame = new JFrame("World Noise");
+        JFrame worldFrame = new JFrame("World Temperature");
+
         worldFrame.setPreferredSize(new Dimension(width, height));
-        WorldNoiseCanvas worldNoiseCanvas = new WorldNoiseCanvas(width, height);
-        worldFrame.add(worldNoiseCanvas);
+
+        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height);
+
+        worldFrame.add(worldTemperatureCanvas);
+
         worldFrame.setVisible(true);
+
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldNoiseCanvas.updateImage(weltschmerz.world);
+        worldTemperatureCanvas.updateImage(weltschmerz.world);
 
         worldFrame.pack();
+
         worldFrame.setLocationRelativeTo(null);
     }
 }

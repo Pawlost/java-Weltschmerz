@@ -37,7 +37,7 @@ public class Graph {
                 Point center = new Point(centerX, centerY);
                 Polygon polygon = new Polygon(point, center);
 
-                Location location = new Location(polygon, locations.get(point).seed, worldNoise);
+                Location location = new Location(polygon, locations.get(point).id);
 
                 location.position.addBorder(borders);
                 location.position.createPolygon();
@@ -66,7 +66,7 @@ public class Graph {
 
             if (centerX > -1 || centerY > -1) {
                 Point centroid = new Point(location.position.centroid.x + centerX / (2 * smooth), location.position.centroid.y + centerY / (2 * smooth));
-                location = new Location(centroid, location.seed);
+                location = new Location(centroid, location.id);
                 locationHashMap.put(centroid, location);
             }
         }

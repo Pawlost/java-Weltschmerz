@@ -2,79 +2,59 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
+import com.ritualsoftheold.weltschmerz.landmass.Equator;
 import com.ritualsoftheold.weltschmerz.landmass.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
-import jdk.jshell.execution.LoaderDelegate;
-import org.checkerframework.checker.units.qual.A;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import squidpony.squidmath.XoRoRNG;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class World {
-    private Configuration conf;
-    private HashMap<Point, Location> world;
-    private ArrayList<Plate> plates;
+
+    private Equator equator;
+    private HashMap<Point, Location> map;
     private WorldNoise noise;
-    private XoRoRNG random;
+    private int dirtID;
+    private int grassID;
+    private boolean isDifferent;
 
     public World(Configuration configuration, WorldNoise noise) {
-        System.out.println("Setting locations");
+        System.out.println("Starting generation");
+
+        this.equator = new Equator(configuration);
         this.noise = noise;
-        this.conf = configuration;
-        this.random = new XoRoRNG(conf.seed);
+        XoRoRNG random = new XoRoRNG(configuration.seed);
 
-        world = new HashMap<>();
-        plates = new ArrayList<>();
+        map = new HashMap<>();
 
-        for (int spread = 0; spread <= conf.detail; spread++) {
-            double x = random.nextInt(-1,conf.width) + random.nextDouble();
-            double y = random.nextInt(-1, conf.height) + random.nextDouble();
+        for (int spread = 0; spread <= configuration.detail; spread++) {
+            double x = random.nextInt(-1, configuration.longitude) + random.nextDouble();
+            double y = random.nextInt(-1, configuration.latitude) + random.nextDouble();
             Point point = new Point(x, y);
             Location location = new Location(point, random.nextLong());
-            world.put(point, location);
+            map.put(point, location);
         }
 
-        world = Fortune.ComputeGraph(world.keySet()).smoothLocation(world, 10);
-        Fortune.ComputeGraph(world.keySet()).getVoronoiArea(world, noise);
+        map = Fortune.ComputeGraph(map.keySet()).smoothLocation(map, 10);
+        Fortune.ComputeGraph(map.keySet()).getVoronoiArea(map, noise);
         System.out.println("Locations set");
 
         generateLand();
-        /*
-        for (Plate plate : getPlates()) {
-            connectPlate(plate);
-        }
-*/
-    }
 
-    private void createIsland(Location location, Plate movingPlate, ArrayList<Location> used, ArrayList<Location> collisionLocations, int amount) {
-        amount--;
-       /* for (Location neighbor : location.getNeighbors()) {
-            if (!neighbor.isLand() || neighbor.getKey().equals("SEA")) {
-                Plate plate = neighbor.getTectonicPlate();
-                neighbor.setLand(true);
-                neighbor.setShape(noise.getShape("PLAIN"));
-                neighbor.setTectonicPlate(movingPlate);
-                plate.remove(neighbor);
-                used.add(neighbor);
-                collisionLocations.remove(neighbor);
-                movingPlate.add(neighbor);
-            }
-        }*/
-
-        if (amount > 0) {
-           // createIsland(location.getNeighbors()[0], movingPlate, used, collisionLocations, amount);
-        }
+        System.out.println("Generation finished");
     }
 
     private void generateLand() {
         Set<Location> anotherLocations = new HashSet<>();
         Set<Location> done = new HashSet<>();
-        for (Location location:world.values()) {
+        for (Location location:map.values()) {
             for(Point point:location.position.getNeighborPoints()){
-                if(world.get(point) != null) {
-                    location.add(world.get(point));
+                if(map.get(point) != null) {
+                    location.add(map.get(point));
                 }
             }
 
@@ -99,92 +79,85 @@ public class World {
         System.out.println("Generated Land");
     }
 
-    private void connectPlate(Plate plate) {
-        plate.makeNeighborPlates();
-        int neighborPlateSize = plate.getNeighborPlates().size();
-        if (neighborPlateSize < 2) {
-            Plate newPlate = plate.getNeighborPlates().get(neighborPlateSize - 1);
-            for (Location location : plate) {
-                location.setTectonicPlate(newPlate);
-                newPlate.add(location);
-            }
-            plates.remove(plate);
-            newPlate.reset();
-            connectPlate(newPlate);
-        }
+    public float getTemperature(int posY){
+        return equator.getTemperature(posY);
     }
 
-    private void fillEmptyLocations() {
-   /*     for (Location[] locations : world) {
-            for (Location location : locations) {
-                int index = 0;
-                Location[] neighbors = location.getNeighbors();
+    public void setMaterials(int dirtID, int grassID){
+        this.dirtID = dirtID;
+        this.grassID = grassID;
+    }
 
-                check:
-                while (location.getTectonicPlate() == null) {
-                    index++;
-                    for (Location neighbor : neighbors) {
-                        if (neighbor.getTectonicPlate() != null) {
-                            Plate plate = neighbor.getTectonicPlate();
-                            plate.add(location);
-                            location.setTectonicPlate(plate);
-                            break check;
-                        }
-                    }
+    public ByteBuffer getChunk(int posX, int posY, int posZ, int bufferSize) {
+        ByteBuffer blockBuffer = ByteBuffer.allocate(bufferSize);
+        byte[] fill = new byte[bufferSize];
+        Arrays.fill(fill, (byte) 1);
+        blockBuffer.put(fill);
 
-                    if (location.getNeighbors().length - 1 <= index) {
-                        break;
-                    }
+        MultiKeyMap<Integer, ByteBuffer> blocks = new MultiKeyMap<>();
+        isDifferent = false;
 
-                    neighbors = location.getNeighbors()[index].getNeighbors();
+        for(int z = 0; z < 64; z++) {
+            for (int x = 0; x < 64; x++) {
+                ByteBuffer bb = ByteBuffer.allocate(64);
+                int y = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
+                if (y / 64 > posY / 64) {
+                    byte[] underArray = new byte[64];
+                    Arrays.fill(underArray, (byte) dirtID);
+                    bb.put(underArray);
+                    blocks.put(z, x, bb);
+                }else if(y / 64 == posY / 64){
+                    byte[] underArray = new byte[(y%64)];
+                    Arrays.fill(underArray, (byte) dirtID);
+                    bb.put(underArray);
+
+                    byte[] upperArray = new byte[64-(y%64)];
+                    Arrays.fill(upperArray, (byte) 1);
+                    bb.put(upperArray);
+
+                    bb.put(y%64, (byte) grassID);
+
+                    isDifferent = true;
+                    blocks.put(z, x, bb);
                 }
             }
-        }*/
-    }
-
-    private void generatePlates() {
-      /*  int range = world.length;
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-
-        for (int i = conf.tectonicPlates; i > 1; i--) {
-            Location location;
-
-            int part = range / i;
-            range -= part;
-
-          /*  do {
-                int position = random.nextInt(world.length);
-                location = locations.get(position);
-            } while (location.getTectonicPlate() != null);
-
-
-            Plate plate = new Plate(location);
-            location.setTectonicPlate(plate);
-            //plate.generateTectonic(locations, part);
-            plates.add(plate);
-        }           */
-    }
-
-    public Plate[] getPlates() {
-        Plate[] copyPlates = new Plate[plates.size()];
-        plates.toArray(copyPlates);
-        return copyPlates;
-    }
-
-    private boolean isLocationEmpty() {
-        for (Location location : world.values()) {
-            if (location.getTectonicPlate() == null) {
-                return true;
-            }
         }
-        return false;
+
+        if(isDifferent) {
+            for (int z = 0; z < 64; z++) {
+                for (int x = 0; x < 64; x++) {
+                    if (blocks.containsKey(z, x)) {
+                        for (int y = 0; y < 64; y++) {
+                            blockBuffer.put(x + (y * 64) + (z * 4096), blocks.get(z, x).get(y));
+                        }
+                    }
+                }
+            }
+        }else if(blocks.size() > 0){
+            blockBuffer.clear();
+            blockBuffer.rewind();
+            Arrays.fill(fill, (byte) dirtID);
+            blockBuffer.put(fill);
+        }
+
+        blocks.clear();
+        blockBuffer.rewind();
+        return blockBuffer;
+    }
+
+    public boolean isDifferent(){
+        return isDifferent;
     }
 
     public Collection<Location> getLocations() {
-        return world.values();
+        return map.values();
     }
 
-    public HashMap<Point, Location> getWorld() {
-        return world;
+    public HashMap<Point, Location> getmap() {
+        return map;
+    }
+
+    public WorldNoise getNoise() {
+        return noise;
     }
 }

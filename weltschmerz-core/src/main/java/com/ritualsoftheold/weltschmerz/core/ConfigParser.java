@@ -10,8 +10,8 @@ import java.util.HashMap;
 public class ConfigParser {
     public static Configuration parseConfig(Config conf){
         Configuration configuration = new Configuration();
-        configuration.width = conf.getInt("map.width");
-        configuration.height = conf.getInt("map.height");
+        configuration.latitude = conf.getInt("map.height");
+        configuration.longitude = conf.getInt("map.width");
 
         configuration.seed = conf.getLong("noise.seed");
         configuration.octaves = conf.getInt("noise.octaves");

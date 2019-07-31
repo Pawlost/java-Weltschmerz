@@ -11,13 +11,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class ElevationCanvas extends JPanel implements Scrollable {
+public class BiomCanvas extends JPanel implements Scrollable {
     private BufferedImage image;
     private int width;
     private int height;
     private ArrayList<Location> world;
 
-    public ElevationCanvas(int width, int height, World world) {
+    public BiomCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.world = new ArrayList<>(world.getLocations());
         this.width = width;
@@ -54,7 +54,7 @@ public class ElevationCanvas extends JPanel implements Scrollable {
             fillRectangle(location);
             drawBorders(location);
         }
-        MapIO.saveHeightmap(image);
+        MapIO.saveImage(image);
     }
 
     public void paintComponent(Graphics g) {

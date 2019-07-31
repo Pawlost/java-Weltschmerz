@@ -1,11 +1,8 @@
 package com.ritualsoftheold.weltschmerz.landmass.land;
 
-import com.ritualsoftheold.weltschmerz.geometry.units.Border;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
-import com.ritualsoftheold.weltschmerz.noise.generators.ChunkNoise;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 
@@ -13,26 +10,23 @@ import java.util.ArrayList;
 
 public class Location {
 
-    public final long seed;
+    public final long id;
     private double centerChunkElevation;
     private Plate tectonicPlate;
     private Shape shape;
     private ArrayList<Location> neighbors;
     public final Polygon position;
-    private WorldNoise worldNoise;
     public static final float VOLATILITY = 2;
 
-    public Location(Point point, long seed) {
-        this(new Polygon(point, null), seed, null);
+    public Location(Point point, long id) {
+        this(new Polygon(point, null), id);
     }
 
-    public Location(Polygon polygon, long seed, WorldNoise worldNoise) {
-        this.worldNoise = worldNoise;
+    public Location(Polygon polygon, long id) {
         this.position = polygon;
-        this.seed = seed;
+        this.id = id;
         neighbors = new ArrayList<>();
     }
-
 
     public ArrayList<Location> getNeighbors() {
         return neighbors;
@@ -70,9 +64,5 @@ public class Location {
 
     public Plate getTectonicPlate() {
         return tectonicPlate;
-    }
-
-    public double getCenterChunkElevation() {
-        return centerChunkElevation;
     }
 }

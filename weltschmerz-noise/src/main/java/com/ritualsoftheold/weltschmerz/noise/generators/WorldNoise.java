@@ -23,8 +23,8 @@ public class WorldNoise extends Generation {
     public WorldNoise(Configuration configuration){
         super(configuration.shapes);
         //Creates basic fractal module
-        this.worldHeight = configuration.height;
-        this.worldWidth = configuration.width;
+        this.worldHeight = configuration.latitude;
+        this.worldWidth = configuration.longitude;
         this.samples = configuration.samples;
         this.max = getShape("MOUNTAIN").max * MAX_SECTOR_HEIGHT_DIFFERENCE;
         this.min = getShape("OCEAN").position * MAX_SECTOR_HEIGHT_DIFFERENCE;

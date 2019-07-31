@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.noise;
+package com.ritualsoftheold.weltschmerz.maps.temperature;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
@@ -10,29 +10,31 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 //Jframe canvas to show noise
-public class WorldNoiseCanvas extends JPanel implements Scrollable {
+public class WorldTemperatureCanvas extends JPanel implements Scrollable {
 
   private static final float SCALE = 1.0f;
   private BufferedImage image;
   private int width;
   private int height;
 
-  public WorldNoiseCanvas(int width, int height) {
+  public WorldTemperatureCanvas(int width, int height) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     this.width = width;
     this.height = height;
   }
 
   public void updateImage(World world) {
-   int width = this.image.getWidth();
+    int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-    for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        float c = (float) (world.getNoise().getNoise(x, y)/world.getNoise().getMax());
-        this.image.setRGB(x, y, new Color(c, c, c).getRGB());
+          int temperature = (int)world.getTemperature(y)%255;
+          System.out.println(temperature);
+          for (int x = 0; x < width; x++) {
+              this.image.setRGB(x, y, new Color(Math.abs(temperature), 0, 127-temperature).getRGB());
+          }
       }
-    }
+
     MapIO.saveImage(image);
     this.repaint();
   }
