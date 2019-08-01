@@ -14,13 +14,15 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable {
 
   private static final float SCALE = 1.0f;
   private BufferedImage image;
+  private int maxTemperature;
   private int width;
   private int height;
 
-  public WorldTemperatureCanvas(int width, int height) {
+  public WorldTemperatureCanvas(int width, int height, int maxTemperature) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     this.width = width;
     this.height = height;
+    this.maxTemperature = maxTemperature;
   }
 
   public void updateImage(World world) {
@@ -28,10 +30,9 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable {
     int height = this.image.getHeight();
 
       for (int y = 0; y < height; y++) {
-          int temperature = (int)world.getTemperature(y)%255;
-          System.out.println(temperature);
           for (int x = 0; x < width; x++) {
-              this.image.setRGB(x, y, new Color(Math.abs(temperature), 0, 127-temperature).getRGB());
+            int temperature = ((int)world.getTemperature(x, y)+maxTemperature)%255;
+            this.image.setRGB(x, y, new Color(Math.abs(temperature), Math.abs(temperature), Math.abs(temperature)).getRGB());
           }
       }
 

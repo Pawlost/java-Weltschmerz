@@ -24,7 +24,7 @@ public class Temperature {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height);
+        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height, configuration.maxTemperature);
 
         worldFrame.add(worldTemperatureCanvas);
 

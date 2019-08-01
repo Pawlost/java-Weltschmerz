@@ -5,7 +5,6 @@ import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.landmass.Equator;
 import com.ritualsoftheold.weltschmerz.landmass.Fortune;
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.landmass.land.Plate;
 import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import squidpony.squidmath.XoRoRNG;
@@ -21,9 +20,11 @@ public class World {
     private int dirtID;
     private int grassID;
     private boolean isDifferent;
+    private Configuration conf;
 
     public World(Configuration configuration, WorldNoise noise) {
         System.out.println("Starting generation");
+        this.conf = configuration;
 
         this.equator = new Equator(configuration);
         this.noise = noise;
@@ -79,8 +80,13 @@ public class World {
         System.out.println("Generated Land");
     }
 
-    public float getTemperature(int posY){
-        return equator.getTemperature(posY);
+    public double getTemperature(int posX, int posY){
+        double elevation =  noise.getNoise(posX, posY) * conf.temperatureDecrease;
+        if(elevation > 0){
+            return equator.getTemperature(posY) - elevation;
+        }else{
+            return equator.getTemperature(posY);
+        }
     }
 
     public void setMaterials(int dirtID, int grassID){
@@ -157,7 +163,7 @@ public class World {
         return map;
     }
 
-    public WorldNoise getNoise() {
+    public WorldNoise getWorldNoise() {
         return noise;
     }
 }

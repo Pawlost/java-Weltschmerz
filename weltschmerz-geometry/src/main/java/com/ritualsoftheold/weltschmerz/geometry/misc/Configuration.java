@@ -12,8 +12,9 @@ public class Configuration {
     public int volcanoes = 0;
     public int tectonicPlates = 20;
     public int detail = 25000;
- //   public int lapseRate =
-    public int maxTemperature = 127;
-    public int minTemperature = -127;
+    public int maxTemperature = 80;
+    public int minTemperature = -80;
+    //Over 1000 meters
+    public double temperatureDecrease = 0.0098;
     public HashMap<String, Shape> shapes;
 }
