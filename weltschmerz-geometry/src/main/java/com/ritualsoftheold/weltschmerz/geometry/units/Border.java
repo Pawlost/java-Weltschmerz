@@ -5,7 +5,6 @@ public class Border{
     public final Vertex vertexB;
     public final Point datumA;
     public final Point datumB;
-    public final Vector vector;
 
     public Border(Vertex a, Vertex b, Point ld, Point rd) {
         if (a.isNaN() || b.isNaN())
@@ -13,7 +12,6 @@ public class Border{
 
         double x = a.x - b.x;
         double y = a.y - b.y;
-        vector = new Vector(x, y, a);
         datumA = ld;
         datumB = rd;
         vertexA = a;

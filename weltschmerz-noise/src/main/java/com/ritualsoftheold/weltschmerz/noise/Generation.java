@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.noise;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
+import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import java.util.HashMap;
 
@@ -29,6 +30,7 @@ public abstract class Generation {
     }
 
     public Shape landGeneration(double e) {
+        e = e/WorldNoise.MAX_SECTOR_HEIGHT_DIFFERENCE;
         if (e < shapes.get("OCEAN").max) {
             String key = getKey(0);
             return shapes.get(key);

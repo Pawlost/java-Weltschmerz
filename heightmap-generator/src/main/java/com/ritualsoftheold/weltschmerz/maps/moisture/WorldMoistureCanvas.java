@@ -1,57 +1,39 @@
-package com.ritualsoftheold.weltschmerz.maps.world;
+package com.ritualsoftheold.weltschmerz.maps.moisture;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.units.Border;
-import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
-public class BiomCanvas extends JPanel implements Scrollable {
+public class WorldMoistureCanvas extends JPanel implements Scrollable {
+
+    private static final float SCALE = 1.0f;
     private BufferedImage image;
     private int width;
     private int height;
-    private ArrayList<Location> world;
 
-    public BiomCanvas(int width, int height, World world) {
+    public WorldMoistureCanvas(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.world = new ArrayList<>(world.getLocations());
         this.width = width;
         this.height = height;
     }
 
-    private void fillPolygon(Location location) {
-        Graphics g = image.getGraphics();
+    public void updateImage(World world) {
+        int width = this.image.getWidth();
+        int height = this.image.getHeight();
 
-        g.setColor(location.getShape().color);
-        Polygon position = location.position;
-        g.fillPolygon(position.getSwingPolygon());
-
-        this.repaint();
-    }
-
-    public void drawBorders(Location location){
-        Graphics g = image.getGraphics();
-        g.setColor(Color.BLACK);
-
-        for(Border border : location.position.getBorders().values()){
-          g.drawLine((int)border.vertexA.x, (int)border.vertexA.y, (int)border.vertexB.x, (int)border.vertexB.y);
+        for (int y = 0; y < height; y++) {
+            float moisture = (float) world.getMoisture(y);
+            System.out.println( world.getMoisture(y));
+            for (int x = 0; x < width; x++) {
+                this.image.setRGB(x, y, new Color((float) Math.abs(moisture), (float) Math.abs(1.0), (float) Math.abs(moisture)).getRGB());
+            }
         }
 
-        this.repaint();
-    }
-
-    public void fillWorld() {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for (Location location : world) {
-            fillPolygon(location);
-            drawBorders(location);
-        }
         MapIO.saveImage(image);
+        this.repaint();
     }
 
     public void paintComponent(Graphics g) {
@@ -60,6 +42,7 @@ public class BiomCanvas extends JPanel implements Scrollable {
         g2.drawImage(this.image, null, null);
         g2.dispose();
     }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(width, height);
@@ -90,3 +73,4 @@ public class BiomCanvas extends JPanel implements Scrollable {
         return false;
     }
 }
+

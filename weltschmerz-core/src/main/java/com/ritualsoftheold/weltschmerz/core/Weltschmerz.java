@@ -2,7 +2,6 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.landmass.land.Location;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import xerial.larray.LByteArray;
 
@@ -33,8 +32,7 @@ public class Weltschmerz {
 
     public Weltschmerz() {
         configuration = MapIO.loadMapConfig();
-        WorldNoise noise = new WorldNoise(configuration);
-        world = new World(configuration, noise);
+        world = new World(configuration);
         System.out.println("Map generated");
     }
 

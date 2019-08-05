@@ -2,8 +2,6 @@ package com.ritualsoftheold.weltschmerz.maps.temperature;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +29,10 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable {
 
       for (int y = 0; y < height; y++) {
           for (int x = 0; x < width; x++) {
-            int temperature = ((int)world.getTemperature(x, y)+maxTemperature)%255;
+            float temperature = ((float)world.getTemperature(x, y) + maxTemperature)/100;
+            if(temperature < 0) {
+              temperature = 0;
+            }
             this.image.setRGB(x, y, new Color(Math.abs(temperature), Math.abs(temperature), Math.abs(temperature)).getRGB());
           }
       }

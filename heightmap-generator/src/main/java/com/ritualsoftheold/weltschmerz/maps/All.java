@@ -1,6 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
+import com.ritualsoftheold.weltschmerz.maps.circulation.Circulation;
 import com.ritualsoftheold.weltschmerz.maps.noise.Noise;
 import com.ritualsoftheold.weltschmerz.maps.temperature.Temperature;
 import com.ritualsoftheold.weltschmerz.maps.world.Bioms;
@@ -11,5 +12,6 @@ public class All {
         new Bioms(weltschmerz);
         new Temperature(weltschmerz);
         new Noise(weltschmerz);
+        new Circulation(weltschmerz);
     }
 }

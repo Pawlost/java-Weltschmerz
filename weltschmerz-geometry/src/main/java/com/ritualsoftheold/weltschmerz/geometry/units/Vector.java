@@ -3,16 +3,25 @@ package com.ritualsoftheold.weltschmerz.geometry.units;
 public class Vector {
     public final double x;
     public final double y;
-    public final Point point;
-    public Vector(double x, double y, Point point){
-        this.x = x;
-        this.y = y;
-        this.point = point;
+    public final double z;
+    public final double w;
+
+    public Vector(double x, double y){
+        this(x, y, 0.0, 0.0);
     }
 
-    public Point getIntersection(Vector vector){
-        double t = ((vector.point.x *vector.x * vector.y) + (vector.x * point.y) - (vector.x * vector.point.y)
-                - (point.x *(vector.x * vector.y)))/(x * vector.x * vector.y - vector.x * y);
-        return new Point(point.x + (x * t), point.y + (y * t));
+    public Vector(double x, double y, double z){
+        this(x, y, z, 0.0);
+    }
+
+    public Vector(double x, double y, double z, double w){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public double getLength(){
+        return Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2)+Math.pow(w, 2));
     }
 }

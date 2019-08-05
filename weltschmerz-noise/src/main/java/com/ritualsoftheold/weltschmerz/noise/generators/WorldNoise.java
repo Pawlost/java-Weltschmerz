@@ -18,7 +18,7 @@ public class WorldNoise extends Generation {
     private double min;
     private ModuleAutoCorrect mod;
     private int samples;
-    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 64;
+    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 100;
 
     public WorldNoise(Configuration configuration){
         super(configuration.shapes);

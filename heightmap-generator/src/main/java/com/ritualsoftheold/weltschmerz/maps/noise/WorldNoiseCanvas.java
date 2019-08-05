@@ -2,8 +2,6 @@ package com.ritualsoftheold.weltschmerz.maps.noise;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +31,6 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable {
         if(c < 0){
             c = 0;
         }
-        System.out.println(c);
         this.image.setRGB(x, y, new Color(c, c, c).getRGB());
       }
     }
