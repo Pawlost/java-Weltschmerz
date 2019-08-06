@@ -1,13 +1,14 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigObject;
 
-import java.awt.*;
 import java.util.HashMap;
 
 public class ConfigParser {
+    private static final String BIOMS_PATH = "bioms";
+
     public static Configuration parseConfig(Config conf){
         Configuration configuration = new Configuration();
         configuration.latitude = conf.getInt("map.height");
@@ -22,41 +23,20 @@ public class ConfigParser {
         configuration.volcanoes = conf.getInt("elevation.volcanoes");
         configuration.tectonicPlates = conf.getInt("elevation.tectonicPlates");
         //configuration.islandSize = conf.getInt("elevation.mountainLenght");
-
         configuration.shapes = parseShape(conf);
         return configuration;
     }
 
-    private static HashMap<String, Shape> parseShape(Config config){
-        HashMap<String, Shape> shapes = new HashMap<>();
-        Shape shape = new Shape(0, config.getDouble("level.OCEAN"), -3,
-                false,"OCEAN", Color.BLUE);
-        shapes.put("OCEAN", shape);
+    private static HashMap<Integer, String> parseShape(Config conf){
+        HashMap<Integer, String> shapes = new HashMap<>();
+        ConfigObject bioms = conf.getObject(BIOMS_PATH);
 
-        shape = new Shape(shapes.get("OCEAN").max, config.getDouble("level.SEA"), -2,
-                false,"SEA", Color.CYAN);
-        shapes.put("SEA", shape);
+        for(String biom : bioms.unwrapped().keySet()){
 
-        shape = new Shape(shapes.get("SEA").max, config.getDouble("level.SHORELINE"), -1,
-                true,"SHORELINE", Color.YELLOW);
-        shapes.put("SHORELINE", shape);
-
-        shape = new Shape(shapes.get("SHORELINE").max, config.getDouble("level.PLAIN"), 0,
-                true,"PLAIN", Color.GREEN);
-        shapes.put("PLAIN", shape);
-
-        shape = new Shape(shapes.get("PLAIN").max, config.getDouble("level.HILL"), 1,
-                true,"HILL", Color.ORANGE);
-        shapes.put("HILL", shape);
-
-        shape = new  Shape(shapes.get("HILL").max, config.getDouble("level.MOUNTAIN"), 2,
-                true,"MOUNTAIN", Color.GRAY);
-        shapes.put("MOUNTAIN", shape);
-
-        shape = new  Shape(shapes.get("HILL").max,  config.getDouble("level.MOUNTAIN"), 1,
-                true,"VOLCANO", Color.RED);
-        shapes.put("VOLCANO", shape);
-
+            String hexColor = conf.getString(BIOMS_PATH+"."+biom+".color");
+            int color = Integer.parseInt(hexColor, 16);
+            shapes.put(color, biom);
+        }
         return shapes;
     }
 }

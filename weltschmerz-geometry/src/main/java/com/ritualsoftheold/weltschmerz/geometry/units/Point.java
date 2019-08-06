@@ -19,12 +19,6 @@ public class Point implements Comparable<Point> {
         return Double.isInfinite(x) || Double.isInfinite(y);
     }
 
-    public double dist(Vertex o) {
-        final double dx = x - o.x;
-        final double dy = y - o.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-
     public double dist(Point o) {
         final double dx = x - o.x;
         final double dy = y - o.y;

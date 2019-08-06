@@ -1,33 +1,28 @@
-package com.ritualsoftheold.weltschmerz.noise.generators;
+package com.ritualsoftheold.weltschmerz.environment;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.geometry.units.Point;
-import com.ritualsoftheold.weltschmerz.noise.Generation;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Shape;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
 
+import java.util.Dictionary;
 
-public class WorldNoise extends Generation {
+
+public class WorldNoise {
 
     private ModuleFractal gen;
     private int worldWidth;
     private int worldHeight;
-    private double max;
-    private double min;
     private ModuleAutoCorrect mod;
     private int samples;
-    public static final int MAX_SECTOR_HEIGHT_DIFFERENCE = 100;
+    public static final int DIFFERENCE = 500;
 
     public WorldNoise(Configuration configuration){
-        super(configuration.shapes);
         //Creates basic fractal module
         this.worldHeight = configuration.latitude;
         this.worldWidth = configuration.longitude;
         this.samples = configuration.samples;
-        this.max = getShape("MOUNTAIN").max * MAX_SECTOR_HEIGHT_DIFFERENCE;
-        this.min = getShape("OCEAN").position * MAX_SECTOR_HEIGHT_DIFFERENCE;
 
         init(configuration.seed, configuration.octaves, configuration.frequency);
         generateNoise();
@@ -52,7 +47,7 @@ public class WorldNoise extends Generation {
          * auto-correct the output to the range specified.
          */
 
-        mod = new ModuleAutoCorrect(min, max);
+        mod = new ModuleAutoCorrect(-DIFFERENCE, DIFFERENCE);
         mod.setSource(gen);// set source (can usually be either another Module or a double value; see specific module for details)
         mod.setSamples(samples); // set how many samples to take
         mod.calculate4D(); // perform the calculations
@@ -68,21 +63,8 @@ public class WorldNoise extends Generation {
         return (mod.get(nx, ny, nz, nw));
     }
 
-    public Shape makeLand(Shape shape, Point centroid) {
-       if(shape == null) {
-            double y = getNoise((int)centroid.x, (int)centroid.y);
-            shape = landGeneration(y);
-        }
-
-        return shape;
-    }
-
     public double getMax() {
-        return max;
-    }
-
-    public double getMin() {
-        return min;
+        return DIFFERENCE;
     }
 
 }

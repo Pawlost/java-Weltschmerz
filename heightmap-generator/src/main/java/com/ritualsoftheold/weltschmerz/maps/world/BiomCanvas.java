@@ -2,54 +2,33 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.units.Border;
-import com.ritualsoftheold.weltschmerz.landmass.land.Location;
-import com.ritualsoftheold.weltschmerz.geometry.units.Polygon;
+import com.ritualsoftheold.weltschmerz.environment.Biom;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class BiomCanvas extends JPanel implements Scrollable {
     private BufferedImage image;
+    private World world;
     private int width;
     private int height;
-    private ArrayList<Location> world;
 
     public BiomCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.world = new ArrayList<>(world.getLocations());
+        this.world = world;
         this.width = width;
         this.height = height;
     }
 
-    private void fillPolygon(Location location) {
-        Graphics g = image.getGraphics();
-
-        g.setColor(location.getShape().color);
-        Polygon position = location.position;
-        g.fillPolygon(position.getSwingPolygon());
-
-        this.repaint();
-    }
-
-    public void drawBorders(Location location){
-        Graphics g = image.getGraphics();
-        g.setColor(Color.BLACK);
-
-        for(Border border : location.position.getBorders().values()){
-          g.drawLine((int)border.vertexA.x, (int)border.vertexA.y, (int)border.vertexB.x, (int)border.vertexB.y);
-        }
-
-        this.repaint();
-    }
-
     public void fillWorld() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for (Location location : world) {
-            fillPolygon(location);
-            drawBorders(location);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Biom biom = world.getBiom(x, y);
+                this.image.setRGB(x, y, biom.color.getRGB());
+                this.repaint();
+            }
         }
         MapIO.saveImage(image);
     }

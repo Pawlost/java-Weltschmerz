@@ -1,6 +1,6 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.PrecisionMath;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 
 public class Circulation {
@@ -77,15 +77,15 @@ public class Circulation {
     }
 
     private double calculateBaseDensity(int posY){
-        double verticallity = PrecisionMath.toUnsignedRange(equator.getDistance(posY));
-        return PrecisionMath.toUnsignedRange(Math.cos(Math.toRadians(verticallity * 3 * (Math.PI*2))));
+        double verticallity = Utils.toUnsignedRange(equator.getDistance(posY));
+        return Utils.toUnsignedRange(Math.cos(Math.toRadians(verticallity * 3 * (Math.PI*2))));
     }
 
     public Vector applyCoriolisEffect(int posY, Vector airFlow){
         float latitude = (float)posY / equator.conf.latitude;
         float equatorPosition = equator.equatorPosition;
         float direction = Math.signum(latitude - equatorPosition);
-        Vector matrix = PrecisionMath.rotation((Math.PI/2) * direction * airFlow.getLength());
+        Vector matrix = Utils.rotation((Math.PI/2) * direction * airFlow.getLength());
         double x = (matrix.x * airFlow.x) + (matrix.y * airFlow.y);
         double y = (matrix.z * airFlow.x) + (matrix.w * airFlow.y);
         return new Vector(x, y);

@@ -1,7 +1,6 @@
-package com.ritualsoftheold.weltschmerz.landmass;
+package com.ritualsoftheold.weltschmerz.environment;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.noise.generators.WorldNoise;
 
 public class Equator {
     public final int equatorPosition;

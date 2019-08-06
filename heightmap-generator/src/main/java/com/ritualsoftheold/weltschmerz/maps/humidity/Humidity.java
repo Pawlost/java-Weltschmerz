@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.moisture;
+package com.ritualsoftheold.weltschmerz.maps.humidity;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
@@ -6,13 +6,13 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import javax.swing.*;
 import java.awt.*;
 
-public class Moisture {
+public class Humidity {
     public static void main(String... args) {
         Weltschmerz weltschmerz = new Weltschmerz();
-        new Moisture(weltschmerz);
+        new Humidity(weltschmerz);
     }
 
-    public Moisture(Weltschmerz weltschmerz) {
+    public Humidity(Weltschmerz weltschmerz) {
         Configuration configuration = weltschmerz.getConfiguration();
 
         int width = configuration.longitude;
@@ -23,7 +23,7 @@ public class Moisture {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(width, height);
+        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(width, height);
 
         worldFrame.add(worldTemperatureCanvas);
 

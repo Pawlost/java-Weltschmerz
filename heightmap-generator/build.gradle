@@ -3,7 +3,6 @@ plugins {
 }
 
 dependencies {
-    compile project(':weltschmerz-noise')
     compile project(':weltschmerz-core')
-    compile project(':weltschmerz-landmass')
+    compile project(':weltschmerz-environment')
 }
