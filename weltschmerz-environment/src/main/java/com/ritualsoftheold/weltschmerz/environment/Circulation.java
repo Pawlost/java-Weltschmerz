@@ -30,7 +30,7 @@ public class Circulation {
         x += (1 / Math.sqrt(2)) * airExchange.w * exchangeCoefficient;
         y += -(1 / Math.sqrt(2)) * airExchange.w * exchangeCoefficient;
 
-        return new Vector(x, y);
+        return applyCoriolisEffect(posY, new Vector(x, y));
     }
 
     private Vector calculateAirExchange(int posX, int posY) {

@@ -10,26 +10,23 @@ import java.awt.image.BufferedImage;
 
 public class BiomCanvas extends JPanel implements Scrollable {
     private BufferedImage image;
-    private World world;
     private int width;
     private int height;
 
-    public BiomCanvas(int width, int height, World world) {
+    public BiomCanvas(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        this.world = world;
         this.width = width;
         this.height = height;
     }
 
-    public void fillWorld() {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    public void updateImage(World world) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Biom biom = world.getBiom(x, y);
                 this.image.setRGB(x, y, biom.color.getRGB());
-                this.repaint();
             }
         }
+        this.repaint();
         MapIO.saveImage(image);
     }
 

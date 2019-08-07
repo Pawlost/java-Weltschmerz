@@ -13,7 +13,8 @@ public class Utils {
     }
 
     public static Vector rotation(double angle) {
-        double sine = Math.sin(Math.toRadians(angle)), cosine = Math.cos(Math.toRadians(angle));
+        double sine = Math.sin(Math.toRadians(angle));
+        double cosine = Math.cos(Math.toRadians(angle));
         return new Vector(cosine, -sine, sine, cosine);
     }
 
@@ -25,7 +26,16 @@ public class Utils {
         return Math.pow(Math.E, Math.log(base) / n);
     }
 
-    public static  boolean isLand(double elevation){
+    public static boolean isLand(double elevation) {
         return elevation > 0;
+    }
+
+    public static Vector normalize(Vector value) {
+        double diviseur = Math.pow(value.x, 2.0) + Math.pow(value.y, 2.0) + Math.pow(value.z, 2.0) + Math.pow(value.w, 2.0);
+        return new Vector(value.x / diviseur, value.y / diviseur, value.z / diviseur, value.w / diviseur);
+    }
+
+    public static double lenght(Vector value) {
+        return Math.sqrt(Math.pow(value.x, 2) + Math.pow(value.y, 2) + Math.pow(value.z, 2) + Math.pow(value.w, 2));
     }
 }

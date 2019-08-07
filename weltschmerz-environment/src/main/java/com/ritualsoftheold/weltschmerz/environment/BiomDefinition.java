@@ -21,7 +21,12 @@ public class BiomDefinition {
 
     public boolean define(double precipitation, double temperature){
        int y = (int)Math.round(precipitation * 2.5);
-       int x = (int)Math.round(temperature * 40);
+        int x;
+       if(temperature > 0) {
+            x = (int)((temperature * 20) + 200);
+       }else{
+            x = (int)(200/Math.abs(temperature));
+       }
 
        return shape.get(x, y) != null;
     }
@@ -34,7 +39,7 @@ public class BiomDefinition {
                 if(elevation < oceanDepth){
                     return new BiomDefinition("OCEAN", Integer.parseInt("000066", 16));
                 }else {
-                    return new BiomDefinition("SEA", Integer.parseInt("0000F", 16));
+                    return new BiomDefinition("SEA", Integer.parseInt("0099FF", 16));
                 }
             }
             return new BiomDefinition("DESERT", Integer.parseInt("FFCC00", 16));

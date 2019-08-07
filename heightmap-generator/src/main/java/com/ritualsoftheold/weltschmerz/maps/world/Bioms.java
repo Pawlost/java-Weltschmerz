@@ -28,10 +28,11 @@ public class Bioms {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        BiomCanvas canvas = new BiomCanvas(width, height, weltschmerz.world);
-        canvas.fillWorld();
+        BiomCanvas canvas = new BiomCanvas(width, height);
 
         frame.add(canvas);
+
+        canvas.updateImage(weltschmerz.world);
 
         frame.pack();
 

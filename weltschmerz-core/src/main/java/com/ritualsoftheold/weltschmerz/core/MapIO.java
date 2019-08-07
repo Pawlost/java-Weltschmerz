@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValueFactory;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
@@ -47,11 +48,13 @@ public class MapIO {
             for (int y = 0; y < image.getHeight(); y++) {
                 int color = image.getRGB(x, y);
                 BiomDefinition distribution = biomMap.get(color);
-                if (distribution == null) {
-                    distribution = new BiomDefinition(conf.shapes.get(color), color);
-                    biomMap.put(color, distribution);
+                if(color != Color.WHITE.getRGB()) {
+                    if (distribution == null) {
+                        distribution = new BiomDefinition(conf.shapes.get(color), color);
+                        biomMap.put(color, distribution);
+                    }
+                    distribution.addPoint(x, y);
                 }
-                distribution.addPoint(x, y);
             }
         }
         return new ArrayList<>(biomMap.values());

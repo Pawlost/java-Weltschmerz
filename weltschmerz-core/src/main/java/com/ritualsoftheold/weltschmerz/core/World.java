@@ -121,6 +121,8 @@ public class World {
         }
 
         System.out.println(definition.key + " Biom generated at posX " + posX + " posY " + posY);
+        System.out.println("precipitation"+precipitation);
+        System.out.println("temperature" + temperature);
 
         return new Biom(temperature, precipitation, airFlow, definition,  definition.color);
     }
@@ -139,6 +141,22 @@ public class World {
 
     public boolean isDifferent() {
         return isDifferent;
+    }
+
+    public double getPrecipitation(int posX, int posY){
+        return precipitation.getPrecipitation(posX, posY);
+    }
+
+    public double getEvapotranspiration(int posX, int posY){
+        return precipitation.getEvapotranspiration(posX, posY);
+    }
+
+    public double getMoisture(int posY){
+        return precipitation.getMoisture(posY);
+    }
+
+    public double getElevation(int posX, int posY){
+        return noise.getNoise(posX, posY);
     }
 
     public WorldNoise getWorldNoise() {

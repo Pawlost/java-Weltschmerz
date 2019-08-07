@@ -12,8 +12,8 @@ public class Configuration {
     public int volcanoes = 0;
     public int tectonicPlates = 20;
     public int detail = 25000;
-    public int maxTemperature = 30;
-    public int minTemperature = -40;
+    public int maxTemperature = 40;
+    public int minTemperature = -10;
     //Over 1000 meters
     public double temperatureDecrease = 0.0098;
     public float seaLevelAirPressure = 1013.25f;
