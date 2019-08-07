@@ -22,6 +22,14 @@ public class Utils {
         return x * (1 - a) + y * a;
     }
 
+    public static Vector clamp(Vector vector, double min, double max) {
+        double x = Math.max(Math.min(vector.x, max), min);
+        double y = Math.max(Math.min(vector.y, max), min);
+        double z = Math.max(Math.min(vector.z, max), min);
+        double w = Math.max(Math.min(vector.w, max), min);
+        return new Vector(x, y, z, w);
+    }
+
     public static double nthRoot(double n, double base) {
         return Math.pow(Math.E, Math.log(base) / n);
     }

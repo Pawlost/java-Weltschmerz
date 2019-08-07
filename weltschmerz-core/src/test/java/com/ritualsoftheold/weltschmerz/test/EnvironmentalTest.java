@@ -10,7 +10,9 @@ import org.junit.Test;
 import xerial.larray.LByteArray;
 import xerial.larray.japi.LArrayJ;
 
+import java.awt.desktop.SystemEventListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EnvironmentalTest {
     private Weltschmerz weltschmerz;
@@ -29,25 +31,26 @@ public class EnvironmentalTest {
     @Test
     public void precipitationTest(){
         ArrayList<Double> arrayList = new ArrayList<>();
+        double hugest = 0;
         for(int x = 0; x < 1000; x++) {
             for(int y =0; y < 500; y++) {
                 double precipitation = weltschmerz.world.getPrecipitation(x, y);
                 double temperature = weltschmerz.world.getTemperature(x, y) + 10;
                 double elevation = weltschmerz.world.getElevation(x, y);
                 arrayList.add(precipitation);
-                System.out.println("precipitation "+precipitation);
-                //System.out.println("temperature "+temperature);
                 if(temperature > 0 && Utils.isLand(elevation)) {
-                    Assert.assertTrue(precipitation > 0 && (int)precipitation < (temperature * 400) / 50);
+                    Assert.assertTrue(precipitation >= 0 && (int)precipitation < (temperature * 400) / 50);
+                }
+                System.out.println(precipitation);
+                if(precipitation > hugest){
+                    hugest = precipitation;
                 }
             }
         }
-        double sum = 0.0;
-        for(double lol:arrayList){
-            sum += lol;
-            System.out.println(lol);
-        }
-        System.out.println("Summary " + sum);
+        System.out.println("hugest"  +hugest);
+
+        double sum = arrayList.stream().mapToDouble(a -> a).sum();
+        System.out.println("Summary " + sum/arrayList.size());
     }
 
     @Test
@@ -72,7 +75,7 @@ public class EnvironmentalTest {
 
     @Test
     public void evapotraspirationTest() {
-        ArrayList<Double> arrayList = new ArrayList<>();
+        /*ArrayList<Double> arrayList = new ArrayList<>();
         for (int y = 0; y < 500; y++) {
             double evapotraspiration = weltschmerz.world.getEvapotranspiration(y, false);
             arrayList.add(evapotraspiration);
@@ -84,12 +87,14 @@ public class EnvironmentalTest {
         }
 
         System.out.println(sum / arrayList.size());
+
+         */
     }
 
 
     @Test
     public void moistureTest() {
-        ArrayList<Double> arrayList = new ArrayList<>();
+      /*  ArrayList<Double> arrayList = new ArrayList<>();
         for (int y = 0; y < 500; y++) {
             double moisture = weltschmerz.world.getMoisture(y);
             arrayList.add(moisture);
@@ -102,6 +107,8 @@ public class EnvironmentalTest {
         }
 
         System.out.println(sum / arrayList.size());
+
+       */
     }
 
     @Test

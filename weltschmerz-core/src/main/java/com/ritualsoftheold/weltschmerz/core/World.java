@@ -121,7 +121,7 @@ public class World {
         }
 
         System.out.println(definition.key + " Biom generated at posX " + posX + " posY " + posY);
-        System.out.println("precipitation"+precipitation);
+        System.out.println("precipitation "+precipitation);
         System.out.println("temperature" + temperature);
 
         return new Biom(temperature, precipitation, airFlow, definition,  definition.color);

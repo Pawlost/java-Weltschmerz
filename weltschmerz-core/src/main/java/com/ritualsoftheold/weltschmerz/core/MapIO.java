@@ -4,7 +4,6 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.environment.BiomDefinition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigValueFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,11 +38,21 @@ public class MapIO {
         return ConfigParser.parseConfig(conf);
     }
 
-    public static ArrayList<BiomDefinition> loadBiomMap(Configuration conf) throws IOException {
-        HashMap<Integer, BiomDefinition> biomMap = new HashMap<>();
-        File file = new File(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(BIOM_DISTRIBUTION_FILE)).getFile());
-        BufferedImage image = ImageIO.read(file);
+    public static BufferedImage loadMap(String path){
+        try {
+            File file = new File(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(path)).getFile());
+            return ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    public static ArrayList<BiomDefinition> loadBiomMap(Configuration conf){
+        HashMap<Integer, BiomDefinition> biomMap = new HashMap<>();
+        BufferedImage image = loadMap(BIOM_DISTRIBUTION_FILE);
+
+        assert image != null;
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 int color = image.getRGB(x, y);

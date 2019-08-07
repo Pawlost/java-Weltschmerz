@@ -34,8 +34,9 @@ public class Precipitation {
     }
 
     public double getMoisture(int posY){
-        double verticality = equator.getDistance(posY);
-        double mix = Utils.mix(-Math.cos(Math.toRadians(verticality*3*Math.PI*2)), -Math.cos(Math.toRadians(verticality*Math.PI*2)), 0.33);
+        double verticality = Utils.toUnsignedRange(equator.getDistance(posY)/4);
+        double mix = Utils.mix(-Math.cos(Math.toRadians(verticality*3*Math.PI*2)),
+                -Math.cos(Math.toRadians(verticality*Math.PI*2)), 0.33);
         return Utils.toUnsignedRange(Math.abs(mix));
     }
 
@@ -47,7 +48,7 @@ public class Precipitation {
         double estimated = (1.0 - CIRCULATION) * getBasePrecipitation(posY);
         double elevationGradient = getElevationGradient(posX, posY, 5).y;
         double simulated =  (2.0 * CIRCULATION) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind)) * humidity;
-        return Math.max(Math.min ( intensity * (estimated + simulated), (int)(Math.abs(temperature + 10) * 400) / 50), 0);
+        return Math.max(Math.min ( intensity * (estimated + simulated)*4, (int)(Math.abs(temperature + 10) * 400) / 50), 0);
     }
 
     public double getHumidity(int posX, int posY){
@@ -93,7 +94,7 @@ public class Precipitation {
             wind = Utils.normalize(wind);
             double slope = Utils.isLand(elevation)? 1.0 - elevationGradient:0.0;
             double uphill = Math.max(Math.max(wind.x * -elevation, wind.y * -elevation), 0.0);
-            return uphill * (0.95) * ORTOGRAPHICEFFECT;
+            return uphill * slope * ORTOGRAPHICEFFECT;
     }
 
     private double getBasePrecipitation(int posY) {

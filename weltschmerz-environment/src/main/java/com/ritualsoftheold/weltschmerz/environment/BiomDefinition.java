@@ -20,7 +20,7 @@ public class BiomDefinition {
     }
 
     public boolean define(double precipitation, double temperature){
-       int y = (int)Math.round(precipitation * 2.5);
+       int y = (int)(precipitation * 2.5);
         int x;
        if(temperature > 0) {
             x = (int)((temperature * 20) + 200);
@@ -32,17 +32,18 @@ public class BiomDefinition {
     }
 
     public static BiomDefinition selectDefault(double temperature,double elevation){
-        if(temperature <= 0){
-            return new BiomDefinition("ICELAND", Integer.parseInt("FFFFFF", 16));
-        }else{
-            if(elevation <= 0){
-                if(elevation < oceanDepth){
-                    return new BiomDefinition("OCEAN", Integer.parseInt("000066", 16));
-                }else {
-                    return new BiomDefinition("SEA", Integer.parseInt("0099FF", 16));
-                }
+        if(elevation <= 0){
+            if(elevation < oceanDepth){
+                return new BiomDefinition("OCEAN", Integer.parseInt("000066", 16));
+            }else {
+                return new BiomDefinition("SEA", Integer.parseInt("0099FF", 16));
             }
-            return new BiomDefinition("DESERT", Integer.parseInt("FFCC00", 16));
+        }else {
+            if (temperature <= 0) {
+                return new BiomDefinition("ICELAND", Integer.parseInt("FFFFFF", 16));
+            } else {
+                return new BiomDefinition("DESERT", Integer.parseInt("FFCC00", 16));
+            }
         }
     }
 }

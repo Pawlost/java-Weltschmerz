@@ -4,36 +4,38 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 
 public class Circulation {
-    private int octaves = 7;
-    private float decline = 0.5f;
-    private double temperatureInfluence = 0.5;
-
 
     private Equator equator;
+
+    public static final double TEMPERATURE_INFLUENCE = 0.5;
+    public static final int OCTAVES = 7;
+    public static double EXCHANGE_COEFIXIENT = 1.5;
 
     public Circulation(Equator equator) {
         this.equator = equator;
     }
 
     public Vector getAirFlow(int posX, int posY) {
-        Vector airExchange = calculateAirExchange(posX, posY);
-        float exchangeCoefficient = 1.5f;
+        Vector airExchange = calculateAirExchange(posX, posY, 7);
         double x = 0;
         double y = 0;
 
-        x += airExchange.x * exchangeCoefficient;
-        y += airExchange.y * exchangeCoefficient;
+        airExchange = new Vector(airExchange.x * EXCHANGE_COEFIXIENT, airExchange.y * EXCHANGE_COEFIXIENT,airExchange.z * EXCHANGE_COEFIXIENT,airExchange.w * EXCHANGE_COEFIXIENT);
+        airExchange = Utils.clamp(airExchange, -1.0, 1.0);
 
-        x += (1 / Math.sqrt(2)) * airExchange.z * exchangeCoefficient;
-        y += (1 / Math.sqrt(2)) * airExchange.z * exchangeCoefficient;
+        x += airExchange.x;
+        y += airExchange.y;
 
-        x += (1 / Math.sqrt(2)) * airExchange.w * exchangeCoefficient;
-        y += -(1 / Math.sqrt(2)) * airExchange.w * exchangeCoefficient;
+        x += (1 / Math.sqrt(2)) * airExchange.z;
+        y += (1 / Math.sqrt(2)) * airExchange.z;
+
+        x += (1 / Math.sqrt(2)) * airExchange.w;
+        y += -(1 / Math.sqrt(2)) * airExchange.w;
 
         return applyCoriolisEffect(posY, new Vector(x, y));
     }
 
-    private Vector calculateAirExchange(int posX, int posY) {
+    private Vector calculateAirExchange(int posX, int posY, double decline) {
         double x = 0;
         double y = 0;
         double z = 0;
@@ -41,7 +43,7 @@ public class Circulation {
         float range = 0.0f;
         float intensity = 1.0f;
 
-        for (int octave = 0; octave < octaves; octave++) {
+        for (int octave = 0; octave < OCTAVES; octave++) {
             Vector delta = calculateDensityDelta(posX, posY, (int)(Math.pow(octave,2)));
             x += delta.x * intensity;
             y += delta.y * intensity;
@@ -57,7 +59,7 @@ public class Circulation {
 
     private Vector calculateDensityDelta(int posX, int posY, int distance){
         // west - east
-        double x = calculateDensity(posX - distance, posY) - calculateDensity(posX, posY);
+        double x = calculateDensity(posX - distance, posY) - calculateDensity(posX + distance, posY);
         // north - south
         double y = calculateDensity(posX, posY -distance) - calculateDensity(posX, posY + distance);
 
@@ -73,7 +75,7 @@ public class Circulation {
     public double calculateDensity(int posX, int posY){
         double density = calculateBaseDensity(posY);
         double temperature = equator.getTemperature(posX, posY);
-        return (density * (1.0 - temperatureInfluence)) + ((1 - temperature)*temperatureInfluence);
+        return (density * (1.0 - TEMPERATURE_INFLUENCE)) + ((1.0 - temperature) * TEMPERATURE_INFLUENCE);
     }
 
     private double calculateBaseDensity(int posY){
@@ -82,12 +84,12 @@ public class Circulation {
     }
 
     public Vector applyCoriolisEffect(int posY, Vector airFlow){
-        float latitude = (float)posY / equator.conf.latitude;
+        float latitude = (float) posY / equator.conf.latitude;
         float equatorPosition = equator.equatorPosition;
         float direction = Math.signum(latitude - equatorPosition);
         Vector matrix = Utils.rotation((Math.PI/2) * direction * airFlow.getLength());
-        double x = (matrix.x * airFlow.x) + (matrix.y * airFlow.y);
-        double y = (matrix.z * airFlow.x) + (matrix.w * airFlow.y);
+        double x = (matrix.x * airFlow.x) + (matrix.z * airFlow.x);
+        double y = (matrix.y * airFlow.y) + (matrix.w * airFlow.y);
         return new Vector(x, y);
     }
 }

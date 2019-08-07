@@ -1,6 +1,8 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
+import jdk.jshell.execution.Util;
 
 public class Equator {
     public final int equatorPosition;
@@ -33,12 +35,7 @@ public class Equator {
         }
     }
 
-    public float getDistance(int posY){
-        if(posY < equatorPosition){
-            return equatorPosition - posY;
-        }else if(posY > equatorPosition){
-            return posY - equatorPosition;
-        }
-        return 0;
+    public double getDistance(int posY){
+        return Utils.toUnsignedRange(Math.abs(equatorPosition - posY));
     }
 }
