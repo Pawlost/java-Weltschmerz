@@ -5,28 +5,32 @@ import com.ritualsoftheold.weltschmerz.core.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class WorldPrecipitationCanvas extends JPanel implements Scrollable {
+public class WorldPrecipitationCanvas extends JPanel implements Scrollable, ActionListener {
 
     private static final float SCALE = 1.0f;
     private BufferedImage image;
     private int width;
     private int height;
+    private World world;
 
-    public WorldPrecipitationCanvas(int width, int height) {
+    public WorldPrecipitationCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;
+        this.world = world;
     }
 
-    public void updateImage(World world) {
+    public void updateImage() {
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float humidity = (float) world.getPrecipitation(x, y)/400;
+                float humidity = (float) world.getPrecipitation(x, y)/world.conf.precipitation;
                 this.image.setRGB(x, y, new Color((float) Math.abs(humidity), (float) Math.abs(humidity), (float) Math.abs(humidity)).getRGB());
             }
         }
@@ -70,6 +74,11 @@ public class WorldPrecipitationCanvas extends JPanel implements Scrollable {
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        updateImage();
     }
 }
 

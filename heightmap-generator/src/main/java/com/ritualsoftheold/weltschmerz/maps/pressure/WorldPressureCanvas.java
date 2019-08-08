@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.moisture;
+package com.ritualsoftheold.weltschmerz.maps.pressure;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class WorldMoistureCanvas extends JPanel implements Scrollable, ActionListener {
+public class WorldPressureCanvas extends JPanel implements Scrollable, ActionListener {
 
     private static final float SCALE = 1.0f;
     private BufferedImage image;
@@ -17,7 +17,7 @@ public class WorldMoistureCanvas extends JPanel implements Scrollable, ActionLis
     private int height;
     private World world;
 
-    public WorldMoistureCanvas(int width, int height, World world) {
+    public WorldPressureCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;
@@ -29,12 +29,11 @@ public class WorldMoistureCanvas extends JPanel implements Scrollable, ActionLis
         int height = this.image.getHeight();
 
         for (int y = 0; y < height; y++) {
-            float moisture = (float) world.getMoisture(y) / world.conf.moisture;
             for (int x = 0; x < width; x++) {
-                this.image.setRGB(x, y, new Color((float) Math.abs(moisture), (float) Math.abs(moisture), (float) Math.abs(moisture)).getRGB());
+                float pressure = (float)world.getPressure(x, y)/world.conf.pressure;
+                this.image.setRGB(x, y, new Color((float) Math.abs(pressure), (float) Math.abs(pressure), (float) Math.abs(pressure)).getRGB());
             }
         }
-
         MapIO.saveImage(image);
         this.repaint();
     }

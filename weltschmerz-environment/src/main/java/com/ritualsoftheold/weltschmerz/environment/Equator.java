@@ -6,19 +6,18 @@ import jdk.jshell.execution.Util;
 
 public class Equator {
     final int equatorPosition;
-    private double tempDifference;
-    final Configuration conf;
+    Configuration conf;
     private WorldNoise noise;
     private double lapseRate;
 
     public Equator(WorldNoise noise, Configuration conf){
         equatorPosition = conf.latitude/2;
-        tempDifference = (Math.abs(conf.minTemperature) + Math.abs(conf.maxTemperature))/equatorPosition;
         this.conf = conf;
         this.noise = noise;
     }
 
     public double getTemperature(int posX, int posY){
+        double tempDifference = (Math.abs(conf.minTemperature) + Math.abs(conf.maxTemperature)) / equatorPosition;
         double basicTemperature;
         if(posY <= equatorPosition){
             basicTemperature = (tempDifference * posY) + conf.minTemperature;
@@ -36,5 +35,9 @@ public class Equator {
 
     public double getDistance(int posY){
         return Math.abs((conf.longitude/2) - posY);
+    }
+
+    public void changeConfiguration(Configuration configuration){
+        this.conf = configuration;
     }
 }

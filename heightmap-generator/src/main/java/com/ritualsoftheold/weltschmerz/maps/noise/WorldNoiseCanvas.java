@@ -5,23 +5,26 @@ import com.ritualsoftheold.weltschmerz.core.World;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 //Jframe canvas to show noise
-public class WorldNoiseCanvas extends JPanel implements Scrollable {
+public class WorldNoiseCanvas extends JPanel implements Scrollable, ActionListener {
 
-  private static final float SCALE = 1.0f;
   private BufferedImage image;
   private int width;
   private int height;
+  private World world;
 
-  public WorldNoiseCanvas(int width, int height) {
+  public WorldNoiseCanvas(int width, int height, World world) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     this.width = width;
     this.height = height;
+    this.world = world;
   }
 
-  public void updateImage(World world) {
+  public void updateImage() {
    int width = this.image.getWidth();
     int height = this.image.getHeight();
 
@@ -73,5 +76,10 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable {
   @Override
   public boolean getScrollableTracksViewportHeight() {
     return false;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+      updateImage();
   }
 }

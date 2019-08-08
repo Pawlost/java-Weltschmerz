@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.circulation;
+package com.ritualsoftheold.weltschmerz.maps.pressure;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
@@ -6,13 +6,13 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import javax.swing.*;
 import java.awt.*;
 
-public class Circulation {
+public class Pressure {
     public static void main(String... args) {
         Weltschmerz weltschmerz = new Weltschmerz();
-        new Circulation(weltschmerz);
+        new Pressure(weltschmerz);
     }
 
-    public Circulation(Weltschmerz weltschmerz) {
+    public Pressure(Weltschmerz weltschmerz) {
         Configuration configuration = weltschmerz.getConfiguration();
 
         int width = configuration.longitude;
@@ -23,7 +23,7 @@ public class Circulation {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldCirculationCanvas worldTemperatureCanvas = new WorldCirculationCanvas(width, height, weltschmerz.world);
+        WorldPressureCanvas worldTemperatureCanvas = new WorldPressureCanvas(width, height, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 

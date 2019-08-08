@@ -23,7 +23,7 @@ public class Humidity {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(width, height);
+        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(width, height, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 
@@ -31,7 +31,7 @@ public class Humidity {
 
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldTemperatureCanvas.updateImage(weltschmerz.world);
+        worldTemperatureCanvas.updateImage();
 
         worldFrame.pack();
 

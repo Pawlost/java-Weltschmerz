@@ -2,32 +2,37 @@ package com.ritualsoftheold.weltschmerz.maps.circulation;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
+import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class WorldCirculationCanvas  extends JPanel implements Scrollable {
+public class WorldCirculationCanvas  extends JPanel implements Scrollable, ActionListener {
 
     private static final float SCALE = 1.0f;
     private BufferedImage image;
     private int width;
     private int height;
+    private World world;
 
-    public WorldCirculationCanvas(int width, int height) {
+    public WorldCirculationCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;
+        this.world = world;
     }
 
-    public void updateImage(World world) {
+    public void updateImage() {
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float flow = (float) world.getPressure(x, y)/20;
-               /* double valueX = flow.x;
+                Vector flow =  world.getAirFlow(x, y);
+                double valueX = flow.x;
                 double valueY = flow.y;
                 if (valueX > 1 || valueX < -1) {
                     valueX = 1;
@@ -35,8 +40,8 @@ public class WorldCirculationCanvas  extends JPanel implements Scrollable {
 
                 if(valueY > 1 || valueY < -1) {
                     valueY = 1;
-                }*/
-                this.image.setRGB(x, y, new Color((float) Math.abs(flow), (float) Math.abs(1.0), (float) Math.abs(flow)).getRGB());
+                }
+                this.image.setRGB(x, y, new Color((float) Math.abs(valueX), (float) Math.abs(1.0), (float) Math.abs(valueY)).getRGB());
             }
         }
         MapIO.saveImage(image);
@@ -78,6 +83,11 @@ public class WorldCirculationCanvas  extends JPanel implements Scrollable {
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        updateImage();
     }
 }
 

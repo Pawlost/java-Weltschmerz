@@ -6,14 +6,14 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import javax.swing.*;
 import java.awt.*;
 
-public class Bioms {
+public class Biomes {
 
     public static void main(String... args) {
         Weltschmerz weltschmerz = new Weltschmerz();
-        new Bioms(weltschmerz);
+        new Biomes(weltschmerz);
     }
 
-    public Bioms(Weltschmerz weltschmerz){
+    public Biomes(Weltschmerz weltschmerz){
         Configuration configuration = weltschmerz.getConfiguration();
 
         int width = configuration.longitude;
@@ -27,11 +27,11 @@ public class Bioms {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        BiomCanvas canvas = new BiomCanvas(width, height);
+        WorldBiomesCanvas canvas = new WorldBiomesCanvas(width, height, weltschmerz.world);
 
         frame.add(canvas);
 
-        canvas.updateImage(weltschmerz.world);
+        canvas.updateImage();
 
         frame.pack();
 

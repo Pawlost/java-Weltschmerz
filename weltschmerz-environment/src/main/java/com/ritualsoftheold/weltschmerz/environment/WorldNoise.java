@@ -25,14 +25,8 @@ public class WorldNoise {
     }
 
     public WorldNoise(Configuration configuration, BufferedImage earth){
-        //Creates basic fractal module
-        this.worldHeight = configuration.latitude;
-        this.worldWidth = configuration.longitude;
-        this.samples = configuration.samples;
+        changeConfiguration(configuration);
         this.earth = earth;
-
-        init(configuration.seed, configuration.octaves, configuration.frequency);
-        generateNoise();
     }
 
     private void init(long seed, int octaves, double frequency){
@@ -78,4 +72,12 @@ public class WorldNoise {
         return DIFFERENCE;
     }
 
+    public void changeConfiguration(Configuration configuration){
+        //Creates basic fractal module
+        this.worldHeight = configuration.latitude;
+        this.worldWidth = configuration.longitude;
+        this.samples = configuration.samples;
+        init(configuration.seed, configuration.octaves, configuration.frequency);
+        generateNoise();
+    }
 }

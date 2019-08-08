@@ -24,7 +24,7 @@ public class Temperature {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height, configuration.maxTemperature);
+        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 
@@ -32,7 +32,7 @@ public class Temperature {
 
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldTemperatureCanvas.updateImage(weltschmerz.world);
+        worldTemperatureCanvas.updateImage();
 
         worldFrame.pack();
 

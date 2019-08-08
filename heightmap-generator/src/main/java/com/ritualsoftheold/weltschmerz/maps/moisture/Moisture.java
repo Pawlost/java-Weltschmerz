@@ -23,7 +23,7 @@ public class Moisture {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(width, height);
+        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(width, height, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 
@@ -31,7 +31,7 @@ public class Moisture {
 
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldTemperatureCanvas.updateImage(weltschmerz.world);
+        worldTemperatureCanvas.updateImage();
 
         worldFrame.pack();
 

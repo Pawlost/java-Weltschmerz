@@ -17,7 +17,7 @@ public class MapIO {
     private static final String OUTPUT_FILE = "map.png";
     private static final String CONFIG_FILE = "config";
     private static final String SIMULATION_FILE = "simulation";
-    private static final String BIOM_DISTRIBUTION_FILE = "Biom_distribution.png";
+    private static final String BIOM_DISTRIBUTION_FILE = "Biome_distribution.png";
 
     //Save image into file
     public static void saveImage(BufferedImage image) {

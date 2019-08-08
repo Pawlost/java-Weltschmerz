@@ -20,12 +20,12 @@ public class Noise {
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World Noise");
         worldFrame.setPreferredSize(new Dimension(width, height));
-        WorldNoiseCanvas worldNoiseCanvas = new WorldNoiseCanvas(width, height);
+        WorldNoiseCanvas worldNoiseCanvas = new WorldNoiseCanvas(width, height, weltschmerz.world);
         worldFrame.add(worldNoiseCanvas);
         worldFrame.setVisible(true);
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldNoiseCanvas.updateImage(weltschmerz.world);
+        worldNoiseCanvas.updateImage();
 
         worldFrame.pack();
         worldFrame.setLocationRelativeTo(null);

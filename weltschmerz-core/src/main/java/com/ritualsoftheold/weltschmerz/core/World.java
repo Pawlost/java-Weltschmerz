@@ -20,10 +20,12 @@ public class World {
     private int grassID;
     private boolean isDifferent;
     private ArrayList<BiomDefinition> bioms;
+    public Configuration conf;
     private static final String EARTH_FILE =  "earth.png";
 
     public World(Configuration configuration) {
         System.out.println("Preparation");
+        this.conf = configuration;
         BufferedImage earth = MapIO.loadMap(EARTH_FILE);
         this.noise = new WorldNoise(configuration, earth);
         this.equator = new Equator(noise, configuration);
@@ -118,10 +120,6 @@ public class World {
             definition = BiomDefinition.selectDefault(temperature, elevation);
         }
 
-        System.out.println(definition.key + " Biom generated at posX " + posX + " posY " + posY);
-        System.out.println("precipitation "+precipitation);
-        System.out.println("temperature" + temperature);
-
         return new Biom(temperature, precipitation, airFlow, definition,  definition.color);
     }
 
@@ -159,5 +157,11 @@ public class World {
 
     public WorldNoise getWorldNoise() {
         return noise;
+    }
+
+    public void changeConfiguration(Configuration configuration){
+        this.conf = configuration;
+        this.equator.changeConfiguration(configuration);
+        this.noise.changeConfiguration(configuration);
     }
 }

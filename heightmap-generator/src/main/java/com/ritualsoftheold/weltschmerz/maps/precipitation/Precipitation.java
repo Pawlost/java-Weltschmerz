@@ -23,7 +23,7 @@ public class Precipitation {
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldPrecipitationCanvas worldTemperatureCanvas = new WorldPrecipitationCanvas(width, height);
+        WorldPrecipitationCanvas worldTemperatureCanvas = new WorldPrecipitationCanvas(width, height, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 
@@ -31,7 +31,7 @@ public class Precipitation {
 
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        worldTemperatureCanvas.updateImage(weltschmerz.world);
+        worldTemperatureCanvas.updateImage();
 
         worldFrame.pack();
 

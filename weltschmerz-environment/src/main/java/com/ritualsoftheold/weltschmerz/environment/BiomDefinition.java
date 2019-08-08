@@ -1,10 +1,13 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
+import squidpony.SquidTags;
 
 public class BiomDefinition {
 
     private static final double OCEAN_DOUBLE = -50.0;
+    public static final int MAXIMUM_PRECIPITATION = 400;
+    public static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 100;
     public final String key;
     public final Integer color;
     private MultiKeyMap<Integer, Integer> shape;
@@ -20,12 +23,12 @@ public class BiomDefinition {
     }
 
     public boolean define(double precipitation, double temperature){
-       int y = (int)(precipitation * 2.5);
+       int y = (int)(precipitation * (1000/MAXIMUM_PRECIPITATION));
         int x;
        if(temperature > 0) {
-            x = (int)((temperature * 10) + 100);
+            x = (int)((temperature * 10) + MAXIMUM_TEMPERATURE_DIFFERENCE);
        }else if(temperature > -10){
-            x = (int)(100/Math.abs(temperature));
+            x = (int)(MAXIMUM_TEMPERATURE_DIFFERENCE/Math.abs(temperature));
        }else {
            return false;
        }
