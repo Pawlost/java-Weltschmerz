@@ -7,9 +7,9 @@ public class Circulation {
 
     private Equator equator;
 
-    public static final double TEMPERATURE_INFLUENCE = 0.5;
-    public static final int OCTAVES = 7;
-    public static double EXCHANGE_COEFIXIENT = 1.5;
+    private static final double TEMPERATURE_INFLUENCE = 0.5;
+    private static final int OCTAVES = 7;
+    private static double EXCHANGE_COEFIXIENT = 1.5;
 
     public Circulation(Equator equator) {
         this.equator = equator;
@@ -59,15 +59,15 @@ public class Circulation {
 
     private Vector calculateDensityDelta(int posX, int posY, int distance){
         // west - east
-        double x = calculateDensity(posX - distance, posY) - calculateDensity(posX + distance, posY);
+        double x = calculateDensity(Math.max(posX  - distance, 0), posY) - calculateDensity(Math.min(posX  + distance, equator.conf.longitude), posY);
         // north - south
-        double y = calculateDensity(posX, posY -distance) - calculateDensity(posX, posY + distance);
+        double y = calculateDensity(posX,  Math.max(posY  - distance, 0)) - calculateDensity(posX,  Math.min(posY + distance, equator.conf.latitude));
 
         // south-west - north-east
-        double z = calculateDensity(posX - distance, posY - distance) - calculateDensity(posX + distance, posY + distance);
+        double z = calculateDensity(Math.max(posX  - distance, 0), Math.max(posY  - distance, 0)) - calculateDensity(Math.min(posX  + distance, equator.conf.longitude),  Math.min(posY  + distance, equator.conf.latitude));
 
         // north-west - south-east
-        double w = calculateDensity(posX - distance, posY + distance) - calculateDensity(posX + distance, posY - distance);
+        double w = calculateDensity(Math.max(posX  - distance, 0),  Math.min(posY  + distance, equator.conf.latitude)) - calculateDensity(Math.min(posX  + distance, equator.conf.longitude),  Math.max(posY  - distance, 0));
 
         return new Vector(x, y, z, w);
     }
@@ -84,7 +84,7 @@ public class Circulation {
     }
 
     public Vector applyCoriolisEffect(int posY, Vector airFlow){
-        float latitude = (float) posY / equator.conf.latitude;
+       float latitude = (float) posY / equator.conf.latitude;
         float equatorPosition = equator.equatorPosition;
         float direction = Math.signum(latitude - equatorPosition);
         Vector matrix = Utils.rotation((Math.PI/2) * direction * airFlow.getLength());

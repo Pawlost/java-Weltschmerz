@@ -6,7 +6,6 @@ import xerial.larray.LByteArray;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class Weltschmerz {

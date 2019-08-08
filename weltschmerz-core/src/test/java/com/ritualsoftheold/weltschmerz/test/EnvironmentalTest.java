@@ -30,7 +30,7 @@ public class EnvironmentalTest {
 
     @Test
     public void precipitationTest(){
-        ArrayList<Double> arrayList = new ArrayList<>();
+        /*ArrayList<Double> arrayList = new ArrayList<>();
         double hugest = 0;
         for(int x = 0; x < 1000; x++) {
             for(int y =0; y < 500; y++) {
@@ -51,6 +51,7 @@ public class EnvironmentalTest {
 
         double sum = arrayList.stream().mapToDouble(a -> a).sum();
         System.out.println("Summary " + sum/arrayList.size());
+         */
     }
 
     @Test
@@ -123,4 +124,16 @@ public class EnvironmentalTest {
             }
         }*/
     }
+
+    @Test
+    public void temperatureTest() {
+        for (int x = 0; x < 1000; x++) {
+            for (int y = 0; y < 500; y++) {
+                double temperature = weltschmerz.world.getTemperature(x, y);
+                System.out.println(temperature);
+            }
+        }
+    }
+
+
 }

@@ -1,10 +1,5 @@
 package com.ritualsoftheold.weltschmerz.geometry.misc;
-
-import com.ritualsoftheold.weltschmerz.geometry.units.Point;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
-
-import java.awt.image.BufferedImage;
-import java.nio.channels.Pipe;
 
 public class Utils {
 

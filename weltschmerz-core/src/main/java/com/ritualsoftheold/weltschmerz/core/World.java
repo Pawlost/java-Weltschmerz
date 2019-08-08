@@ -6,7 +6,7 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -20,19 +20,17 @@ public class World {
     private int grassID;
     private boolean isDifferent;
     private ArrayList<BiomDefinition> bioms;
+    private static final String EARTH_FILE =  "earth.png";
 
     public World(Configuration configuration) {
-        try {
-            System.out.println("Preparation");
-            this.noise = new WorldNoise(configuration);
-            this.equator = new Equator(noise, configuration);
-            this.circulation = new Circulation(equator);
-            this.precipitation = new Precipitation(equator, circulation, noise);
-            bioms = MapIO.loadBiomMap(configuration);
-            System.out.println("Preparation done");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Preparation");
+        BufferedImage earth = MapIO.loadMap(EARTH_FILE);
+        this.noise = new WorldNoise(configuration, earth);
+        this.equator = new Equator(noise, configuration);
+        this.circulation = new Circulation(equator);
+        this.precipitation = new Precipitation(equator, circulation, noise);
+        bioms = MapIO.loadBiomMap(configuration);
+        System.out.println("Preparation done");
     }
 
     public double getTemperature(int posX, int posY) {

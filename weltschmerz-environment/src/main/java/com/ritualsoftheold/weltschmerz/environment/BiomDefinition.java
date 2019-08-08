@@ -4,7 +4,7 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 
 public class BiomDefinition {
 
-    private static final double oceanDepth = -50.0;
+    private static final double OCEAN_DOUBLE = -50.0;
     public final String key;
     public final Integer color;
     private MultiKeyMap<Integer, Integer> shape;
@@ -23,9 +23,11 @@ public class BiomDefinition {
        int y = (int)(precipitation * 2.5);
         int x;
        if(temperature > 0) {
-            x = (int)((temperature * 20) + 200);
-       }else{
-            x = (int)(200/Math.abs(temperature));
+            x = (int)((temperature * 10) + 100);
+       }else if(temperature > -10){
+            x = (int)(100/Math.abs(temperature));
+       }else {
+           return false;
        }
 
        return shape.get(x, y) != null;
@@ -33,7 +35,7 @@ public class BiomDefinition {
 
     public static BiomDefinition selectDefault(double temperature,double elevation){
         if(elevation <= 0){
-            if(elevation < oceanDepth){
+            if(elevation < OCEAN_DOUBLE){
                 return new BiomDefinition("OCEAN", Integer.parseInt("000066", 16));
             }else {
                 return new BiomDefinition("SEA", Integer.parseInt("0099FF", 16));

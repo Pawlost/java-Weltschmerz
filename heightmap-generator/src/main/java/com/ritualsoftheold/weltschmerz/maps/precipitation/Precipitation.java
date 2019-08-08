@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.humidity;
+package com.ritualsoftheold.weltschmerz.maps.precipitation;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
@@ -6,24 +6,24 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 import javax.swing.*;
 import java.awt.*;
 
-public class Humidity {
+public class Precipitation {
     public static void main(String... args) {
         Weltschmerz weltschmerz = new Weltschmerz();
-        new Humidity(weltschmerz);
+        new Precipitation(weltschmerz);
     }
 
-    public Humidity(Weltschmerz weltschmerz) {
+    public Precipitation(Weltschmerz weltschmerz) {
         Configuration configuration = weltschmerz.getConfiguration();
 
         int width = configuration.longitude;
         int height = configuration.latitude;
 
         //Creates frame for heigh map
-        JFrame worldFrame = new JFrame("World humidity");
+        JFrame worldFrame = new JFrame("World precipitation");
 
         worldFrame.setPreferredSize(new Dimension(width, height));
 
-        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(width, height);
+        WorldPrecipitationCanvas worldTemperatureCanvas = new WorldPrecipitationCanvas(width, height);
 
         worldFrame.add(worldTemperatureCanvas);
 

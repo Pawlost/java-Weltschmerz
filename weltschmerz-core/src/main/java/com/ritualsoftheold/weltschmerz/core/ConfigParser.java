@@ -19,10 +19,6 @@ public class ConfigParser {
         configuration.frequency = conf.getDouble("noise.frequency");
         configuration.samples = conf.getInt("noise.samples");
 
-
-        configuration.volcanoes = conf.getInt("elevation.volcanoes");
-        configuration.tectonicPlates = conf.getInt("elevation.tectonicPlates");
-        //configuration.islandSize = conf.getInt("elevation.mountainLenght");
         configuration.shapes = parseShape(conf);
         return configuration;
     }

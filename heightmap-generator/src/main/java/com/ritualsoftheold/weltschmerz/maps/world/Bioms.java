@@ -1,6 +1,5 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
-import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
 

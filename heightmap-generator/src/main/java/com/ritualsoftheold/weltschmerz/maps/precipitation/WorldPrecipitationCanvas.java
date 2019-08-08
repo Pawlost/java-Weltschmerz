@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.maps.humidity;
+package com.ritualsoftheold.weltschmerz.maps.precipitation;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
@@ -7,14 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class WorldHumidityCanvas extends JPanel implements Scrollable {
+public class WorldPrecipitationCanvas extends JPanel implements Scrollable {
 
     private static final float SCALE = 1.0f;
     private BufferedImage image;
     private int width;
     private int height;
 
-    public WorldHumidityCanvas(int width, int height) {
+    public WorldPrecipitationCanvas(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;
@@ -26,7 +26,7 @@ public class WorldHumidityCanvas extends JPanel implements Scrollable {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float humidity = (float) world.getHumidity(x, y)/200;
+                float humidity = (float) world.getPrecipitation(x, y)/400;
                 this.image.setRGB(x, y, new Color((float) Math.abs(humidity), (float) Math.abs(humidity), (float) Math.abs(humidity)).getRGB());
             }
         }

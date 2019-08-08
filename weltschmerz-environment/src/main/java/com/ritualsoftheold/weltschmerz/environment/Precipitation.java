@@ -2,7 +2,6 @@ package com.ritualsoftheold.weltschmerz.environment;
 
 import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
 import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
-import jdk.jshell.execution.Util;
 
 public class Precipitation {
 
@@ -10,14 +9,13 @@ public class Precipitation {
     private static final double CIRCULATION = 0.5;
     private static final double EVAPORATION = 1.0;
     private static final  double ORTOGRAPHICEFFECT = 1.0;
-    private static final double INTESITY = 1.0;
+    private static final double INTESITY = 0.6;
     private static final int ITERATION = 1;
 
     private Equator equator;
     private Circulation circulation;
     private WorldNoise worldNoise;
     private double intensity;
-
 
     public Precipitation(Equator equator, Circulation circulation, WorldNoise worldNoise){
         this.equator = equator;
@@ -26,17 +24,18 @@ public class Precipitation {
     }
 
     public Vector getElevationGradient(int posX, int posY, int delta){
-        double x = Math.min(Math.max(posX + delta, equator.conf.longitude), 0);
-        double y = Math.min(Math.max(posY + delta, equator.conf.latitude), 0);
-         x = worldNoise.getNoise((int)x + delta, posY) - worldNoise.getNoise((int)x - delta, posY);
-         y = worldNoise.getNoise(posX, (int)y + delta) - worldNoise.getNoise(posX, (int) y - delta);
+        double x = Math.min(Math.min(posX + delta, equator.conf.longitude), 0);
+        double y = Math.min(Math.min(posY + delta, equator.conf.latitude), 0);
+         x = worldNoise.getNoise(Math.max((int)x + delta, equator.conf.longitude), posY) - worldNoise.getNoise(Math.max((int)x - delta,0), posY);
+         y = worldNoise.getNoise(posX, Math.max((int)y + delta, equator.conf.latitude)) - worldNoise.getNoise(posX, Math.max((int) y - delta, 0));
         return Utils.normalize(new Vector(x, 0.01 * delta, y));
     }
 
     public double getMoisture(int posY){
-        double verticality = Utils.toUnsignedRange(equator.getDistance(posY)/4);
+        //TODO zoom, intesity, placememnt
+        double verticality = (Utils.toUnsignedRange(equator.getDistance(posY))/6)+13;
         double mix = Utils.mix(-Math.cos(Math.toRadians(verticality*3*Math.PI*2)),
-                -Math.cos(Math.toRadians(verticality*Math.PI*2)), 0.33);
+                -Math.cos(Math.toRadians(verticality*Math.PI*2)), 0.2);
         return Utils.toUnsignedRange(Math.abs(mix));
     }
 
@@ -48,7 +47,8 @@ public class Precipitation {
         double estimated = (1.0 - CIRCULATION) * getBasePrecipitation(posY);
         double elevationGradient = getElevationGradient(posX, posY, 5).y;
         double simulated =  (2.0 * CIRCULATION) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind)) * humidity;
-        return Math.max(Math.min ( intensity * (estimated + simulated)*4, (int)(Math.abs(temperature + 10) * 400) / 50), 0);
+       return Math.max(Math.min ( intensity * (estimated + simulated)*4, (int)(Math.abs(temperature + 10) * 400) / 100), 0);
+        //return intensity * (estimated + simulated);
     }
 
     public double getHumidity(int posX, int posY){
@@ -74,6 +74,7 @@ public class Precipitation {
         double outflow = Math.max(humidity - outflowHumidity, 0.0);
         humidity += inflow * intensity * inverseOrographicEffect;
         humidity -= outflow * intensity;
+        //TODO Intensity
         return humidity;
     }
 

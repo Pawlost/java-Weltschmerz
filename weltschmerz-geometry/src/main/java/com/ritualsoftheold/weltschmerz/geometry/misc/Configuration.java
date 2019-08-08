@@ -9,13 +9,8 @@ public class Configuration {
     public int octaves = 3;
     public double frequency = 2;
     public int samples = 15;
-    public int volcanoes = 0;
-    public int tectonicPlates = 20;
-    public int detail = 25000;
-    public int maxTemperature = 40;
-    public int minTemperature = -10;
-    //Over 1000 meters
-    public double temperatureDecrease = 0.0098;
-    public float seaLevelAirPressure = 1013.25f;
+    public double maxTemperature = 90;
+    public double minTemperature = -20;
+    public double temperatureDecrease = 0.3;
     public HashMap<Integer, String> shapes;
 }

@@ -5,16 +5,15 @@ import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
 import jdk.jshell.execution.Util;
 
 public class Equator {
-    public final int equatorPosition;
-    private float tempDifference;
-    private int minTemperature;
-    public final Configuration conf;
+    final int equatorPosition;
+    private double tempDifference;
+    final Configuration conf;
     private WorldNoise noise;
+    private double lapseRate;
 
     public Equator(WorldNoise noise, Configuration conf){
         equatorPosition = conf.latitude/2;
-        tempDifference = (Math.abs(conf.maxTemperature) + Math.abs(conf.minTemperature))/(float)equatorPosition;
-        this.minTemperature = conf.minTemperature;
+        tempDifference = (Math.abs(conf.minTemperature) + Math.abs(conf.maxTemperature))/equatorPosition;
         this.conf = conf;
         this.noise = noise;
     }
@@ -22,9 +21,9 @@ public class Equator {
     public double getTemperature(int posX, int posY){
         double basicTemperature;
         if(posY <= equatorPosition){
-            basicTemperature = (tempDifference * posY) + minTemperature;
+            basicTemperature = (tempDifference * posY) + conf.minTemperature;
         }else{
-            basicTemperature = ((conf.latitude-posY) * tempDifference)+minTemperature;
+            basicTemperature = ((conf.latitude-posY) * tempDifference)+conf.minTemperature;
         }
 
         double elevation = noise.getNoise(posX, posY) * conf.temperatureDecrease;
@@ -36,6 +35,6 @@ public class Equator {
     }
 
     public double getDistance(int posY){
-        return Utils.toUnsignedRange(Math.abs(equatorPosition - posY));
+        return Math.abs((conf.longitude/2) - posY);
     }
 }
