@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.geometry.misc;
+package com.ritualsoftheold.weltschmerz.misc.misc;
 
 import java.util.HashMap;
 
@@ -13,22 +13,19 @@ public class Configuration {
     public double frequency = 2;
     public int samples = 15;
 
-    //Elevation
-    public int elevationDelta = 5;
-
     //Temperature
     public double maxTemperature = 90;
-    public double minTemperature = -20;
+    public double minTemperature = -30;
     public double temperatureDecrease = 0.3;
 
     //Moisture
     public double zoom = 6.0;
-    public int placement = 13;
-    public double moistureIntensity = 1.0;
-    public double change = 0.2;
+    public double placement = 0;
+    public double moistureIntensity = 10.0;
+    public double change = 0.5;
 
     //Height Maps
-    public int moisture = 20;
+    public int moisture = 10;
     public int pressure = 200;
     public int precipitation = 400;
     public int humidity = 10;
@@ -36,7 +33,7 @@ public class Configuration {
     //Precipitation
     public double circulation = 0.5;
     public double orographicEffect = 1.0;
-    public double precipitationIntensity = 0.6;
+    public double precipitationIntensity = 1.4;
     public double iteration = 1.0;
 
     //Humidity
@@ -48,6 +45,7 @@ public class Configuration {
     public int circulationOctaves = 7;
     public double temperatureInfluence = 0.5;
     public int circulationDecline = 7;
+    public int elevationDelta = 5;
 
     //Biomes
     public HashMap<Integer, String> shapes;

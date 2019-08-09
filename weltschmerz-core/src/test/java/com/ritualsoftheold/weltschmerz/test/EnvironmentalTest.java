@@ -1,18 +1,8 @@
 package com.ritualsoftheold.weltschmerz.test;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.environment.Precipitation;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import xerial.larray.LByteArray;
-import xerial.larray.japi.LArrayJ;
-
-import java.awt.desktop.SystemEventListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EnvironmentalTest {
     private Weltschmerz weltschmerz;

@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.geometry.units;
+package com.ritualsoftheold.weltschmerz.misc.units;
 
 public class Vector {
     public final double x;

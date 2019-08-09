@@ -2,5 +2,5 @@ rootProject.name = 'Weltschmerz'
 include 'heightmap-generator'
 include 'weltschmerz-core'
 include 'weltschmerz-environment'
-include 'weltschmerz-geometry'
+include 'weltschmerz-misc'
 

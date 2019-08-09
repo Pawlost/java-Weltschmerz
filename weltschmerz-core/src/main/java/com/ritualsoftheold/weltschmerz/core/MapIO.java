@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.environment.BiomDefinition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;

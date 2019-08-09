@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
+import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 
 import java.awt.*;
 

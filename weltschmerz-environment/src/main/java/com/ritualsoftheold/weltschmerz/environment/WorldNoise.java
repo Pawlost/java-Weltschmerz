@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
@@ -37,7 +37,6 @@ public class WorldNoise {
         gen.setFrequency(frequency);
         gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(seed);
-        System.out.println("Noise generated");
     }
 
     private void generateNoise(){

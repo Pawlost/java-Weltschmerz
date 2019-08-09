@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.maps.circulation;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
+import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 
 import javax.swing.*;
 import java.awt.*;

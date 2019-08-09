@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
+import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
+import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 
 public class Precipitation {
 

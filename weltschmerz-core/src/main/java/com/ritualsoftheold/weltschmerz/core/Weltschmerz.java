@@ -1,10 +1,10 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.environment.Biom;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 
 import xerial.larray.LByteArray;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
@@ -16,13 +16,12 @@ public class Weltschmerz {
         Configuration configuration = weltschmerz.configuration;
         BufferedImage image = new BufferedImage(configuration.longitude, configuration.latitude, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics g = image.getGraphics();
-     /*   for (Location location : weltschmerz.world.getLocations()) {
-            g.setColor(location.getShape().color);
-            g.drawPolygon(location.position.getSwingPolygon());
-            g.setColor(Color.RED);
-            g.drawOval((int) location.position.center.x, (int) location.position.center.y, 2, 2);
-        }*/
+        for (int x = 0; x < configuration.longitude; x++) {
+            for (int y = 0; y < configuration.latitude; y++) {
+                Biom biom = weltschmerz.world.getBiom(x, y);
+                image.setRGB(x, y, biom.color.getRGB());
+            }
+        }
         MapIO.saveImage(image);
     }
 
@@ -32,7 +31,6 @@ public class Weltschmerz {
     public Weltschmerz() {
             configuration = MapIO.loadMapConfig();
             world = new World(configuration);
-            System.out.println("Map generated");
     }
 
     public LByteArray getChunk(int x, int y, int z, LByteArray chunk) {
