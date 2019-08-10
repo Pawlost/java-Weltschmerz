@@ -29,7 +29,7 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable, Action
 
       for (int y = 0; y < height; y++) {
           for (int x = 0; x < width; x++) {
-            float temperature = (float) (world.getTemperature(x, y)/world.conf.maxTemperature);
+            float temperature = (float) (world.getTemperature(x, y)/world.config.getInt("temperature.max_temperature"));
             if(temperature < 0) {
               temperature = 0;
             }

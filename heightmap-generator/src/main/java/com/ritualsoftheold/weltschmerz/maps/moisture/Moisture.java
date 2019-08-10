@@ -1,10 +1,11 @@
 package com.ritualsoftheold.weltschmerz.maps.moisture;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ObjectInputFilter;
 
 public class Moisture {
     public static void main(String... args) {
@@ -13,17 +14,16 @@ public class Moisture {
     }
 
     public Moisture(Weltschmerz weltschmerz) {
-        Configuration configuration = weltschmerz.getConfiguration();
+        Config config = weltschmerz.getConfiguration();
 
-        int width = configuration.longitude;
-        int height = configuration.latitude;
-
+        int latitude = config.getInt("map.latitude");
+        int longitude = config.getInt("map.longitude");
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World moisture");
 
-        worldFrame.setPreferredSize(new Dimension(width, height));
+        worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(width, height, weltschmerz.world);
+        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(longitude, latitude, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 

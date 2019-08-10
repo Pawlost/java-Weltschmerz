@@ -1,13 +1,14 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
+import com.typesafe.config.Config;
 import org.apache.commons.collections4.map.MultiKeyMap;
 import squidpony.SquidTags;
 
 public class BiomDefinition {
 
     private static final double OCEAN_DOUBLE = -50.0;
-    public static final int MAXIMUM_PRECIPITATION = 400;
-    public static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 100;
+    static final int MAXIMUM_PRECIPITATION = 400;
+    static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 100;
     public final String key;
     public final Integer color;
     private MultiKeyMap<Integer, Integer> shape;
@@ -50,5 +51,10 @@ public class BiomDefinition {
                 return new BiomDefinition("DESERT", Integer.parseInt("FFCC00", 16));
             }
         }
+    }
+
+    //For future
+    public void changeConfiguration(Config config){
+
     }
 }

@@ -1,10 +1,11 @@
 package com.ritualsoftheold.weltschmerz.maps.world;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ObjectInputFilter;
 
 public class Biomes {
 
@@ -14,20 +15,20 @@ public class Biomes {
     }
 
     public Biomes(Weltschmerz weltschmerz){
-        Configuration configuration = weltschmerz.getConfiguration();
+        Config config = weltschmerz.getConfiguration();
 
-        int width = configuration.longitude;
-        int height = configuration.latitude;
+        int latitude = config.getInt("map.latitude");
+        int longitude = config.getInt("map.longitude");
 
         //Creates frame for heigh map
         JFrame frame = new JFrame("Bioms");
 
-        frame.setPreferredSize(new Dimension(width, height));
+        frame.setPreferredSize(new Dimension(longitude, latitude));
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        WorldBiomesCanvas canvas = new WorldBiomesCanvas(width, height, weltschmerz.world);
+        WorldBiomesCanvas canvas = new WorldBiomesCanvas(longitude, latitude, weltschmerz.world);
 
         frame.add(canvas);
 

@@ -2,37 +2,51 @@ package com.ritualsoftheold.weltschmerz.environment;
 
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
+import com.typesafe.config.Config;
 
 public class Precipitation {
 
+    private int longitude;
+    private int latitude;
+    private double zoom;
+    private double change;
+    private double moistureIntensity;
+    private double circulationIntensity;
+    private double orographicEffect;
+    private double precipitationIntensity;
+    private double iteration;
+    private double transpiration;
+    private double evaporation;
     private Equator equator;
     private Circulation circulation;
     private WorldNoise worldNoise;
     private double intensity;
+    private int elevationDelta;
 
-    public Precipitation(Equator equator, Circulation circulation, WorldNoise worldNoise){
+    public Precipitation(Equator equator, Circulation circulation, WorldNoise worldNoise, Config config){
         this.equator = equator;
         this.circulation = circulation;
         this.worldNoise =worldNoise;
+        changeConfiguration(config);
     }
 
     private Vector getElevationGradient(int posX, int posY){
-        double x = Math.min(Math.min(posX + equator.conf.elevationDelta, equator.conf.longitude), 0);
-        double y = Math.min(Math.min(posY + equator.conf.elevationDelta, equator.conf.latitude), 0);
+        double x = Math.min(Math.min(posX + elevationDelta, longitude), 0);
+        double y = Math.min(Math.min(posY + elevationDelta, latitude), 0);
 
-         x = worldNoise.getNoise(Math.max((int)x + equator.conf.elevationDelta, equator.conf.longitude), posY)
-                 - worldNoise.getNoise(Math.max((int)x - equator.conf.elevationDelta,0), posY);
-         y = worldNoise.getNoise(posX, Math.max((int)y + equator.conf.elevationDelta, equator.conf.latitude))
-                 - worldNoise.getNoise(posX, Math.max((int) y - equator.conf.elevationDelta, 0));
+         x = worldNoise.getNoise(Math.max((int)x + elevationDelta, longitude), posY)
+                 - worldNoise.getNoise(Math.max((int)x - elevationDelta,0), posY);
+         y = worldNoise.getNoise(posX, Math.max((int)y + elevationDelta, latitude))
+                 - worldNoise.getNoise(posX, Math.max((int) y - elevationDelta, 0));
 
-        return Utils.normalize(new Vector(x, 0.01 * equator.conf.elevationDelta, y));
+        return Utils.normalize(new Vector(x, 0.01 * elevationDelta, y));
     }
 
     public double getMoisture(int posY){
-        double verticality = (Utils.toUnsignedRange(equator.getDistance(posY))/equator.conf.zoom)+equator.conf.placement;
+        double verticality = (Utils.toUnsignedRange(equator.getDistance(posY))/zoom);
         double mix = Utils.mix(-Math.cos(Math.toRadians(verticality*3*Math.PI*2)),
-                -Math.cos(Math.toRadians(verticality*Math.PI*2)), equator.conf.change);
-        return Utils.toUnsignedRange(Math.abs(mix) * equator.conf.moistureIntensity);
+                -Math.cos(Math.toRadians(verticality*Math.PI*2)), change);
+        return Utils.toUnsignedRange(Math.abs(mix) * moistureIntensity);
     }
 
     public double getPrecipitation(int posX, int posY){
@@ -40,10 +54,10 @@ public class Precipitation {
         Vector wind = circulation.getAirFlow(posX, posY);
         double humidity = getHumidity(posX, posY);
         double temperature = equator.getTemperature(posX, posY);
-        double estimated = (1.0 - equator.conf.circulation) * getBasePrecipitation(posY);
+        double estimated = (1.0 - circulationIntensity) * getBasePrecipitation(posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
-        double simulated =  (2.0 * equator.conf.circulation) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind,
-                equator.conf.orographicEffect)) * humidity;
+        double simulated =  (2.0 * circulationIntensity) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind,
+                orographicEffect)) * humidity;
        return Math.max(Math.min(intensity * (estimated + simulated), (int)(Math.abs(temperature + 10)
                * BiomDefinition.MAXIMUM_PRECIPITATION) / BiomDefinition.MAXIMUM_TEMPERATURE_DIFFERENCE), 0);
     }
@@ -55,11 +69,11 @@ public class Precipitation {
         Vector wind = circulation.getAirFlow(posX, posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
 
-        double orographicEffect = getOrotographicEffect(elevation, elevationGradient, wind, equator.conf.orographicEffect);
-        double inverseOrographicEffect = 1.0 - orographicEffect;
+        double finalOrographicEffect = getOrotographicEffect(elevation, elevationGradient, wind, orographicEffect);
+        double inverseOrographicEffect = 1.0 - finalOrographicEffect;
 
-        intensity = isLand ? 1.0 * equator.conf.precipitationIntensity : 0;
-        double scale = equator.conf.iteration * 0.01;
+        intensity = isLand ? 1.0 * precipitationIntensity : 0;
+        double scale = iteration * 0.01;
 
         // circulate humidity
         double inflowHumidity = getEvapotranspiration((int)(posX - (Utils.normalize(wind).x * wind.getLength() * scale)),
@@ -79,9 +93,9 @@ public class Precipitation {
         double elevation = worldNoise.getNoise(posX, posY);
         double evapotranspiration;
         if(Utils.isLand(elevation)){
-            evapotranspiration = equator.conf.traspiration;
+            evapotranspiration = transpiration;
         }else{
-            evapotranspiration = equator.conf.evaporation;
+            evapotranspiration = evaporation;
         }
 
         evapotranspiration *= getMoisture(posY);
@@ -98,5 +112,26 @@ public class Precipitation {
     private double getBasePrecipitation(int posY) {
         double verticality = Utils.toUnsignedRange(equator.getDistance(posY));
         return Utils.toUnsignedRange(-Math.cos(Math.toRadians(verticality * 3 * Math.PI*2)));
+    }
+
+    public void changeConfiguration(Config config){
+        longitude = config.getInt("map.longitude");
+        latitude = config.getInt("map.latitude");
+
+        //Moisture
+        zoom = config.getDouble("moisture.zoom");
+        change = config.getDouble("moisture.change");
+        moistureIntensity = config.getDouble("moisture.moisture_intensity");
+
+        //Precipitation
+        elevationDelta = config.getInt("precipitation.elevation_delta");
+        circulationIntensity = config.getDouble("precipitation.circulation_intensity");
+        orographicEffect = config.getDouble("precipitation.orographic_effect");
+        precipitationIntensity = config.getDouble("precipitation.precipitation_intensity");
+        iteration = config.getDouble("precipitation.iteration");
+
+        //Humidity
+        transpiration = config.getDouble("humidity.transpiration");
+        evaporation = config.getDouble("humidity.evaporation");
     }
 }

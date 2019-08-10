@@ -1,8 +1,8 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.environment.Biom;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 
+import com.typesafe.config.Config;
 import xerial.larray.LByteArray;
 
 import java.awt.image.BufferedImage;
@@ -13,11 +13,15 @@ public class Weltschmerz {
     public static void main(String[] args) {
         Weltschmerz weltschmerz = new Weltschmerz();
 
-        Configuration configuration = weltschmerz.configuration;
-        BufferedImage image = new BufferedImage(configuration.longitude, configuration.latitude, BufferedImage.TYPE_INT_ARGB);
+        Config configuration = weltschmerz.configuration;
 
-        for (int x = 0; x < configuration.longitude; x++) {
-            for (int y = 0; y < configuration.latitude; y++) {
+        int latitude = configuration.getInt("map.latitude");
+        int longitude = configuration.getInt("map.longitude");
+
+        BufferedImage image = new BufferedImage(longitude, latitude, BufferedImage.TYPE_INT_ARGB);
+
+        for (int x = 0; x < longitude; x++) {
+            for (int y = 0; y < latitude; y++) {
                 Biom biom = weltschmerz.world.getBiom(x, y);
                 image.setRGB(x, y, biom.color.getRGB());
             }
@@ -25,7 +29,7 @@ public class Weltschmerz {
         MapIO.saveImage(image);
     }
 
-    private Configuration configuration;
+    private Config configuration;
     public final World world;
 
     public Weltschmerz() {
@@ -50,7 +54,7 @@ public class Weltschmerz {
         world.setMaterials(dirtID, grassID);
     }
 
-    public Configuration getConfiguration() {
+    public Config getConfiguration() {
         return configuration;
     }
 }

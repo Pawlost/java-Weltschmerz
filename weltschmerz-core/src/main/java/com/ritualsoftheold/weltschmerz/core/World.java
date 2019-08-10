@@ -1,9 +1,9 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.environment.*;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
+import com.typesafe.config.Config;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.awt.image.BufferedImage;
@@ -12,6 +12,7 @@ import java.util.*;
 
 public class World {
 
+    public final Config config;
     private Equator equator;
     private Precipitation precipitation;
     private WorldNoise noise;
@@ -20,18 +21,17 @@ public class World {
     private int grassID;
     private boolean isDifferent;
     private ArrayList<BiomDefinition> bioms;
-    public Configuration conf;
     private static final String EARTH_FILE =  "earth.png";
 
-    public World(Configuration configuration) {
+    public World(Config config) {
         System.out.println("Preparation");
-        this.conf = configuration;
+        this.config = config;
         BufferedImage earth = MapIO.loadMap(EARTH_FILE);
-        this.noise = new WorldNoise(configuration, earth);
-        this.equator = new Equator(noise, configuration);
-        this.circulation = new Circulation(equator);
-        this.precipitation = new Precipitation(equator, circulation, noise);
-        bioms = MapIO.loadBiomMap(configuration);
+        this.noise = new WorldNoise(config, earth);
+        this.equator = new Equator(noise, config);
+        this.circulation = new Circulation(equator, config);
+        this.precipitation = new Precipitation(equator, circulation, noise, config);
+        bioms = MapIO.loadBiomMap(config);
         System.out.println("Preparation done");
     }
 
@@ -159,9 +159,10 @@ public class World {
         return noise;
     }
 
-    public void changeConfiguration(Configuration configuration){
-        this.conf = configuration;
-        this.equator.changeConfiguration(configuration);
-        this.noise.changeConfiguration(configuration);
+    public void changeConfiguration(Config config){
+        this.equator.changeConfiguration(config);
+        this.noise.changeConfiguration(config);
+        this.circulation.changeConfiguration(config);
+        this.precipitation.changeConfiguration(config);
     }
 }

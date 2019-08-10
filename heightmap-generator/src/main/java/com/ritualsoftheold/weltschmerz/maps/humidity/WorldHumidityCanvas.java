@@ -11,11 +11,11 @@ import java.awt.image.BufferedImage;
 
 public class WorldHumidityCanvas extends JPanel implements Scrollable, ActionListener {
 
-    private static final float SCALE = 1.0f;
     private BufferedImage image;
     private int width;
     private int height;
     private World world;
+    public static final int HUMIDITY = 10;
 
     public WorldHumidityCanvas(int width, int height, World world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -30,8 +30,8 @@ public class WorldHumidityCanvas extends JPanel implements Scrollable, ActionLis
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float humidity = (float) world.getHumidity(x, y)/world.conf.humidity;
-                this.image.setRGB(x, y, new Color((float) Math.abs(humidity), (float) Math.abs(humidity), (float) Math.abs(humidity)).getRGB());
+                float humidity = (float) world.getHumidity(x, y)/HUMIDITY;
+                this.image.setRGB(x, y, new Color(Math.abs(humidity), Math.abs(humidity), Math.abs(humidity)).getRGB());
             }
         }
 

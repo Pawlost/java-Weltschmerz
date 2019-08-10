@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.humidity;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,17 +13,17 @@ public class Humidity {
     }
 
     public Humidity(Weltschmerz weltschmerz) {
-        Configuration configuration = weltschmerz.getConfiguration();
+        Config config = weltschmerz.getConfiguration();
 
-        int width = configuration.longitude;
-        int height = configuration.latitude;
+        int latitude = config.getInt("map.latitude");
+        int longitude = config.getInt("map.longitude");
 
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World humidity");
 
-        worldFrame.setPreferredSize(new Dimension(width, height));
+        worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(width, height, weltschmerz.world);
+        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(longitude, latitude, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 

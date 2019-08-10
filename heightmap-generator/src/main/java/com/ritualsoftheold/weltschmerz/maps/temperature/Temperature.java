@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.temperature;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,17 +14,17 @@ public class Temperature {
     }
 
     public Temperature(Weltschmerz weltschmerz){
-        Configuration configuration = weltschmerz.getConfiguration();
+        Config config = weltschmerz.getConfiguration();
 
-        int width = configuration.longitude;
-        int height = configuration.latitude;
+        int latitude = config.getInt("map.latitude");
+        int longitude = config.getInt("map.longitude");
 
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World Temperature");
 
-        worldFrame.setPreferredSize(new Dimension(width, height));
+        worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(width, height, weltschmerz.world);
+        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(longitude, latitude, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 

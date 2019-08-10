@@ -1,10 +1,11 @@
 package com.ritualsoftheold.weltschmerz.maps.circulation;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ObjectInputFilter;
 
 public class Circulation {
     public static void main(String... args) {
@@ -13,17 +14,17 @@ public class Circulation {
     }
 
     public Circulation(Weltschmerz weltschmerz) {
-        Configuration configuration = weltschmerz.getConfiguration();
+        Config config = weltschmerz.getConfiguration();
 
-        int width = configuration.longitude;
-        int height = configuration.latitude;
+        int latitude = config.getInt("map.latitude");
+        int longitude = config.getInt("map.longitude");
 
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World Pressure");
 
-        worldFrame.setPreferredSize(new Dimension(width, height));
+        worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldCirculationCanvas worldTemperatureCanvas = new WorldCirculationCanvas(width, height, weltschmerz.world);
+        WorldCirculationCanvas worldTemperatureCanvas = new WorldCirculationCanvas(longitude, latitude, weltschmerz.world);
 
         worldFrame.add(worldTemperatureCanvas);
 
