@@ -1,9 +1,9 @@
 package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.environment.*;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Utils;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
+import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
 import java.awt.image.BufferedImage;

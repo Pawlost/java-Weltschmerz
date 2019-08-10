@@ -2,7 +2,7 @@ package com.ritualsoftheold.weltschmerz.maps;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 import com.ritualsoftheold.weltschmerz.maps.circulation.WorldCirculationCanvas;
 import com.ritualsoftheold.weltschmerz.maps.humidity.WorldHumidityCanvas;
 import com.ritualsoftheold.weltschmerz.maps.moisture.WorldMoistureCanvas;
@@ -96,11 +96,9 @@ public class All extends JPanel implements ActionListener {
 
         integerFormatter = new NumberFormatter();
         integerFormatter.setValueClass(Integer.class);
-        integerFormatter.setAllowsInvalid(false);
 
         doubleFormatter = new NumberFormatter();
         doubleFormatter.setValueClass(Double.class);
-        doubleFormatter.setAllowsInvalid(false);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -128,9 +126,12 @@ public class All extends JPanel implements ActionListener {
         save.addActionListener(this);
         save.setActionCommand("save");
 
-        panel.add(save);
-        panel.add(generate);
-        panel.add(biomesCanvas);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        panel.add(save, gbc);
+        panel.add(generate, gbc);
+        panel.add(biomesCanvas, gbc);
         return panel;
     }
 
@@ -152,14 +153,15 @@ public class All extends JPanel implements ActionListener {
 
         minTemperature = new JFormattedTextField(temperature);
         minTemperature.setValue(world.conf.minTemperature);
+        minTemperature.setSize(200, 10);
 
         maxTemperature = new JSlider(0, 90, (int) world.conf.maxTemperature);
 
         temperatureDecrease = new JFormattedTextField(doubleFormatter);
         temperatureDecrease.setValue(world.conf.temperatureDecrease);
+        temperatureDecrease.setSize(200, 10);
 
         panel.setLayout(new GridBagLayout());
-
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0;
@@ -216,18 +218,23 @@ public class All extends JPanel implements ActionListener {
 
         circulation = new JFormattedTextField(doubleFormatter);
         circulation.setValue(world.conf.circulation);
+        circulation.setSize(100, 10);
 
         orographicEffect = new JFormattedTextField(doubleFormatter);
         orographicEffect.setValue(world.conf.orographicEffect);
+        orographicEffect.setSize(100, 10);
 
         precipitationIntensity = new JFormattedTextField(doubleFormatter);
         precipitationIntensity.setValue(world.conf.precipitationIntensity);
+        precipitationIntensity.setSize(100, 10);
 
         iteration = new JFormattedTextField(doubleFormatter);
         iteration.setValue(world.conf.iteration);
+        iteration.setSize(100, 10);
 
         precipitation = new JFormattedTextField(integerFormatter);
         precipitation.setValue(world.conf.precipitation);
+        precipitation.setSize(100, 10);
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -302,28 +309,18 @@ public class All extends JPanel implements ActionListener {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        elevationDelta = new JFormattedTextField(integerFormatter);
-        elevationDelta.setValue(world.conf.elevationDelta);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(new JLabel("Elevation delta"), gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        panel.add(elevationDelta, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         panel.add(save, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         panel.add(generate, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        gbc.gridheight = 4;
+        gbc.gridheight = 3;
         panel.add(noiseCanvas, gbc);
 
         return panel;
@@ -426,6 +423,10 @@ public class All extends JPanel implements ActionListener {
         save.addActionListener(this);
         save.setActionCommand("save");
 
+        elevationDelta = new JFormattedTextField(integerFormatter);
+        elevationDelta.setValue(world.conf.elevationDelta);
+        elevationDelta.setSize(100, 10);
+
         exchangeCoeficient = new JFormattedTextField(doubleFormatter);
         exchangeCoeficient.setValue(world.conf.exchangeCoeficient);
 
@@ -475,15 +476,23 @@ public class All extends JPanel implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        panel.add(save, gbc);
+        panel.add(new JLabel("Elevation delta"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        panel.add(elevationDelta, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 5;
+        panel.add(save, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
         panel.add(generate, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        gbc.gridheight = 7;
+        gbc.gridheight = 8;
         panel.add(circulationCanvas, gbc);
 
         return panel;
@@ -604,16 +613,16 @@ public class All extends JPanel implements ActionListener {
         //Temperature
         configuration.minTemperature = Integer.parseInt(minTemperature.getText());
         configuration.maxTemperature = maxTemperature.getValue();
-        configuration.temperatureDecrease = Double.parseDouble(temperatureDecrease.getText());
+        configuration.temperatureDecrease = (Double) temperatureDecrease.getValue();
 
         //Elevation
         configuration.elevationDelta = Integer.parseInt(elevationDelta.getText());
 
         //Moisture
-        configuration.zoom = Double.parseDouble(zoom.getText());
+        configuration.zoom = (Double) zoom.getValue();
         configuration.placement = Integer.parseInt(placement.getText());
-        configuration.moistureIntensity = Double.parseDouble(moistureIntensity.getText());
-        configuration.change = Double.parseDouble(change.getText());
+        configuration.moistureIntensity = (Double) moistureIntensity.getValue();
+        configuration.change = (Double) change.getValue();
 
         //Height Maps
         configuration.moisture = Integer.parseInt(moisture.getText());
@@ -622,22 +631,21 @@ public class All extends JPanel implements ActionListener {
         configuration.humidity = Integer.parseInt(precipitation.getText());
 
         //Precipitation
-        configuration.circulation = Double.parseDouble(circulation.getText());
-        configuration.orographicEffect = Double.parseDouble(orographicEffect.getText());
-        configuration.precipitationIntensity = Double.parseDouble(precipitationIntensity.getText());
-        configuration.iteration = Double.parseDouble(iteration.getText());
+        configuration.circulation = (Double) circulation.getValue();
+        configuration.orographicEffect = (Double) orographicEffect.getValue();
+        configuration.precipitationIntensity = (Double) precipitationIntensity.getValue();
+        configuration.iteration =(Double) iteration.getValue();
 
         //Humidity
-        configuration.traspiration = Double.parseDouble(traspiration.getText());
-        configuration.evaporation = Double.parseDouble(evaporation.getText());
+        configuration.traspiration = (Double) traspiration.getValue();
+        configuration.evaporation = (Double) evaporation.getValue();
         configuration.humidity = Integer.parseInt(humidity.getText());
 
         //Circulation
-        configuration.exchangeCoeficient = Double.parseDouble(exchangeCoeficient.getText());
+        configuration.exchangeCoeficient = (Double) exchangeCoeficient.getValue();
         configuration.circulationOctaves = Integer.parseInt(circulationOctaves.getText());
-        configuration.temperatureInfluence = Double.parseDouble(temperatureInfluence.getText());
+        configuration.temperatureInfluence = (Double) temperatureInfluence.getValue();
         configuration.circulationDecline = Integer.parseInt(circulationDecline.getText());
-
 
         world.changeConfiguration(configuration);
     }

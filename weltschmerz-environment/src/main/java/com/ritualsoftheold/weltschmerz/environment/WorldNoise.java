@@ -1,6 +1,6 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.geometry.misc.Configuration;
+import com.ritualsoftheold.weltschmerz.misc.misc.Configuration;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
@@ -23,7 +23,7 @@ public class WorldNoise {
         this.earth = earth;
     }
 
-    private void init(){
+    private void init() {
         ModuleFractal gen = new ModuleFractal();
         gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
@@ -32,9 +32,6 @@ public class WorldNoise {
         gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(conf.seed);
         mod = new ModuleAutoCorrect(conf.minElevation, conf.maxElevation);
-        mod.setSource(gen);// set source (can usually be either another Module or a double value; see specific module for details)
-        mod.setSamples(conf.samples); // set how many samples to take
-        mod.calculate4D(); // perform the calculations
     }
     public double getNoise(int x, int y){
         if(!conf.useEarthImage) {

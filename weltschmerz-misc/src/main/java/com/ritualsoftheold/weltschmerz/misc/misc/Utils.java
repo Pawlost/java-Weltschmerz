@@ -1,5 +1,5 @@
-package com.ritualsoftheold.weltschmerz.geometry.misc;
-import com.ritualsoftheold.weltschmerz.geometry.units.Vector;
+package com.ritualsoftheold.weltschmerz.misc.misc;
+import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 
 public class Utils {
 
