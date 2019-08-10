@@ -7,14 +7,14 @@ public class Configuration {
     public int longitude = 4000;
     public int latitude = 4000;
     public long seed = 7987099;
+    public boolean useEarthImage = false;
+    public int minElevation = -500;
+    public int maxElevation = 500;
 
     //Noise
     public int octaves = 3;
     public double frequency = 2;
     public int samples = 15;
-
-    //Elevation
-    public int elevationDelta = 5;
 
     //Temperature
     public double maxTemperature = 90;
@@ -38,6 +38,7 @@ public class Configuration {
     public double orographicEffect = 1.0;
     public double precipitationIntensity = 0.6;
     public double iteration = 1.0;
+    public int elevationDelta = 5;
 
     //Humidity
     public double traspiration = 0.5;
