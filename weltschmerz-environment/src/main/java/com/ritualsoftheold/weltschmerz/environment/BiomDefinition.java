@@ -8,7 +8,7 @@ public class BiomDefinition {
 
     private static final double OCEAN_DOUBLE = -50.0;
     static final int MAXIMUM_PRECIPITATION = 400;
-    static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 100;
+    static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 200;
     public final String key;
     public final Integer color;
     private MultiKeyMap<Integer, Integer> shape;
@@ -27,7 +27,7 @@ public class BiomDefinition {
        int y = (int)(precipitation * (1000/MAXIMUM_PRECIPITATION));
         int x;
        if(temperature > 0) {
-            x = (int)((temperature * 10) + MAXIMUM_TEMPERATURE_DIFFERENCE);
+            x = (int)((temperature * 20) + MAXIMUM_TEMPERATURE_DIFFERENCE);
        }else if(temperature > -10){
             x = (int)(MAXIMUM_TEMPERATURE_DIFFERENCE/Math.abs(temperature));
        }else {

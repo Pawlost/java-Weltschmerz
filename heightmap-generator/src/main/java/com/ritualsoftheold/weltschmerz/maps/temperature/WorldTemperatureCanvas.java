@@ -27,7 +27,7 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable, Action
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-      for (int y = 0; y < height; y++) {
+    /*for (int y = 0; y < height; y++) {
           for (int x = 0; x < width; x++) {
             float temperature = (float) (world.getTemperature(x, y)/world.config.getInt("temperature.max_temperature"));
             if(temperature < 0) {
@@ -40,6 +40,8 @@ public class WorldTemperatureCanvas extends JPanel implements Scrollable, Action
             }
           }
       }
+
+     */
 
     MapIO.saveImage(image);
     this.repaint();

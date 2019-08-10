@@ -28,15 +28,11 @@ public class World {
         this.config = config;
         BufferedImage earth = MapIO.loadMap(EARTH_FILE);
         this.noise = new WorldNoise(config, earth);
-        this.equator = new Equator(noise, config);
-        this.circulation = new Circulation(equator, config);
+        this.equator = new Equator(config);
+        this.circulation = new Circulation(equator, noise, config);
         this.precipitation = new Precipitation(equator, circulation, noise, config);
         bioms = MapIO.loadBiomMap(config);
         System.out.println("Preparation done");
-    }
-
-    public double getTemperature(int posX, int posY) {
-        return equator.getTemperature(posX, posY);
     }
 
     public void setMaterials(int dirtID, int grassID) {
@@ -103,9 +99,9 @@ public class World {
 
     public Biom getBiom(int posX, int posY){
         double elevation = noise.getNoise(posX, posY);
-        double temperature = getTemperature(posX, posY);
-        double precipitation = this.precipitation.getPrecipitation(posX, posY);
-        Vector airFlow = getAirFlow(posX, posY);
+        double temperature = equator.getTemperature(posY, elevation);
+        Vector airFlow = circulation.getAirFlow(posX, posY);
+        double precipitation = this.precipitation.getPrecipitation(posX, posY, elevation, temperature, airFlow);
 
         BiomDefinition definition = null;
         if (Utils.isLand(elevation)) {
@@ -122,29 +118,13 @@ public class World {
 
         return new Biom(temperature, precipitation, airFlow, definition,  definition.color);
     }
-
-    public double getHumidity(int posX, int posY){
-        return precipitation.getHumidity(posX, posY);
-    }
-
+    
     public double getPressure(int posX, int posY) {
         return circulation.calculateDensity(posX, posY);
     }
 
-    public Vector getAirFlow(int posX, int posY) {
-        return circulation.getAirFlow(posX, posY);
-    }
-
     public boolean isDifferent() {
         return isDifferent;
-    }
-
-    public double getPrecipitation(int posX, int posY){
-        return precipitation.getPrecipitation(posX, posY);
-    }
-
-    public double getEvapotranspiration(int posX, int posY){
-        return precipitation.getEvapotranspiration(posX, posY);
     }
 
     public double getMoisture(int posY){

@@ -49,23 +49,19 @@ public class Precipitation {
         return Utils.toUnsignedRange(Math.abs(mix) * moistureIntensity);
     }
 
-    public double getPrecipitation(int posX, int posY){
-        double elevation = worldNoise.getNoise(posX, posY);
-        Vector wind = circulation.getAirFlow(posX, posY);
-        double humidity = getHumidity(posX, posY);
-        double temperature = equator.getTemperature(posX, posY);
+    public double getPrecipitation(int posX, int posY, double elevation, double temperature, Vector wind){
+        double humidity = getHumidity(posX, posY, elevation);
         double estimated = (1.0 - circulationIntensity) * getBasePrecipitation(posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
         double simulated =  (2.0 * circulationIntensity) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind,
                 orographicEffect)) * humidity;
        return Math.max(Math.min(intensity * (estimated + simulated), (int)(Math.abs(temperature + 10)
-               * BiomDefinition.MAXIMUM_PRECIPITATION) / BiomDefinition.MAXIMUM_TEMPERATURE_DIFFERENCE), 0);
+               * BiomDefinition.MAXIMUM_PRECIPITATION) / 50), 0);
     }
 
-    public double getHumidity(int posX, int posY){
-        double elevation = worldNoise.getNoise(posX, posY);
+    public double getHumidity(int posX, int posY, double elevation){
         boolean isLand = Utils.isLand(elevation);
-        double humidity = getEvapotranspiration(posX, posY);
+        double humidity = getEvapotranspiration(posY, isLand);
         Vector wind = circulation.getAirFlow(posX, posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
 
@@ -76,23 +72,27 @@ public class Precipitation {
         double scale = iteration * 0.01;
 
         // circulate humidity
-        double inflowHumidity = getEvapotranspiration((int)(posX - (Utils.normalize(wind).x * wind.getLength() * scale)),
-                (int)(posY - (Utils.normalize(wind).y * wind.getLength() * scale)));
-        double outflowHumidity = getEvapotranspiration((int)(posX + (Utils.normalize(wind).x * wind.getLength() * scale)),
-                (int) (posY + (Utils.normalize(wind).y * wind.getLength() * scale)));
+        int x = (int)(posX - (Utils.normalize(wind).x * wind.getLength() * scale));
+        int y  = (int)(posY - (Utils.normalize(wind).y * wind.getLength() * scale));
+
+        double inflowHumidity = getEvapotranspiration(y, Utils.isLand(worldNoise.getNoise(x, y)));
+
+        x = (int)(posX + (Utils.normalize(wind).x * wind.getLength() * scale));
+        y  = (int)(posY + (Utils.normalize(wind).y * wind.getLength() * scale));
+
+        double outflowHumidity = getEvapotranspiration(y, Utils.isLand(worldNoise.getNoise(x, y)));
 
         double inflow = Math.max(inflowHumidity - humidity, 0.0);
         double outflow = Math.max(humidity - outflowHumidity, 0.0);
         humidity += inflow * intensity * inverseOrographicEffect;
         humidity -= outflow * intensity;
-        //TODO Intensity
+
         return humidity;
     }
 
-    public double getEvapotranspiration(int posX, int posY){
-        double elevation = worldNoise.getNoise(posX, posY);
+    public double getEvapotranspiration(int posY, boolean isLand){
         double evapotranspiration;
-        if(Utils.isLand(elevation)){
+        if(isLand){
             evapotranspiration = transpiration;
         }else{
             evapotranspiration = evaporation;

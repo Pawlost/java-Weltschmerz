@@ -28,12 +28,14 @@ public class WorldPrecipitationCanvas extends JPanel implements Scrollable, Acti
         int width = this.image.getWidth();
         int height = this.image.getHeight();
 
-        for (int y = 0; y < height; y++) {
+       /* for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 float humidity = (float) world.getPrecipitation(x, y)/PRECIPITATION;
                 this.image.setRGB(x, y, new Color((float) Math.abs(humidity), (float) Math.abs(humidity), (float) Math.abs(humidity)).getRGB());
             }
         }
+
+        */
 
         MapIO.saveImage(image);
         this.repaint();

@@ -27,13 +27,15 @@ public class WorldHumidityCanvas extends JPanel implements Scrollable, ActionLis
     public void updateImage() {
         int width = this.image.getWidth();
         int height = this.image.getHeight();
-
+        /*
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 float humidity = (float) world.getHumidity(x, y)/HUMIDITY;
                 this.image.setRGB(x, y, new Color(Math.abs(humidity), Math.abs(humidity), Math.abs(humidity)).getRGB());
             }
         }
+
+         */
 
         MapIO.saveImage(image);
         this.repaint();

@@ -357,26 +357,26 @@ public class All extends JPanel implements ChangeListener {
                 "    latitude = "+latitude+"\n" +
                 "\n" +
                 "    #Seed to generate unique world\n" +
-                "    seed = 12316\n" +
+                "    seed = "+config.getLong("map.seed")+"\n" +
                 "\n" +
                 "    use_earth_image = "+config.getString("map.use_earth_image")+"\n" +
                 "\n" +
                 "    //Minimal map elvation in negative value\n" +
-                "    min_elevation = -500\n" +
+                "    min_elevation = "+config.getInt("map.min_elevation")+"\n" +
                 "\n" +
                 "    //Maximum map elevation\n" +
-                "    max_elevation = 500\n" +
+                "    max_elevation = "+config.getInt("map.max_elevation")+"\n" +
                 "}\n" +
                 "\n" +
                 "noise {\n" +
                 "    #Octaves of noise (quatintity of continents)\n" +
-                "    octaves = 4\n" +
+                "    octaves = "+config.getInt("noise.octaves")+"\n" +
                 "\n" +
                 "    #Frequency of noise\n" +
-                "    frequency = 7\n" +
+                "    frequency = "+config.getInt("noise.frequency")+"\n" +
                 "\n" +
                 "    #Noise Samples\n" +
-                "    samples = 20\n" +
+                "    samples = "+config.getInt("noise.samples")+"\n" +
                 "}\n" +
                 "\n" +
                 "temperature{\n" +

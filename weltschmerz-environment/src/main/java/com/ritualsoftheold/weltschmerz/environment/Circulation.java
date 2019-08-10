@@ -6,6 +6,7 @@ import com.typesafe.config.Config;
 
 public class Circulation {
 
+    private WorldNoise noise;
     private Equator equator;
     private int latitude;
     private int longitude;
@@ -14,8 +15,9 @@ public class Circulation {
     private double exchangeCoefficient;
     private int octaves;
 
-    public Circulation(Equator equator, Config config) {
+    public Circulation(Equator equator, WorldNoise noise, Config config) {
         this.equator = equator;
+        this.noise = noise;
         changeConfiguration(config);
     }
 
@@ -86,7 +88,8 @@ public class Circulation {
 
     public double calculateDensity(int posX, int posY){
         double density = calculateBaseDensity(posY);
-        double temperature = equator.getTemperature(posX, posY);
+        double elevation = noise.getNoise(posX, posY);
+        double temperature = equator.getTemperature(posY, elevation);
         return (density * (1.0 - temperatureInfluence)) + ((1.0 - temperature) * temperatureInfluence);
     }
 
@@ -97,8 +100,8 @@ public class Circulation {
 
     private Vector applyCoriolisEffect(int posY, Vector airFlow){
         float coriolisLatitude = (float) posY / latitude;
-        float equatorPosition = equator.getEquatorPosition();
-        float direction = Math.signum(coriolisLatitude - equatorPosition);
+        double equatorPosition = equator.getEquatorPosition();
+        double direction = Math.signum(coriolisLatitude - equatorPosition);
         Vector matrix = Utils.rotation((Math.PI/2) * direction * airFlow.getLength());
         double x = (matrix.x * airFlow.x) + (matrix.z * airFlow.x);
         double y = (matrix.y * airFlow.y) + (matrix.w * airFlow.y);

@@ -3,25 +3,23 @@ package com.ritualsoftheold.weltschmerz.environment;
 import com.typesafe.config.Config;
 
 public class Equator {
-    private int latitude;
+    private double latitude;
     private int maxTemperature;
     private int minTemperature;
     private double temperatureDecrease;
-    private int equatorPosition;
-    private WorldNoise noise;
+    private double equatorPosition;
 
-    public Equator(WorldNoise noise, Config conf){
+    public Equator(Config conf){
         changeConfiguration(conf);
-        this.noise = noise;
     }
 
-    public double getTemperature(int posX, int posY){
+    public double getTemperature(int posY, double elevation){
         double tempDifference = (Math.abs(minTemperature) + Math.abs(maxTemperature)) / equatorPosition;
         double basicTemperature = (getDistance(posY) * -tempDifference) + maxTemperature;
 
-        double elevation = noise.getNoise(posX, posY) * temperatureDecrease;
+        double decrease = elevation * temperatureDecrease;
         if (elevation > 0) {
-            return basicTemperature - elevation;
+            return basicTemperature - decrease;
         } else {
             return basicTemperature;
         }
@@ -31,7 +29,7 @@ public class Equator {
         return Math.abs(equatorPosition - posY);
     }
 
-    public int getEquatorPosition() {
+    public double getEquatorPosition() {
         return equatorPosition;
     }
 
@@ -39,7 +37,7 @@ public class Equator {
         latitude = config.getInt("map.latitude");
         maxTemperature = config.getInt("temperature.max_temperature");
         minTemperature = config.getInt("temperature.min_temperature");
-        temperatureDecrease = config.getInt("temperature.temperature_decrease");
-        equatorPosition = (latitude/2);
+        temperatureDecrease = config.getDouble("temperature.temperature_decrease");
+        equatorPosition = (latitude /2.0);
     }
 }
