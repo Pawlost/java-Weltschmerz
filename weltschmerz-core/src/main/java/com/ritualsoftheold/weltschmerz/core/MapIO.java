@@ -4,7 +4,6 @@ import com.ritualsoftheold.weltschmerz.environment.BiomDefinition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
-import jodd.util.ClassLoaderUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
