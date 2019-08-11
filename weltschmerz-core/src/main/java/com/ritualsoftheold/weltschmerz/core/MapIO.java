@@ -4,6 +4,7 @@ import com.ritualsoftheold.weltschmerz.environment.BiomDefinition;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
+import jodd.util.ClassLoaderUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class MapIO {
     private static final String BIOMS_PATH = "biomes";
@@ -37,7 +37,8 @@ public class MapIO {
 
     static BufferedImage loadMap(String path){
         try {
-            File file = new File(Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(path)).getFile());
+            InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            assert file != null;
             return ImageIO.read(file);
         } catch (IOException e) {
             e.printStackTrace();
