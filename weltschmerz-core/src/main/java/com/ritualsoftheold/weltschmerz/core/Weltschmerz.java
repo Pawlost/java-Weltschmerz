@@ -50,8 +50,8 @@ public class Weltschmerz {
         return world.isDifferent();
     }
 
-    public void setMaterialID(int grassID, int dirtID) {
-        world.setMaterials(dirtID, grassID);
+    public void setMaterialID(int grassID, int dirtID, int grassMeshID) {
+        world.setMaterials(dirtID, grassID, grassMeshID);
     }
 
     public Config getConfiguration() {

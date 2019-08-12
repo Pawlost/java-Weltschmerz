@@ -19,6 +19,7 @@ public class World {
     private Circulation circulation;
     private int dirtID;
     private int grassID;
+    private int grassMeshID;
     private boolean isDifferent;
     private ArrayList<BiomDefinition> bioms;
     private static final String EARTH_FILE =  "earth.png";
@@ -35,12 +36,13 @@ public class World {
         System.out.println("Preparation done");
     }
 
-    public void setMaterials(int dirtID, int grassID) {
+    void setMaterials(int dirtID, int grassID, int grassMeshID) {
         this.dirtID = dirtID;
         this.grassID = grassID;
+        this.grassMeshID = grassMeshID;
     }
 
-    public ByteBuffer getChunk(int posX, int posY, int posZ, int bufferSize) {
+    ByteBuffer getChunk(int posX, int posY, int posZ, int bufferSize) {
         ByteBuffer blockBuffer = ByteBuffer.allocate(bufferSize);
         byte[] fill = new byte[bufferSize];
         Arrays.fill(fill, (byte) 1);
@@ -59,15 +61,17 @@ public class World {
                     bb.put(underArray);
                     blocks.put(z, x, bb);
                 } else if (y / 64 == posY / 64) {
-                    byte[] underArray = new byte[(y % 64)];
+                    y = Math.abs(y%64);
+                    byte[] underArray = new byte[(y)];
                     Arrays.fill(underArray, (byte) dirtID);
                     bb.put(underArray);
 
-                    byte[] upperArray = new byte[64 - (y % 64)];
+                    byte[] upperArray = new byte[64 - y];
                     Arrays.fill(upperArray, (byte) 1);
                     bb.put(upperArray);
 
-                    bb.put(y % 64, (byte) grassID);
+                    bb.put(y, (byte) grassID);
+                    bb.put(y + 1, (byte) grassMeshID);
 
                     isDifferent = true;
                     blocks.put(z, x, bb);
@@ -123,7 +127,7 @@ public class World {
         return circulation.calculateDensity(posX, posY);
     }
 
-    public boolean isDifferent() {
+    boolean isDifferent() {
         return isDifferent;
     }
 

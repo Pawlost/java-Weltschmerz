@@ -8,7 +8,7 @@ public class BiomDefinition {
 
     private static final double OCEAN_DOUBLE = -50.0;
     static final int MAXIMUM_PRECIPITATION = 400;
-    static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 200;
+    private static final  int MAXIMUM_TEMPERATURE_DIFFERENCE = 200;
     public final String key;
     public final Integer color;
     private MultiKeyMap<Integer, Integer> shape;

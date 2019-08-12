@@ -27,9 +27,9 @@ public class WorldNoise {
     }
 
     public WorldNoise(Config config, BufferedImage earth){
-        init();
         changeConfiguration(config);
         this.earth = earth;
+        init();
     }
 
     private void init() {
@@ -40,7 +40,7 @@ public class WorldNoise {
         gen.setFrequency(frequency);
         gen.setType(ModuleFractal.FractalType.FBM);
         gen.setSeed(seed);
-        mod = new ModuleAutoCorrect(minElevation, maxElevation);
+        mod = new ModuleAutoCorrect(-minElevation, maxElevation);
         mod.setSource(gen);
         mod.setSamples(samples);
         mod.calculate4D();
@@ -67,8 +67,8 @@ public class WorldNoise {
         latitude = config.getInt("map.latitude");
         longitude = config.getInt("map.longitude");
         useEarthImage = config.getBoolean("map.use_earth_image");
-        minElevation = config.getInt("temperature.max_temperature");
-        maxElevation = config.getInt("temperature.min_temperature");
+        minElevation = config.getInt("map.min_elevation");
+        maxElevation = config.getInt("map.max_elevation");
         seed = config.getLong("map.seed");
         octaves = config.getInt("noise.octaves");
         frequency = config.getDouble("noise.frequency");

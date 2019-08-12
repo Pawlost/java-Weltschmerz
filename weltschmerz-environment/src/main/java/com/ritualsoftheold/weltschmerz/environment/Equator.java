@@ -3,7 +3,6 @@ package com.ritualsoftheold.weltschmerz.environment;
 import com.typesafe.config.Config;
 
 public class Equator {
-    private double latitude;
     private int maxTemperature;
     private int minTemperature;
     private double temperatureDecrease;
@@ -34,7 +33,7 @@ public class Equator {
     }
 
     public void changeConfiguration(Config config){
-        latitude = config.getInt("map.latitude");
+        double latitude = config.getInt("map.latitude");
         maxTemperature = config.getInt("temperature.max_temperature");
         minTemperature = config.getInt("temperature.min_temperature");
         temperatureDecrease = config.getDouble("temperature.temperature_decrease");
