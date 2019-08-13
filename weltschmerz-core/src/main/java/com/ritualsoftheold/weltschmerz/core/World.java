@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.google.common.collect.HashMultimap;
 import com.ritualsoftheold.weltschmerz.environment.*;
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
@@ -20,6 +21,7 @@ public class World {
     private int dirtID;
     private int grassID;
     private int grassMeshID;
+    private byte[][][] tree;
     private boolean isDifferent;
     private ArrayList<BiomDefinition> bioms;
     private static final String EARTH_FILE =  "earth.png";
@@ -40,6 +42,10 @@ public class World {
         this.dirtID = dirtID;
         this.grassID = grassID;
         this.grassMeshID = grassMeshID;
+    }
+
+    void setObject(byte[][][] tree){
+        this.tree = tree;
     }
 
     ByteBuffer getChunk(int posX, int posY, int posZ, int bufferSize) {
@@ -85,6 +91,19 @@ public class World {
                     if (blocks.containsKey(z, x)) {
                         for (int y = 0; y < 64; y++) {
                             blockBuffer.put(x + (y * 64) + (z * 4096), blocks.get(z, x).get(y));
+                        }
+                    }
+                }
+            }
+
+            if (posX == 1 && posZ == 1){
+                int posy = (int) Math.round(noise.getNoise(posX * 64, posZ * 64));
+                if(posy / 64 == posY / 64) {
+                    for (int z = 0; z < tree.length; z++) {
+                        for (int y = 0; y < tree[z].length; y++) {
+                            for (int x = 0; x < tree[z][y].length; x ++) {
+                                blockBuffer.put(x + ((y + posy) * 64) + (z * 4096), tree[z][y][x]);
+                            }
                         }
                     }
                 }

@@ -119,8 +119,8 @@ public class EnvironmentalTest {
     public void temperatureTest() {
         for (int x = 0; x < 1000; x++) {
             for (int y = 0; y < 500; y++) {
-                double temperature = weltschmerz.world.getTemperature(x, y);
-                System.out.println(temperature);
+            //    double temperature = weltschmerz.world.getTemperature(x, y);
+            //    System.out.println(temperature);
             }
         }
     }

@@ -1,12 +1,16 @@
 package com.ritualsoftheold.weltschmerz.core;
 
+import com.google.common.collect.HashMultimap;
 import com.ritualsoftheold.weltschmerz.environment.Biom;
 
 import com.typesafe.config.Config;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import xerial.larray.LByteArray;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Weltschmerz {
     //Generate map image
@@ -50,8 +54,12 @@ public class Weltschmerz {
         return world.isDifferent();
     }
 
-    public void setMaterialID(int grassID, int dirtID, int grassMeshID) {
+    public void setBlocksID(int grassID, int dirtID, int grassMeshID) {
         world.setMaterials(dirtID, grassID, grassMeshID);
+    }
+
+    public void setObject(byte[][][] tree){
+        world.setObject(tree);
     }
 
     public Config getConfiguration() {
