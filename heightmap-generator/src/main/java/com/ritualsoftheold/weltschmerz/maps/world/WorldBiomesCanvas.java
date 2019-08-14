@@ -3,6 +3,7 @@ package com.ritualsoftheold.weltschmerz.maps.world;
 import com.ritualsoftheold.weltschmerz.core.MapIO;
 import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.environment.Biom;
+import com.ritualsoftheold.weltschmerz.maps.All;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,13 +25,18 @@ public class WorldBiomesCanvas extends JPanel implements Scrollable, ActionListe
     }
 
     public void updateImage() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Biom biom = world.getBiom(x, y);
-                this.image.setRGB(x, y, biom.color.getRGB());
-            }
+       for(int t = 1; t <= All.THREADS; t ++) {
+           final int thread = t;
+         new Thread(() -> {
+                for (int y = 0; y < height/thread; y++) {
+                    for (int x = 0; x < width; x++) {
+                        Biom biom = world.getBiom(x, y);
+                        this.image.setRGB(x, y, biom.color.getRGB());
+                    }
+                }
+                this.repaint();
+         }).start();
         }
-        this.repaint();
         MapIO.saveImage(image);
     }
 

@@ -1,5 +1,6 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
+import com.ritualsoftheold.weltschmerz.misc.misc.Constants;
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import com.typesafe.config.Config;
@@ -50,19 +51,18 @@ public class Precipitation {
     }
 
     public double getPrecipitation(int posX, int posY, double elevation, double temperature, Vector wind){
-        double humidity = getHumidity(posX, posY, elevation);
+        double humidity = getHumidity(posX, posY, wind, elevation);
         double estimated = (1.0 - circulationIntensity) * getBasePrecipitation(posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
         double simulated =  (2.0 * circulationIntensity) *  (temperature + 10 + getOrotographicEffect(elevation, elevationGradient, wind,
                 orographicEffect)) * humidity;
        return Math.max(Math.min(intensity * (estimated + simulated), (int)(Math.abs(temperature + 10)
-               * BiomDefinition.MAXIMUM_PRECIPITATION) / 50), 0);
+               * Constants.MAXIMUM_PRECIPITATION) / 50), 0);
     }
 
-    public double getHumidity(int posX, int posY, double elevation){
+    public double getHumidity(int posX, int posY, Vector wind, double elevation){
         boolean isLand = Utils.isLand(elevation);
         double humidity = getEvapotranspiration(posY, isLand);
-        Vector wind = circulation.getAirFlow(posX, posY);
         double elevationGradient = getElevationGradient(posX, posY).y;
 
         double finalOrographicEffect = getOrotographicEffect(elevation, elevationGradient, wind, orographicEffect);
@@ -72,13 +72,13 @@ public class Precipitation {
         double scale = iteration * 0.01;
 
         // circulate humidity
-        int x = (int)(posX - (Utils.normalize(wind).x * wind.getLength() * scale));
-        int y  = (int)(posY - (Utils.normalize(wind).y * wind.getLength() * scale));
+        int x = Math.max(Math.min((int)(posX - (Utils.normalize(wind).x * wind.getLength() * scale)), longitude), 0);
+        int y = Math.max(Math.min((int)(posY - (Utils.normalize(wind).y * wind.getLength() * scale)), latitude), 0);
 
         double inflowHumidity = getEvapotranspiration(y, Utils.isLand(worldNoise.getNoise(x, y)));
 
-        x = (int)(posX + (Utils.normalize(wind).x * wind.getLength() * scale));
-        y  = (int)(posY + (Utils.normalize(wind).y * wind.getLength() * scale));
+        x =  Math.max(Math.min((int)(posX + (Utils.normalize(wind).x * wind.getLength() * scale)), longitude), 0);
+        y  =  Math.max(Math.min((int)(posY + (Utils.normalize(wind).y * wind.getLength() * scale)), latitude), 0);
 
         double outflowHumidity = getEvapotranspiration(y, Utils.isLand(worldNoise.getNoise(x, y)));
 

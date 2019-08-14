@@ -10,7 +10,9 @@ import java.awt.image.BufferedImage;
 
 public class WorldNoise {
     private ModuleAutoCorrect mod;
-    private BufferedImage earth;
+    private int[] earth;
+    private int imageWidth;
+    BufferedImage image;
 
     private int longitude;
     private int latitude;
@@ -28,7 +30,10 @@ public class WorldNoise {
 
     public WorldNoise(Config config, BufferedImage earth){
         changeConfiguration(config);
-        this.earth = earth;
+        this.earth = new int[earth.getWidth() * earth.getHeight()];
+
+        this.imageWidth = earth.getWidth();
+        earth.getRGB(0, 0, earth.getWidth(), earth.getHeight(), this.earth, 0, imageWidth);
         init();
     }
 
@@ -55,7 +60,7 @@ public class WorldNoise {
             double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
             return (mod.get(nx, ny, nz, nw));
         }else{
-            return new Color(earth.getRGB(x, y)).getRed();
+            return earth[(y*imageWidth)+x] & 0xFF;
         }
     }
 

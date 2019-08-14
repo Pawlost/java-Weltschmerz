@@ -5,17 +5,19 @@ import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import java.awt.*;
 
 public class Biom {
-    public final double temperature;
-    public final double precipitation;
-    public final Vector airFlow;
+    public double temperature;
+    public double precipitation;
+    public Vector airFlow;
     public final Color color;
-    public final BiomDefinition biomDefinition;
 
-    public Biom(double temperature, double precipitation, Vector airFlow, BiomDefinition biomDefinition, int color){
+    public Biom(String key, int color){
+        this.color = new Color(color);
+    }
+
+    public Biom(double temperature, double precipitation, Vector airFlow, int color){
         this.temperature = temperature;
         this.airFlow = airFlow;
         this.precipitation = precipitation;
         this.color = new Color(color);
-        this.biomDefinition = biomDefinition;
     }
 }

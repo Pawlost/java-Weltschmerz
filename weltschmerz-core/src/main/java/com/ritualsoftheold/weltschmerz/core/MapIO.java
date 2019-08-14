@@ -1,16 +1,17 @@
 package com.ritualsoftheold.weltschmerz.core;
 
-import com.ritualsoftheold.weltschmerz.environment.BiomDefinition;
+import com.ritualsoftheold.weltschmerz.environment.Biom;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
+import org.apache.commons.collections4.map.MultiKeyMap;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class MapIO {
     private static final String BIOMS_PATH = "biomes";
@@ -45,26 +46,21 @@ public class MapIO {
         return null;
     }
 
-    static ArrayList<BiomDefinition> loadBiomMap(Config conf){
-        HashMap<Integer, BiomDefinition> biomesMap = new HashMap<>();
-        HashMap<Integer, String> colorDefinitios = parseColorDefinitions(conf);
-        BufferedImage image = loadMap(BIOME_DISTRIBUTION_FILE);
+    static Biom[][] loadBiomMap(Config conf){
+        HashMap<Integer, String> colorDefinitions = parseColorDefinitions(conf);
 
-        assert image != null;
+        BufferedImage image = Objects.requireNonNull(loadMap(BIOME_DISTRIBUTION_FILE));
+        Biom[][] biomes = new Biom[image.getWidth()][image.getHeight()];
+
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 int color = image.getRGB(x, y);
-                BiomDefinition distribution = biomesMap.get(color);
                 if(color != Color.WHITE.getRGB()) {
-                    if (distribution == null) {
-                        distribution = new BiomDefinition(colorDefinitios.get(color), color);
-                        biomesMap.put(color, distribution);
-                    }
-                    distribution.addPoint(x, y);
+                    biomes[x][y] = new Biom(colorDefinitions.get(color), color);
                 }
             }
         }
-        return new ArrayList<>(biomesMap.values());
+        return biomes;
     }
 
     static void saveConfiguration(Config config){

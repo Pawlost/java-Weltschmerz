@@ -8,14 +8,17 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class All extends JPanel implements ChangeListener {
+public class All extends JPanel implements MouseListener {
+
     public static void main(String... args) {
         new All();
     }
+
+    public static final int THREADS = 4;
 
     private World world;
     private int longitude;
@@ -93,78 +96,78 @@ public class All extends JPanel implements ChangeListener {
 
         //Temperature
         minTemperature = new JSlider(-1000, 0, config.getInt("temperature.min_temperature"));
-        minTemperature.addChangeListener(this);
+        minTemperature.addMouseListener(this);
 
         maxTemperature = new JSlider(0, 90, config.getInt("temperature.max_temperature"));
-        maxTemperature.addChangeListener(this);
+        maxTemperature.addMouseListener(this);
 
         temperatureDecrease = new DoubleJSlider(0, 1000,
                 config.getDouble("temperature.temperature_decrease"), 100);
-        temperatureDecrease.addChangeListener(this);
+        temperatureDecrease.addMouseListener(this);
 
         //Precipitation
         circulationIntensity = new DoubleJSlider(0, 1000,
                 config.getDouble("precipitation.circulation_intensity"), 100);
-        circulationIntensity.addChangeListener(this);
+        circulationIntensity.addMouseListener(this);
 
         orographicEffect = new DoubleJSlider(0, 1000,
                 config.getDouble("precipitation.orographic_effect"), 100);
-        orographicEffect.addChangeListener(this);
+        orographicEffect.addMouseListener(this);
 
         precipitationIntensity = new DoubleJSlider(0, 1000,
                 config.getDouble("precipitation.precipitation_intensity"), 100);
-        precipitationIntensity.addChangeListener(this);
+        precipitationIntensity.addMouseListener(this);
 
-        iteration = new DoubleJSlider(0, 1000,
+        iteration = new DoubleJSlider(0, 100,
                 config.getDouble("precipitation.iteration"), 100);
-        iteration.addChangeListener(this);
+        iteration.addMouseListener(this);
 
-        elevationDelta = new JSlider(0, 1000,
+        elevationDelta = new JSlider(0, 100,
                 config.getInt("precipitation.elevation_delta"));
-        elevationDelta.addChangeListener(this);
+        elevationDelta.addMouseListener(this);
 
 
         //Moisture
         zoom = new DoubleJSlider(0, 1000,
                 config.getDouble("moisture.zoom"), 100);
-        zoom.addChangeListener(this);
+        zoom.addMouseListener(this);
 
         moistureIntensity = new DoubleJSlider(0, 1000,
                 config.getDouble("moisture.moisture_intensity"), 100);
-        moistureIntensity.addChangeListener(this);
+        moistureIntensity.addMouseListener(this);
 
         change = new DoubleJSlider(0, 1000,
                 config.getDouble("moisture.change"), 100);
-        change.addChangeListener(this);
+        change.addMouseListener(this);
 
         //Circulation
         exchangeCoefficient = new DoubleJSlider(0, 1000,
                 config.getDouble("circulation.exchange_coefficient"), 100);
-        exchangeCoefficient.addChangeListener(this);
+        exchangeCoefficient.addMouseListener(this);
 
         circulationOctaves = new JSlider(0, 1000,
                 config.getInt("circulation.circulation_octaves"));
-        circulationOctaves.addChangeListener(this);
+        circulationOctaves.addMouseListener(this);
 
         temperatureInfluence = new DoubleJSlider(0, 1000,
                 config.getDouble("circulation.temperature_influence"), 100);
-        temperatureInfluence.addChangeListener(this);
+        temperatureInfluence.addMouseListener(this);
 
         circulationDecline = new JSlider(0, 1000,
                 config.getInt("circulation.circulation_decline"));
-        circulationDecline.addChangeListener(this);
+        circulationDecline.addMouseListener(this);
 
         //Humidity
         evaporation = new DoubleJSlider(0, 1000,
                 config.getDouble("humidity.evaporation"), 100);
-        evaporation.addChangeListener(this);
+        evaporation.addMouseListener(this);
 
         transpiration = new DoubleJSlider(0, 1000,
                 config.getDouble("humidity.transpiration"), 100);
-        transpiration.addChangeListener(this);
+        transpiration.addMouseListener(this);
 
         debug = new JSlider(0, 1000, 10);
-        debug.addChangeListener(this);
+        debug.addMouseListener(this);
 
         //Humidity
         gbc.gridx = 0;
@@ -346,130 +349,150 @@ public class All extends JPanel implements ChangeListener {
     }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
         String string =
                 "#Configuration file for Weltschmerz\n" +
-                "map{\n" +
-                "    #World and image width\n" +
-                "    longitude = "+ longitude +"\n" +
-                "\n" +
-                "    #World and image height\n" +
-                "    latitude = "+latitude+"\n" +
-                "\n" +
-                "    #Seed to generate unique world\n" +
-                "    seed = "+config.getLong("map.seed")+"\n" +
-                "\n" +
-                "    use_earth_image = "+config.getString("map.use_earth_image")+"\n" +
-                "\n" +
-                "    //Minimal map elvation in negative value\n" +
-                "    min_elevation = "+config.getInt("map.min_elevation")+"\n" +
-                "\n" +
-                "    //Maximum map elevation\n" +
-                "    max_elevation = "+config.getInt("map.max_elevation")+"\n" +
-                "}\n" +
-                "\n" +
-                "noise {\n" +
-                "    #Octaves of noise (quatintity of continents)\n" +
-                "    octaves = "+config.getInt("noise.octaves")+"\n" +
-                "\n" +
-                "    #Frequency of noise\n" +
-                "    frequency = "+config.getInt("noise.frequency")+"\n" +
-                "\n" +
-                "    #Noise Samples\n" +
-                "    samples = "+config.getInt("noise.samples")+"\n" +
-                "}\n" +
-                "\n" +
-                "temperature{\n" +
-                "    //Maximum world temperature\n" +
-                "    max_temperature = "+maxTemperature.getValue()+"\n" +
-                "\n" +
-                "    //Minimum world temperature\n" +
-                "    min_temperature = "+minTemperature.getValue()+"\n" +
-                "\n" +
-                "    //Temperature decrease with elevation\n" +
-                "    temperature_decrease = "+temperatureDecrease.getDouble()+"\n" +
-                "}\n" +
-                "\n" +
-                "moisture{\n" +
-                "    //Prevents from multiple moisture zones\n" +
-                "    zoom = "+zoom.getDouble()+"\n" +
-                "\n" +
-                "    //Intesity of moisture\n" +
-                "    moisture_intensity = "+moistureIntensity.getDouble()+"\n" +
-                "\n" +
-                "    //Defines how intense are bigger miosture zones\n" +
-                "    change = "+change.getDouble()+"\n" +
-                "}\n" +
-                "\n" +
-                "precipitation{\n" +
-                "    //Defines intensity of circulation\n" +
-                "    circulation_intensity = "+circulationIntensity.getDouble()+"\n" +
-                "\n" +
-                "    //Intensity of orographic effect\n" +
-                "    orographic_effect = "+orographicEffect.getDouble()+"\n" +
-                "\n" +
-                "    precipitation_intensity = "+precipitationIntensity.getDouble()+"\n" +
-                "\n" +
-                "    iteration = "+iteration.getDouble()+"\n" +
-                "\n" +
-                "    //Elevation influence on precipitation\n" +
-                "    elevation_delta = "+elevationDelta.getValue()+"\n" +
-                "}\n" +
-                "\n" +
-                "humidity{\n" +
-                "    //Transpiration intensity\n" +
-                "    transpiration = "+transpiration.getDouble()+"\n" +
-                "\n" +
-                "    //Evaporation intensity\n" +
-                "    evaporation = "+evaporation.getDouble()+"\n" +
-                "}\n" +
-                "\n" +
-                "circulation{\n" +
-                "    exchange_coefficient = "+exchangeCoefficient.getDouble()+"\n" +
-                "\n" +
-                "    //Range of simulated circulation\n" +
-                "    circulation_octaves = "+circulationOctaves.getValue()+"\n" +
-                "\n" +
-                "    //temeprature influence on circulation\n" +
-                "    temperature_influence = "+temperatureInfluence.getDouble()+"\n" +
-                "\n" +
-                "    circulation_decline = "+circulationDecline.getValue()+"\n" +
-                "}\n" +
-                "\n" +
-                "#Affects level (height) of land generation\n" +
-                "biomes{\n" +
-                "    TROPICAL_RAINFOREST{\n" +
-                "        color = 005430\n" +
-                "    }\n" +
-                "    TEMPERATE_RAINFOREST{\n" +
-                "        color = 00556D\n" +
-                "    }\n" +
-                "    SAVANNA{\n" +
-                "        color = 99A525\n" +
-                "    }\n" +
-                "    TEMPERATE_SEASONAL_FOREST{\n" +
-                "        color = 2C89A1\n" +
-                "    }\n" +
-                "    BOREAL_FOREST{\n" +
-                "        color = 5B8F51\n" +
-                "    }\n" +
-                "    WOODLAND{\n" +
-                "        color = B37C00\n" +
-                "    }\n" +
-                "    SUBTROPICAL_DESERT{\n" +
-                "        color = C67137\n" +
-                "    }\n" +
-                "    TEMPERATURE_GRASSLAND{\n" +
-                "        color = 927D31\n" +
-                "    }\n" +
-                "    TUNDRA{\n" +
-                "        color = 92A7AC\n" +
-                "    }\n" +
-                "}";
+                        "map{\n" +
+                        "    #World and image width\n" +
+                        "    longitude = "+ longitude +"\n" +
+                        "\n" +
+                        "    #World and image height\n" +
+                        "    latitude = "+latitude+"\n" +
+                        "\n" +
+                        "    #Seed to generate unique world\n" +
+                        "    seed = "+config.getLong("map.seed")+"\n" +
+                        "\n" +
+                        "    use_earth_image = "+config.getString("map.use_earth_image")+"\n" +
+                        "\n" +
+                        "    //Minimal map elvation in negative value\n" +
+                        "    min_elevation = "+config.getInt("map.min_elevation")+"\n" +
+                        "\n" +
+                        "    //Maximum map elevation\n" +
+                        "    max_elevation = "+config.getInt("map.max_elevation")+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "noise {\n" +
+                        "    #Octaves of noise (quatintity of continents)\n" +
+                        "    octaves = "+config.getInt("noise.octaves")+"\n" +
+                        "\n" +
+                        "    #Frequency of noise\n" +
+                        "    frequency = "+config.getInt("noise.frequency")+"\n" +
+                        "\n" +
+                        "    #Noise Samples\n" +
+                        "    samples = "+config.getInt("noise.samples")+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "temperature{\n" +
+                        "    //Maximum world temperature\n" +
+                        "    max_temperature = "+maxTemperature.getValue()+"\n" +
+                        "\n" +
+                        "    //Minimum world temperature\n" +
+                        "    min_temperature = "+minTemperature.getValue()+"\n" +
+                        "\n" +
+                        "    //Temperature decrease with elevation\n" +
+                        "    temperature_decrease = "+temperatureDecrease.getDouble()+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "moisture{\n" +
+                        "    //Prevents from multiple moisture zones\n" +
+                        "    zoom = "+zoom.getDouble()+"\n" +
+                        "\n" +
+                        "    //Intesity of moisture\n" +
+                        "    moisture_intensity = "+moistureIntensity.getDouble()+"\n" +
+                        "\n" +
+                        "    //Defines how intense are bigger miosture zones\n" +
+                        "    change = "+change.getDouble()+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "precipitation{\n" +
+                        "    //Defines intensity of circulation\n" +
+                        "    circulation_intensity = "+circulationIntensity.getDouble()+"\n" +
+                        "\n" +
+                        "    //Intensity of orographic effect\n" +
+                        "    orographic_effect = "+orographicEffect.getDouble()+"\n" +
+                        "\n" +
+                        "    precipitation_intensity = "+precipitationIntensity.getDouble()+"\n" +
+                        "\n" +
+                        "    iteration = "+iteration.getDouble()+"\n" +
+                        "\n" +
+                        "    //Elevation influence on precipitation\n" +
+                        "    elevation_delta = "+elevationDelta.getValue()+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "humidity{\n" +
+                        "    //Transpiration intensity\n" +
+                        "    transpiration = "+transpiration.getDouble()+"\n" +
+                        "\n" +
+                        "    //Evaporation intensity\n" +
+                        "    evaporation = "+evaporation.getDouble()+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "circulation{\n" +
+                        "    exchange_coefficient = "+exchangeCoefficient.getDouble()+"\n" +
+                        "\n" +
+                        "    //Range of simulated circulation\n" +
+                        "    circulation_octaves = "+circulationOctaves.getValue()+"\n" +
+                        "\n" +
+                        "    //temeprature influence on circulation\n" +
+                        "    temperature_influence = "+temperatureInfluence.getDouble()+"\n" +
+                        "\n" +
+                        "    circulation_decline = "+circulationDecline.getValue()+"\n" +
+                        "}\n" +
+                        "\n" +
+                        "#Affects level (height) of land generation\n" +
+                        "biomes{\n" +
+                        "    TROPICAL_RAINFOREST{\n" +
+                        "        color = 005430\n" +
+                        "    }\n" +
+                        "    TEMPERATE_RAINFOREST{\n" +
+                        "        color = 00556D\n" +
+                        "    }\n" +
+                        "    SAVANNA{\n" +
+                        "        color = 99A525\n" +
+                        "    }\n" +
+                        "    TEMPERATE_SEASONAL_FOREST{\n" +
+                        "        color = 2C89A1\n" +
+                        "    }\n" +
+                        "    BOREAL_FOREST{\n" +
+                        "        color = 5B8F51\n" +
+                        "    }\n" +
+                        "    WOODLAND{\n" +
+                        "        color = B37C00\n" +
+                        "    }\n" +
+                        "    SUBTROPICAL_DESERT{\n" +
+                        "        color = C67137\n" +
+                        "    }\n" +
+                        "    TEMPERATURE_GRASSLAND{\n" +
+                        "        color = 927D31\n" +
+                        "    }\n" +
+                        "    TUNDRA{\n" +
+                        "        color = 92A7AC\n" +
+                        "    }\n" +
+                        "}";
 
         Config config = ConfigFactory.parseString(string);
 
         world.changeConfiguration(config);
         biomesCanvas.updateImage();
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
