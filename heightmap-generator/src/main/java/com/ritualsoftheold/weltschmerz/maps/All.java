@@ -145,6 +145,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         minTemperatureLabel = new JFormattedTextField(integerFormatter);
         minTemperatureLabel.setValue(config.getInt("temperature.min_temperature"));
         minTemperatureLabel.addActionListener(this);
+        minTemperatureLabel.setPreferredSize(new Dimension(50, 20));
 
         maxTemperature = new JSlider(0, 40, config.getInt("temperature.max_temperature"));
         maxTemperature.addMouseListener(this);
@@ -152,6 +153,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         maxTemperatureLabel = new JFormattedTextField(integerFormatter);
         maxTemperatureLabel.setValue(config.getInt("temperature.max_temperature"));
         maxTemperatureLabel.addActionListener(this);
+        maxTemperatureLabel.setPreferredSize(new Dimension(50, 20));
 
         temperatureDecrease = new DoubleJSlider(0, 100,
                 config.getDouble("temperature.temperature_decrease"), 10);
@@ -160,6 +162,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         temperatureDecreaseLabel = new JFormattedTextField(doubleFormatter);
         temperatureDecreaseLabel.setValue(config.getDouble("temperature.temperature_decrease"));
         temperatureDecreaseLabel.addActionListener(this);
+        temperatureDecreaseLabel.setPreferredSize(new Dimension(50, 20));
 
 
         //Precipitation
@@ -170,6 +173,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         circulationIntensityLabel = new JFormattedTextField(doubleFormatter);
         circulationIntensityLabel.setValue(config.getDouble("precipitation.circulation_intensity"));
         circulationIntensityLabel.addActionListener(this);
+        circulationIntensityLabel.setPreferredSize(new Dimension(50, 20));
 
         orographicEffect = new DoubleJSlider(0, 100,
                 config.getDouble("precipitation.orographic_effect"), 10);
@@ -178,6 +182,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         orographicEffectLabel = new JFormattedTextField(doubleFormatter);
         orographicEffectLabel.setValue(config.getDouble("precipitation.orographic_effect"));
         orographicEffectLabel.addActionListener(this);
+        orographicEffectLabel.setPreferredSize(new Dimension(50, 20));
 
         precipitationIntensity = new DoubleJSlider(0, 100,
                 config.getDouble("precipitation.precipitation_intensity"), 10);
@@ -186,6 +191,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         precipitationIntensityLabel = new JFormattedTextField(doubleFormatter);
         precipitationIntensityLabel.setValue(config.getDouble("precipitation.precipitation_intensity"));
         precipitationIntensityLabel.addActionListener(this);
+        precipitationIntensityLabel.setPreferredSize(new Dimension(50, 20));
 
         iteration = new DoubleJSlider(0, Math.max(longitude, latitude)*10,
                 config.getDouble("precipitation.iteration"), 10);
@@ -194,6 +200,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         iterationLabel = new JFormattedTextField(doubleFormatter);
         iterationLabel.setValue(config.getDouble("precipitation.iteration"));
         iterationLabel.addActionListener(this);
+        iterationLabel.setPreferredSize(new Dimension(50, 20));
 
         elevationDelta = new JSlider(0, Math.max(longitude, latitude),
                 config.getInt("precipitation.elevation_delta"));
@@ -202,6 +209,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         elevationDeltaLabel = new JFormattedTextField(integerFormatter);
         elevationDeltaLabel.setValue(config.getInt("precipitation.elevation_delta"));
         elevationDeltaLabel.addActionListener(this);
+        elevationDeltaLabel.setPreferredSize(new Dimension(50, 20));
 
         //Moisture
         zoom = new DoubleJSlider(0, 100,
@@ -211,6 +219,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         zoomLabel = new JFormattedTextField(doubleFormatter);
         zoomLabel.setValue(config.getDouble("moisture.zoom"));
         zoomLabel.addActionListener(this);
+        zoomLabel.setPreferredSize(new Dimension(50, 20));
 
         moistureIntensity = new DoubleJSlider(0, 100,
                 config.getDouble("moisture.moisture_intensity"), 10);
@@ -219,6 +228,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         moistureIntensityLabel = new JFormattedTextField(doubleFormatter);
         moistureIntensityLabel.setValue(config.getDouble("moisture.moisture_intensity"));
         moistureIntensityLabel.addActionListener(this);
+        moistureIntensityLabel.setPreferredSize(new Dimension(50, 20));
 
         change = new DoubleJSlider(0, 100,
                 config.getDouble("moisture.change"), 10);
@@ -227,6 +237,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         changeLabel = new JFormattedTextField(doubleFormatter);
         changeLabel.setValue(config.getDouble("moisture.change"));
         changeLabel.addActionListener(this);
+        changeLabel.setPreferredSize(new Dimension(50, 20));
 
         //Circulation
         exchangeCoefficient = new DoubleJSlider(0, 100,
@@ -236,6 +247,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         exchangeCoefficientLabel = new JFormattedTextField(doubleFormatter);
         exchangeCoefficientLabel.setValue(config.getDouble("circulation.exchange_coefficient"));
         exchangeCoefficientLabel.addActionListener(this);
+        exchangeCoefficientLabel.setPreferredSize(new Dimension(50, 20));
 
         circulationOctaves = new JSlider(0, 100,
                 config.getInt("circulation.circulation_octaves"));
@@ -244,6 +256,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         circulationOctavesLabel = new JFormattedTextField(integerFormatter);
         circulationOctavesLabel.setValue(config.getInt("circulation.circulation_octaves"));
         circulationOctavesLabel.addActionListener(this);
+        circulationOctavesLabel.setPreferredSize(new Dimension(50, 20));
 
         temperatureInfluence = new DoubleJSlider(0, 100,
                 config.getDouble("circulation.temperature_influence"), 10);
@@ -252,6 +265,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         temperatureInfluenceLabel = new JFormattedTextField(doubleFormatter);
         temperatureInfluenceLabel.setValue(config.getDouble("circulation.temperature_influence"));
         temperatureInfluenceLabel.addActionListener(this);
+        temperatureInfluenceLabel.setPreferredSize(new Dimension(50, 20));
 
         circulationDecline = new JSlider(0, 100,
                 config.getInt("circulation.circulation_decline"));
@@ -260,6 +274,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         circulationDeclineLabel = new JFormattedTextField(integerFormatter);
         circulationDeclineLabel.setValue(config.getInt("circulation.circulation_decline"));
         circulationDeclineLabel.addActionListener(this);
+        circulationDeclineLabel.setPreferredSize(new Dimension(50, 20));
 
         //Humidity
         evaporation = new DoubleJSlider(0, 100,
@@ -269,6 +284,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         evaporationLabel = new JFormattedTextField(doubleFormatter);
         evaporationLabel.setValue(config.getDouble("humidity.evaporation"));
         evaporationLabel.addActionListener(this);
+        evaporationLabel.setPreferredSize(new Dimension(50, 20));
 
         transpiration = new DoubleJSlider(0, 100,
                 config.getDouble("humidity.transpiration"), 10);
@@ -277,6 +293,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         transpirationLabel = new JFormattedTextField(doubleFormatter);
         transpirationLabel.setValue(config.getDouble("humidity.transpiration"));
         transpirationLabel.addActionListener(this);
+        transpirationLabel.setPreferredSize(new Dimension(50, 20));
 
         debug = new JSlider(0, 1000, 10);
         debug.addMouseListener(this);
@@ -800,8 +817,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
                         "    temperature_influence = "+temperatureInfluenceLabel.getValue()+"\n" +
                         "\n" +
                         "    circulation_decline = "+circulationDeclineLabel.getValue()+"\n" +
-                        "}\n" +
-                        "}";
+                        "}\n";
 
         //Temperature
         minTemperature.setValue((Integer) minTemperatureLabel.getValue());
