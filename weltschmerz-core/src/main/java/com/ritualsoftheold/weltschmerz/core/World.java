@@ -129,7 +129,7 @@ public class World {
 
         Biom biom = null;
         int y = (int) (precipitation * (1000/Constants.MAXIMUM_PRECIPITATION));
-        if (temperature >= 0) {
+        if (temperature >= 0 && temperature < 40) {
             int x = (int) ((temperature * 20) + Constants.MAXIMUM_TEMPERATURE_DIFFERENCE);
             biom = bioms[x][y];
         }else if (temperature > -10) {
