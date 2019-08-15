@@ -22,7 +22,7 @@ public class World {
     private int dirtID;
     private int grassID;
     private int grassMeshID;
-    private byte[][][] tree;
+    private MultiKeyMap<Integer, byte[][][]> tree;
     private boolean isDifferent;
     private Biom[][] bioms;
     private static final String EARTH_FILE = "earth.png";
@@ -45,7 +45,7 @@ public class World {
         this.grassMeshID = grassMeshID;
     }
 
-    void setObject(byte[][][] tree) {
+    void setObject(MultiKeyMap<Integer, byte[][][]> tree) {
         this.tree = tree;
     }
 
@@ -86,34 +86,27 @@ public class World {
             }
         }
 
-        if (isDifferent) {
-            for (int z = 0; z < 64; z++) {
-                for (int x = 0; x < 64; x++) {
-                    if (blocks.containsKey(z, x)) {
-                        for (int y = 0; y < 64; y++) {
-                            blockBuffer.put(x + (y * 64) + (z * 4096), blocks.get(z, x).get(y));
-                        }
+        for (int z = 0; z < 64; z++) {
+            for (int x = 0; x < 64; x++) {
+                if (blocks.containsKey(z, x)) {
+                    for (int y = 0; y < 64; y++) {
+                        blockBuffer.put(x + (y * 64) + (z * 4096), blocks.get(z, x).get(y));
                     }
                 }
             }
+        }
 
-            if (posX == 1 && posZ == 1) {
-                int posy = (int) Math.round(noise.getNoise(posX * 64, posZ * 64));
-                if (posy / 64 == posY / 64) {
-                    for (int z = 0; z < tree.length; z++) {
-                        for (int y = 0; y < tree[z].length; y++) {
-                            for (int x = 0; x < tree[z][y].length; x++) {
-                                blockBuffer.put(x + ((y + posy) * 64) + (z * 4096), tree[z][y][x]);
-                            }
-                        }
+        if(tree.containsKey(posX - 2, (posY / 64) - 1, posZ - 2)) {
+            int posy = (int) Math.round(noise.getNoise(posX * 64, posZ * 64));
+            byte[][][] bounds = tree.get(posX - 2, (posY / 64) - 1, posZ - 2);
+            for (int z = 0; z < bounds.length; z++) {
+                for (int y = 0; y < bounds[z].length; y++) {
+                    for (int x = 0; x < bounds[z][y].length; x++) {
+                        blockBuffer.put(x + ((y + posy) * 64) + (z * 4096), bounds[z][y][x]);
                     }
                 }
             }
-        } else if (blocks.size() > 0) {
-            blockBuffer.clear();
-            blockBuffer.rewind();
-            Arrays.fill(fill, (byte) dirtID);
-            blockBuffer.put(fill);
+            isDifferent = true;
         }
 
         blocks.clear();
