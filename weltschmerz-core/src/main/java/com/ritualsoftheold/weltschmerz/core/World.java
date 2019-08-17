@@ -5,8 +5,7 @@ import com.ritualsoftheold.weltschmerz.misc.misc.Constants;
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import com.typesafe.config.Config;
-import jdk.jshell.execution.Util;
-import org.apache.commons.collections4.map.MultiKeyMap;
+import squidpony.squidmath.XoRoRNG;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -22,10 +21,15 @@ public class World {
     private int dirtID;
     private int grassID;
     private int grassMeshID;
-    private MultiKeyMap<Integer, byte[][][]> tree;
     private boolean isDifferent;
     private Biom[][] bioms;
     private static final String EARTH_FILE = "earth.png";
+
+    private int treeDistanceX;
+    private int treeDistanceY;
+    private int treeDistanceZ;
+    private byte treeID;
+    private XoRoRNG xoRoRNG;
 
     public World(Config config) {
         System.out.println("Preparation");
@@ -35,6 +39,7 @@ public class World {
         this.equator = new Equator(config);
         this.circulation = new Circulation(equator, noise, config);
         this.precipitation = new Precipitation(equator, circulation, noise, config);
+        this.xoRoRNG = new XoRoRNG(config.getLong("map.seed"));
         bioms = MapIO.loadBiomMap(config);
         System.out.println("Preparation done");
     }
@@ -45,8 +50,12 @@ public class World {
         this.grassMeshID = grassMeshID;
     }
 
-    void setObject(MultiKeyMap<Integer, byte[][][]> tree) {
-        this.tree = tree;
+    void setObject(int treeDistanceX, int treeDistanceY, int treeDistanceZ, byte value) {
+        this.treeDistanceX = treeDistanceX;
+        this.treeDistanceY = treeDistanceY;
+        this.treeDistanceZ = treeDistanceZ;
+
+        this.treeID = value;
     }
 
     ByteBuffer getChunk(int posX, int posY, int posZ, int bufferSize) {
@@ -55,61 +64,89 @@ public class World {
         Arrays.fill(fill, (byte) 1);
         blockBuffer.put(fill);
 
-        MultiKeyMap<Integer, ByteBuffer> blocks = new MultiKeyMap<>();
         isDifferent = false;
 
-        for (int z = 0; z < 64; z++) {
-            for (int x = 0; x < 64; x++) {
-                ByteBuffer bb = ByteBuffer.allocate(64);
-                int y = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
-                if (y / 64 > posY / 64) {
-                    byte[] underArray = new byte[64];
-                    Arrays.fill(underArray, (byte) dirtID);
-                    bb.put(underArray);
-                    blocks.put(z, x, bb);
-                } else if (y / 64 == posY / 64) {
-                    y = Math.abs(y % 64);
-                    byte[] underArray = new byte[(y)];
-                    Arrays.fill(underArray, (byte) dirtID);
-                    bb.put(underArray);
+        if(posX >= 5 && posY/64 >= 0 && posZ >= 5 && treeDistanceX > 0 && treeDistanceY > 0 && treeDistanceZ > 0) {
 
-                    byte[] upperArray = new byte[64 - y];
-                    Arrays.fill(upperArray, (byte) 1);
-                    bb.put(upperArray);
-
-                    bb.put(y, (byte) grassID);
-                    bb.put(y + 1, (byte) grassMeshID);
-
-                    isDifferent = true;
-                    blocks.put(z, x, bb);
-                }
+            int sizeX;
+            boolean accross = false;
+            if (treeDistanceX / 64 > 0) {
+                sizeX = 64;
+                treeDistanceX -= 64;
+                accross = true;
+            } else {
+                sizeX = treeDistanceX % 64;
             }
-        }
 
-        for (int z = 0; z < 64; z++) {
-            for (int x = 0; x < 64; x++) {
-                if (blocks.containsKey(z, x)) {
-                    for (int y = 0; y < 64; y++) {
-                        blockBuffer.put(x + (y * 64) + (z * 4096), blocks.get(z, x).get(y));
+            int sizeY;
+            if (treeDistanceY / 64 > 0) {
+                sizeY = 64;
+                treeDistanceY -= 64;
+                accross = true;
+            } else {
+                sizeY = treeDistanceY % 64;
+            }
+
+            int sizeZ;
+            if (treeDistanceZ / 64 > 0) {
+                sizeZ = 64;
+                treeDistanceZ -= 64;
+                accross = true;
+            } else {
+                sizeZ = treeDistanceZ % 64;
+            }
+
+            if (!accross) {
+                treeDistanceX -= treeDistanceX % 64;
+                treeDistanceY -= treeDistanceY % 64;
+                treeDistanceZ -= treeDistanceZ % 64;
+            }
+
+            int additionY = 0;
+            for (int z = 0; z < sizeZ; z++) {
+                for (int x = 0; x < sizeX; x++) {
+                    int elevation = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
+                    if (posY / 64 == elevation / 64) {
+                        elevation += 1;
+                        if(elevation%64 > additionY){
+                            additionY = elevation%64;
+                        }
+                        for (int y = elevation % 64; y < (sizeY + elevation) % 64; y++) {
+                            blockBuffer.put(x + (y * 64) + (z * 4096), treeID);
+                        }
+                    } else {
+                        for (int y = 0; y < sizeY; y++) {
+                            blockBuffer.put(x + (y * 64) + (z * 4096), treeID);
+                        }
                     }
                 }
             }
-        }
-
-        if(tree.containsKey(posX - 2, (posY / 64) - 1, posZ - 2)) {
-            int posy = (int) Math.round(noise.getNoise(posX * 64, posZ * 64));
-            byte[][][] bounds = tree.get(posX - 2, (posY / 64) - 1, posZ - 2);
-            for (int z = 0; z < bounds.length; z++) {
-                for (int y = 0; y < bounds[z].length; y++) {
-                    for (int x = 0; x < bounds[z][y].length; x++) {
-                        blockBuffer.put(x + ((y + posy) * 64) + (z * 4096), bounds[z][y][x]);
-                    }
-                }
-            }
+            treeDistanceY += additionY;
             isDifferent = true;
         }
 
-        blocks.clear();
+        for (int z = 0; z < 64; z++) {
+            for (int x = 0; x < 64; x++) {
+                int elevation = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
+                for (int y = 0; y < 64; y++) {
+                    if ((elevation / 64) > (posY / 64)) {
+                        blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
+                    } else if (elevation / 64 == (posY / 64)) {
+                        if (Math.abs(elevation % 64) >= y) {
+                            blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
+                            isDifferent = true;
+                        }
+                    }
+                }
+                if (isDifferent) {
+                    blockBuffer.put(x + Math.abs((elevation % 64) * 64) + (z * 4096), (byte) grassID);
+                    if(xoRoRNG.nextBoolean()) {
+                      blockBuffer.put(x + Math.abs(((elevation + 1)% 64) * 64) + (z * 4096), (byte) grassMeshID);
+                    }
+                }
+            }
+        }
+
         blockBuffer.rewind();
         return blockBuffer;
     }
@@ -121,11 +158,11 @@ public class World {
         double precipitation = this.precipitation.getPrecipitation(posX, posY, elevation, temperature, airFlow);
 
         Biom biom = null;
-        int y = (int) (precipitation * (1000/Constants.MAXIMUM_PRECIPITATION));
+        int y = (int) (precipitation * (1000 / Constants.MAXIMUM_PRECIPITATION));
         if (temperature >= 0 && temperature < 40) {
             int x = (int) ((temperature * 20) + Constants.MAXIMUM_TEMPERATURE_DIFFERENCE);
             biom = bioms[x][y];
-        }else if (temperature > -10) {
+        } else if (temperature > -10) {
             int x = (int) (Constants.MAXIMUM_TEMPERATURE_DIFFERENCE / Math.max(Math.abs(temperature), 1));
             biom = bioms[x][y];
         }

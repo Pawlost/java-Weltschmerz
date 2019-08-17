@@ -3,7 +3,6 @@ package com.ritualsoftheold.weltschmerz.core;
 import com.ritualsoftheold.weltschmerz.environment.Biom;
 
 import com.typesafe.config.Config;
-import org.apache.commons.collections4.map.MultiKeyMap;
 import xerial.larray.LByteArray;
 
 import java.awt.image.BufferedImage;
@@ -55,8 +54,8 @@ public class Weltschmerz {
         world.setMaterials(dirtID, grassID, grassMeshID);
     }
 
-    public void setObject(MultiKeyMap<Integer, byte[][][]> tree){
-        world.setObject(tree);
+    public void setObject(int objectDistanceX, int objectDistanceY, int objectDistanceZ, byte value){
+        world.setObject(objectDistanceX, objectDistanceY, objectDistanceZ, value);
     }
 
     public Config getConfiguration() {
