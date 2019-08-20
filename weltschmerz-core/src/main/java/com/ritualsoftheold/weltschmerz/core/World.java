@@ -111,7 +111,7 @@ public class World {
                         if(elevation%64 > additionY){
                             additionY = elevation%64;
                         }
-                        for (int y = elevation % 64; y < (sizeY + elevation) % 64; y++) {
+                        for (int y = elevation % 64; y < 64; y++) {
                             blockBuffer.put(x + (y * 64) + (z * 4096), treeID);
                         }
                     } else {
