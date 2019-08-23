@@ -5,14 +5,12 @@ import com.sudoplay.joise.module.ModuleBasisFunction;
 import com.sudoplay.joise.module.ModuleFractal;
 import com.typesafe.config.Config;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class WorldNoise {
     private ModuleAutoCorrect mod;
     private int[] earth;
     private int imageWidth;
-    BufferedImage image;
 
     private int longitude;
     private int latitude;
@@ -23,18 +21,32 @@ public class WorldNoise {
     private int minElevation;
     private int maxElevation;
     private boolean useEarthImage;
+    private double[] image;
 
     public WorldNoise(Config config){
         this(config, null);
     }
 
-    public WorldNoise(Config config, BufferedImage earth){
+    public WorldNoise(Config config, BufferedImage earth) {
         changeConfiguration(config);
         this.earth = new int[earth.getWidth() * earth.getHeight()];
 
         this.imageWidth = earth.getWidth();
         earth.getRGB(0, 0, earth.getWidth(), earth.getHeight(), this.earth, 0, imageWidth);
+        image = new double[longitude * latitude];
         init();
+
+        for (int y = 0; y < latitude; y++) {
+            for (int x = 0; x < longitude; x++) {
+                float s = x / (float) longitude;
+                float t = y / (float) latitude;
+                double nx = Math.cos(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                double ny = Math.cos(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                double nz = Math.sin(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                image[(y * longitude) + x] = mod.get(nx, ny, nz, nw);
+            }
+        }
     }
 
     private void init() {
@@ -50,17 +62,12 @@ public class WorldNoise {
         mod.setSamples(samples);
         mod.calculate4D();
     }
-    public double getNoise(int x, int y){
-        if(!useEarthImage) {
-            float s = x / (float) longitude;
-            float t = y / (float) latitude;
-            double nx = Math.cos(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-            double ny = Math.cos(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-            double nz = Math.sin(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-            double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-            return (mod.get(nx, ny, nz, nw));
-        }else{
-            return earth[(y*imageWidth)+x] & 0xFF;
+
+    public double getNoise(int x, int y) {
+        if (!useEarthImage) {
+            return image[(y * longitude) + x];
+        } else {
+            return earth[(y * imageWidth) + x] & 0xFF;
         }
     }
 

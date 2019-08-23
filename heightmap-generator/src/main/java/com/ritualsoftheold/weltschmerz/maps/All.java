@@ -44,9 +44,6 @@ public class All extends JPanel implements MouseListener, ActionListener {
     private DoubleJSlider moistureIntensity;
     private DoubleJSlider change;
 
-    //Debug
-    private JSlider debug;
-
     //Precipitation
     private DoubleJSlider circulationIntensity;
     private DoubleJSlider orographicEffect;
@@ -100,8 +97,8 @@ public class All extends JPanel implements MouseListener, ActionListener {
         this.world = weltschmerz.world;
         config = world.config;
 
-        latitude = config.getInt("map.latitude");
-        longitude = config.getInt("map.longitude");
+        longitude = 500;
+        latitude = 500;
 
         integerFormatter = new NumberFormatter();
         integerFormatter.setValueClass(Integer.class);
@@ -114,7 +111,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
         //Creates frame for heigh map
         JFrame frame = new JFrame("All");
 
-        frame.setPreferredSize(new Dimension(1200, 900));
+        frame.setPreferredSize(new Dimension(1200, 600));
 
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -295,7 +292,8 @@ public class All extends JPanel implements MouseListener, ActionListener {
         transpirationLabel.addActionListener(this);
         transpirationLabel.setPreferredSize(new Dimension(50, 20));
 
-        debug = new JSlider(0, 1000, 10);
+        //Debug
+        JSlider debug = new JSlider(0, 1000, 10);
         debug.addMouseListener(this);
 
         //Humidity
@@ -457,127 +455,127 @@ public class All extends JPanel implements MouseListener, ActionListener {
         panel.add(changeLabel, gbc);
 
 
-        gbc.gridx = 0;
-        gbc.gridy = 24;
+        gbc.gridx = 2;
+        gbc.gridy = 0;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Precipitation"), gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 25;
+        gbc.gridx = 2;
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Circulation intensity"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 26;
+        gbc.gridx = 3;
+        gbc.gridy = 2;
         panel.add(circulationIntensity, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 26;
+        gbc.gridx = 2;
+        gbc.gridy = 2;
         panel.add(circulationIntensityLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 27;
+        gbc.gridx = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Orographic effect"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 28;
+        gbc.gridx = 3;
+        gbc.gridy = 4;
         panel.add(orographicEffect, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 28;
+        gbc.gridx = 2;
+        gbc.gridy = 4;
         panel.add(orographicEffectLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 29;
+        gbc.gridx = 2;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Precipitation intensity"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 30;
+        gbc.gridx = 3;
+        gbc.gridy = 6;
         panel.add(precipitationIntensity, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 30;
+        gbc.gridx = 2;
+        gbc.gridy = 6;
         panel.add(precipitationIntensityLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 31;
+        gbc.gridx = 2;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Iteration"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 33;
+        gbc.gridx = 3;
+        gbc.gridy = 8;
         panel.add(iteration, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 33;
+        gbc.gridx = 2;
+        gbc.gridy = 8;
         panel.add(iterationLabel, gbc);
 
         //Temperature
-        gbc.gridx = 0;
-        gbc.gridy = 33;
+        gbc.gridx = 2;
+        gbc.gridy = 9;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Temperature"), gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 34;
+        gbc.gridx = 2;
+        gbc.gridy = 10;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Min temperature"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 35;
+        gbc.gridx = 3;
+        gbc.gridy = 11;
         panel.add(minTemperature, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 35;
+        gbc.gridx = 2;
+        gbc.gridy = 11;
         panel.add(minTemperatureLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 36;
+        gbc.gridx = 2;
+        gbc.gridy = 12;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Max temperature"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 37;
+        gbc.gridx = 3;
+        gbc.gridy = 13;
         panel.add(maxTemperature, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 37;
+        gbc.gridx = 2;
+        gbc.gridy = 13;
         panel.add(maxTemperatureLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 38;
+        gbc.gridx = 2;
+        gbc.gridy = 14;
         gbc.gridwidth = 2;
         panel.add(new JLabel("Temperature decrease"), gbc);
         gbc.gridwidth = 1;
 
-        gbc.gridx = 1;
-        gbc.gridy = 39;
+        gbc.gridx = 3;
+        gbc.gridy = 15;
         panel.add(temperatureDecrease, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 39;
+        gbc.gridx = 2;
+        gbc.gridy = 15;
         panel.add(temperatureDecreaseLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 40;
+        gbc.gridx = 2;
+        gbc.gridy = 16;
         gbc.gridwidth = 2;
-        panel.add(new JLabel("Debug (increase this to get image)"), gbc);
+        panel.add(new JLabel("Height map zoom"), gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 42;
+        gbc.gridx = 2;
+        gbc.gridy = 17;
         panel.add(debug, gbc);
 
-        gbc.gridx = 3;
+        gbc.gridx =4;
         gbc.gridy = 0;
-        gbc.gridheight = 43;
+        gbc.gridheight = 25;
         panel.add(biomesCanvas, gbc);
         return panel;
     }

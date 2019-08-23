@@ -8,11 +8,11 @@ public class Equator {
     private double temperatureDecrease;
     private double equatorPosition;
 
-    public Equator(Config conf){
+    public Equator(Config conf) {
         changeConfiguration(conf);
     }
 
-    public double getTemperature(int posY, double elevation){
+    public double getTemperature(int posY, double elevation) {
         double tempDifference = (Math.abs(minTemperature) + Math.abs(maxTemperature)) / equatorPosition;
         double basicTemperature = (getDistance(posY) * -tempDifference) + maxTemperature;
 
@@ -24,7 +24,7 @@ public class Equator {
         }
     }
 
-    public double getDistance(int posY){
+    public double getDistance(int posY) {
         return Math.abs(equatorPosition - posY);
     }
 
@@ -32,11 +32,11 @@ public class Equator {
         return equatorPosition;
     }
 
-    public void changeConfiguration(Config config){
+    public void changeConfiguration(Config config) {
         double latitude = config.getInt("map.latitude");
         maxTemperature = config.getInt("temperature.max_temperature");
         minTemperature = config.getInt("temperature.min_temperature");
         temperatureDecrease = config.getDouble("temperature.temperature_decrease");
-        equatorPosition = (latitude /2.0);
+        equatorPosition = (latitude / 2.0);
     }
 }

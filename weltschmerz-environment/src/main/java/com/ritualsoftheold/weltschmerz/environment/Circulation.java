@@ -10,6 +10,7 @@ public class Circulation {
     private Equator equator;
     private int latitude;
     private int longitude;
+    private double maxElevation;
     private double circulationDecline;
     private double temperatureInfluence;
     private double exchangeCoefficient;
@@ -53,7 +54,7 @@ public class Circulation {
         float intensity = 1.0f;
 
         for (int octave = 0; octave < octaves; octave++) {
-            Vector delta = calculateDensityDelta(posX, posY, (int)(Math.pow(octave,2)));
+            Vector delta = calculateDensityDelta(posX, posY, (int) (Math.pow(octave, 2)));
             x += delta.x * intensity;
             y += delta.y * intensity;
             z += delta.z * intensity;
@@ -63,57 +64,123 @@ public class Circulation {
             intensity *= circulationDecline;
         }
 
-        return new Vector(x/range, y/range, z/range, w/range);
+        return new Vector(x / range, y / range, z / range, w / range);
     }
 
-    private Vector calculateDensityDelta(int posX, int posY, int distance){
+    private Vector calculateDensityDelta(int posX, int posY, int distance) {
+
+        int posXPositive = Math.min(posX + distance, longitude - 1);
+        int posXNegative = Math.max(posX - distance, 0);
+        int posYPositive = Math.min(posY + distance, latitude - 1);
+        int posYNegative = Math.max(posY - distance, 0);
+
+        double xNegativeDensity = calculateDensity(posXNegative, posY);
+        double xPositiveDensity;
+        double yNegativeDensity;
+        double yPositiveDensity;
+        double zPositiveDensity;
+        double zNegativeDensity;
+        double wPositiveDensity;
+        double wNegativeDensity;
+
         // west - east
-        double x = calculateDensity(Math.max(posX  - distance, 0), posY) -
-                calculateDensity(Math.min(posX  + distance, longitude), posY);
+        if(posXNegative == posXPositive){
+            xPositiveDensity = xNegativeDensity;
+        }else{
+            xPositiveDensity = calculateDensity(posXPositive, posY);
+        }
+
+        double x = xNegativeDensity - xPositiveDensity;
+
         // north - south
-        double y = calculateDensity(posX,  Math.max(posY  - distance, 0)) - calculateDensity(posX,
-                Math.min(posY + distance, latitude));
+        if (posYNegative == posY && posX == xNegativeDensity) {
+            yNegativeDensity = xNegativeDensity;
+        }else if(posYNegative == posY && posX == xPositiveDensity){
+            yNegativeDensity = xPositiveDensity;
+        }else{
+            yNegativeDensity = calculateDensity(posX, posYNegative);
+        }
+
+        if (posYPositive == posY && posX == xNegativeDensity) {
+            yPositiveDensity = xNegativeDensity;
+        }else if(posYPositive == posY && posX == xPositiveDensity){
+            yPositiveDensity = xPositiveDensity;
+        }else {
+            yPositiveDensity = calculateDensity(posX, posYPositive);
+        }
+
+        double y = yNegativeDensity - yPositiveDensity;
 
         // south-west - north-east
-        double z = calculateDensity(Math.max(posX  - distance, 0), Math.max(posY  - distance, 0))
-                - calculateDensity(Math.min(posX  + distance, longitude),  Math.min(posY  + distance,
-                latitude));
+        if(posX == posXNegative){
+            zNegativeDensity = yNegativeDensity;
+        }else if(posY == posYNegative){
+            zNegativeDensity = xNegativeDensity;
+        }else{
+            zNegativeDensity = calculateDensity(posXNegative, posYNegative);
+        }
+
+        if(posX == posXPositive){
+            zPositiveDensity = yPositiveDensity;
+        }else if(posY == posYPositive){
+            zPositiveDensity = xPositiveDensity;
+        }else{
+            zPositiveDensity = calculateDensity(posXPositive, posYPositive);
+        }
+
+        double z = zNegativeDensity - zPositiveDensity;
 
         // north-west - south-east
-        double w = calculateDensity(Math.max(posX  - distance, 0),  Math.min(posY  + distance, latitude)) -
-                calculateDensity(Math.min(posX  + distance, longitude),  Math.max(posY  - distance, 0));
+        if(posX == posXNegative){
+            wNegativeDensity = yPositiveDensity;
+        }else if(posY == posYPositive){
+            wNegativeDensity = xNegativeDensity;
+        }else{
+            wNegativeDensity = calculateDensity(posXNegative, posYPositive);
+        }
+
+        if(posY == posYNegative){
+            wPositiveDensity = xPositiveDensity;
+        }else if(posX == posXPositive){
+            wPositiveDensity = yNegativeDensity;
+        }else{
+            wPositiveDensity = calculateDensity(posXPositive, posYNegative);
+        }
+
+        double w = wNegativeDensity - wPositiveDensity;
 
         return new Vector(x, y, z, w);
     }
 
-    public double calculateDensity(int posX, int posY){
+    public double calculateDensity(int posX, int posY) {
         double density = calculateBaseDensity(posY);
-        double elevation = noise.getNoise(posX, posY);
+        double elevation = noise.getNoise(posX, posY)/maxElevation;
         double temperature = equator.getTemperature(posY, elevation);
         return (density * (1.0 - temperatureInfluence)) + ((1.0 - temperature) * temperatureInfluence);
     }
 
-    private double calculateBaseDensity(int posY){
+    private double calculateBaseDensity(int posY) {
         double verticallity = Utils.toUnsignedRange(equator.getDistance(posY));
-        return Utils.toUnsignedRange(Math.cos(Math.toRadians(verticallity * 3 * (Math.PI*2))));
+        return Utils.toUnsignedRange(Math.cos(Math.toRadians(verticallity * 3 * (Math.PI * 2))));
     }
 
-    private Vector applyCoriolisEffect(int posY, Vector airFlow){
+    private Vector applyCoriolisEffect(int posY, Vector airFlow) {
         float coriolisLatitude = (float) posY / latitude;
         double equatorPosition = equator.getEquatorPosition();
         double direction = Math.signum(coriolisLatitude - equatorPosition);
-        Vector matrix = Utils.rotation((Math.PI/2) * direction * airFlow.getLength());
+        Vector matrix = Utils.rotation((Math.PI / 2) * direction * airFlow.getLength());
         double x = (matrix.x * airFlow.x) + (matrix.z * airFlow.x);
         double y = (matrix.y * airFlow.y) + (matrix.w * airFlow.y);
         return new Vector(x, y);
     }
 
-    public void changeConfiguration(Config config){
+    public void changeConfiguration(Config config) {
         latitude = config.getInt("map.latitude");
         longitude = config.getInt("map.longitude");
         circulationDecline = config.getDouble("circulation.circulation_decline");
         temperatureInfluence = config.getDouble("circulation.temperature_influence");
         exchangeCoefficient = config.getDouble("circulation.exchange_coefficient");
         octaves = config.getInt("circulation.circulation_octaves");
+        maxElevation = config.getInt("map.max_elevation");
     }
 }

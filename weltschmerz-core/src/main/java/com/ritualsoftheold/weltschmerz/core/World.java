@@ -38,7 +38,7 @@ public class World {
         this.noise = new WorldNoise(config, earth);
         this.equator = new Equator(config);
         this.circulation = new Circulation(equator, noise, config);
-        this.precipitation = new Precipitation(equator, circulation, noise, config);
+        this.precipitation = new Precipitation(equator, noise, config);
         this.xoRoRNG = new XoRoRNG(config.getLong("map.seed"));
         bioms = MapIO.loadBiomMap(config);
         System.out.println("Preparation done");
