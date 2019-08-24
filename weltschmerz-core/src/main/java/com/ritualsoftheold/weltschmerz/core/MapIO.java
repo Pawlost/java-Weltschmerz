@@ -4,7 +4,6 @@ import com.ritualsoftheold.weltschmerz.environment.Biom;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
-import org.apache.commons.collections4.map.MultiKeyMap;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,9 +40,8 @@ public class MapIO {
             assert file != null;
             return ImageIO.read(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     static Biom[][] loadBiomMap(Config conf){

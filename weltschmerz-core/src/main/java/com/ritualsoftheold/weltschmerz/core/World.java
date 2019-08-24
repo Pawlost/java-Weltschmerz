@@ -66,6 +66,28 @@ public class World {
 
         isDifferent = false;
 
+        for (int z = 0; z < 64; z++) {
+            for (int x = 0; x < 64; x++) {
+                int elevation = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
+                for (int y = 0; y < 64; y++) {
+                    if ((elevation / 64) > (posY / 64)) {
+                        blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
+                    } else if (elevation / 64 == (posY / 64)) {
+                        if (Math.abs(elevation % 64) >= y) {
+                            blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
+                            isDifferent = true;
+                        }
+                    }
+                }
+                if (isDifferent) {
+                    blockBuffer.put(x + Math.abs((elevation % 64) * 64) + (z * 4096), (byte) grassID);
+                    if(xoRoRNG.nextBoolean()) {
+                      blockBuffer.put(x + Math.abs(((elevation + 1)% 64) * 64) + (z * 4096), (byte) grassMeshID);
+                    }
+                }
+            }
+        }
+
         if(posX >= 5 && posY/64 >= 0 && posZ >= 5 && treeDistanceX > 0 && treeDistanceY > 0 && treeDistanceZ > 0) {
 
             int sizeX;
@@ -111,7 +133,7 @@ public class World {
                         if(elevation%64 > additionY){
                             additionY = elevation%64;
                         }
-                        for (int y = elevation % 64; y < 64; y++) {
+                        for (int y = elevation % 63; y < 64; y++) {
                             blockBuffer.put(x + (y * 64) + (z * 4096), treeID);
                         }
                     } else {
@@ -123,28 +145,6 @@ public class World {
             }
             treeDistanceY += additionY;
             isDifferent = true;
-        }
-
-        for (int z = 0; z < 64; z++) {
-            for (int x = 0; x < 64; x++) {
-                int elevation = (int) Math.round(noise.getNoise(x + posX * 64, z + posZ * 64));
-                for (int y = 0; y < 64; y++) {
-                    if ((elevation / 64) > (posY / 64)) {
-                        blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
-                    } else if (elevation / 64 == (posY / 64)) {
-                        if (Math.abs(elevation % 64) >= y) {
-                            blockBuffer.put(x + (y * 64) + (z * 4096), (byte) dirtID);
-                            isDifferent = true;
-                        }
-                    }
-                }
-                if (isDifferent) {
-                    blockBuffer.put(x + Math.abs((elevation % 64) * 64) + (z * 4096), (byte) grassID);
-                    if(xoRoRNG.nextBoolean()) {
-                      blockBuffer.put(x + Math.abs(((elevation + 1)% 64) * 64) + (z * 4096), (byte) grassMeshID);
-                    }
-                }
-            }
         }
 
         blockBuffer.rewind();

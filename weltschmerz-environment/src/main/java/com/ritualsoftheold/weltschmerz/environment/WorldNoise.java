@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class WorldNoise {
     private ModuleAutoCorrect mod;
-    private int[] earth;
-    private int imageWidth;
-
+    private BufferedImage earth;
     private int longitude;
     private int latitude;
     private int octaves;
@@ -20,7 +18,6 @@ public class WorldNoise {
     private long seed;
     private int minElevation;
     private int maxElevation;
-    private boolean useEarthImage;
     private double[] image;
 
     public WorldNoise(Config config){
@@ -29,27 +26,8 @@ public class WorldNoise {
 
     public WorldNoise(Config config, BufferedImage earth) {
         changeConfiguration(config);
-        this.earth = new int[earth.getWidth() * earth.getHeight()];
+        this.earth = earth;
 
-        this.imageWidth = earth.getWidth();
-        earth.getRGB(0, 0, earth.getWidth(), earth.getHeight(), this.earth, 0, imageWidth);
-        image = new double[longitude * latitude];
-        init();
-
-        for (int y = 0; y < latitude; y++) {
-            for (int x = 0; x < longitude; x++) {
-                float s = x / (float) longitude;
-                float t = y / (float) latitude;
-                double nx = Math.cos(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-                double ny = Math.cos(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-                double nz = Math.sin(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-                double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
-                image[(y * longitude) + x] = mod.get(nx, ny, nz, nw);
-            }
-        }
-    }
-
-    private void init() {
         ModuleFractal gen = new ModuleFractal();
         gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
@@ -64,10 +42,16 @@ public class WorldNoise {
     }
 
     public double getNoise(int x, int y) {
-        if (!useEarthImage) {
+        if (image != null) {
             return image[(y * longitude) + x];
         } else {
-            return earth[(y * imageWidth) + x] & 0xFF;
+            float s = x / (float) longitude;
+            float t = y / (float) latitude;
+            double nx = Math.cos(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+            double ny = Math.cos(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+            double nz = Math.sin(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+            double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+            return mod.get(nx, ny, nz, nw);
         }
     }
 
@@ -78,12 +62,36 @@ public class WorldNoise {
     public void changeConfiguration(Config config){
         latitude = config.getInt("map.latitude");
         longitude = config.getInt("map.longitude");
-        useEarthImage = config.getBoolean("map.use_earth_image");
         minElevation = config.getInt("map.min_elevation");
         maxElevation = config.getInt("map.max_elevation");
         seed = config.getLong("map.seed");
         octaves = config.getInt("noise.octaves");
         frequency = config.getDouble("noise.frequency");
         samples = config.getInt("noise.samples");
+
+        if(config.getBoolean("map.use_image")) {
+            if (earth != null){
+                int[] earthImage = new int[earth.getWidth() * earth.getHeight()];
+                earth.getRGB(0, 0, earth.getWidth(), earth.getHeight(), earthImage, 0, earth.getWidth());
+                for (int y = 0; y < earth.getHeight(); y++) {
+                    for (int x = 0; x < earth.getWidth(); x++) {
+                         image[(y*longitude)+x] = earthImage[(y*earth.getWidth())+x] & 0xFF;
+                    }
+                }
+            }else {
+                image = new double[longitude * latitude];
+                for (int y = 0; y < latitude; y++) {
+                    for (int x = 0; x < longitude; x++) {
+                        float s = x / (float) longitude;
+                        float t = y / (float) latitude;
+                        double nx = Math.cos(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                        double ny = Math.cos(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                        double nz = Math.sin(s * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                        double nw = Math.sin(t * 2 * Math.PI) * 1.0 / (2 * Math.PI);
+                        image[(y * longitude) + x] = mod.get(nx, ny, nz, nw);
+                    }
+                }
+            }
+        }
     }
 }
