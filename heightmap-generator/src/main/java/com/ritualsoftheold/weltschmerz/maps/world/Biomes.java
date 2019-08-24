@@ -14,7 +14,7 @@ public class Biomes {
         new Biomes(weltschmerz);
     }
 
-    public Biomes(Weltschmerz weltschmerz){
+    private Biomes(Weltschmerz weltschmerz){
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -28,7 +28,7 @@ public class Biomes {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        WorldBiomesCanvas canvas = new WorldBiomesCanvas(longitude, latitude, weltschmerz.world);
+        WorldBiomesCanvas canvas = new WorldBiomesCanvas(longitude, latitude, weltschmerz);
 
         frame.add(canvas);
 

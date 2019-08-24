@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.humidity;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.core.World;
+import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +14,10 @@ public class WorldHumidityCanvas extends JPanel implements Scrollable, ActionLis
     private BufferedImage image;
     private int width;
     private int height;
-    private World world;
+    private Weltschmerz world;
     public static final int HUMIDITY = 10;
 
-    public WorldHumidityCanvas(int width, int height, World world) {
+    public WorldHumidityCanvas(int width, int height, Weltschmerz world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;

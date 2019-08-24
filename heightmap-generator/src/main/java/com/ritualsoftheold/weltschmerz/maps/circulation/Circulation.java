@@ -5,7 +5,6 @@ import com.typesafe.config.Config;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.ObjectInputFilter;
 
 public class Circulation {
     public static void main(String... args) {
@@ -13,7 +12,7 @@ public class Circulation {
         new Circulation(weltschmerz);
     }
 
-    public Circulation(Weltschmerz weltschmerz) {
+    private Circulation(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -24,7 +23,7 @@ public class Circulation {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldCirculationCanvas worldTemperatureCanvas = new WorldCirculationCanvas(longitude, latitude, weltschmerz.world);
+        WorldCirculationCanvas worldTemperatureCanvas = new WorldCirculationCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

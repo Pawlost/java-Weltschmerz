@@ -13,7 +13,7 @@ public class Temperature {
         new Temperature(weltschmerz);
     }
 
-    public Temperature(Weltschmerz weltschmerz){
+    private Temperature(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -24,7 +24,7 @@ public class Temperature {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(longitude, latitude, weltschmerz.world);
+        WorldTemperatureCanvas worldTemperatureCanvas = new WorldTemperatureCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

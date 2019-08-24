@@ -1,8 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.circulation;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.core.World;
-import com.ritualsoftheold.weltschmerz.misc.units.Vector;
+import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +15,9 @@ public class WorldCirculationCanvas  extends JPanel implements Scrollable, Actio
     private BufferedImage image;
     private int width;
     private int height;
-    private World world;
+    private Weltschmerz world;
 
-    public WorldCirculationCanvas(int width, int height, World world) {
+    public WorldCirculationCanvas(int width, int height, Weltschmerz world) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         this.width = width;
         this.height = height;

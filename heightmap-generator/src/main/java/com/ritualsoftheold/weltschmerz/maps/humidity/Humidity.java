@@ -12,7 +12,7 @@ public class Humidity {
         new Humidity(weltschmerz);
     }
 
-    public Humidity(Weltschmerz weltschmerz) {
+    private Humidity(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -23,7 +23,7 @@ public class Humidity {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(longitude, latitude, weltschmerz.world);
+        WorldHumidityCanvas worldTemperatureCanvas = new WorldHumidityCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

@@ -12,7 +12,7 @@ public class Pressure {
         new Pressure(weltschmerz);
     }
 
-    public Pressure(Weltschmerz weltschmerz) {
+    private Pressure(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -23,7 +23,7 @@ public class Pressure {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldPressureCanvas worldTemperatureCanvas = new WorldPressureCanvas(longitude, latitude, weltschmerz.world);
+        WorldPressureCanvas worldTemperatureCanvas = new WorldPressureCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

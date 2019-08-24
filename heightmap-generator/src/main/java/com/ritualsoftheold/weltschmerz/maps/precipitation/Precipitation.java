@@ -12,7 +12,7 @@ public class Precipitation {
         new Precipitation(weltschmerz);
     }
 
-    public Precipitation(Weltschmerz weltschmerz) {
+    private Precipitation(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -23,7 +23,7 @@ public class Precipitation {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldPrecipitationCanvas worldTemperatureCanvas = new WorldPrecipitationCanvas(longitude, latitude, weltschmerz.world);
+        WorldPrecipitationCanvas worldTemperatureCanvas = new WorldPrecipitationCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

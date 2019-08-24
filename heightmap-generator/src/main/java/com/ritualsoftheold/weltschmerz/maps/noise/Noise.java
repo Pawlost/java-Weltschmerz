@@ -12,7 +12,7 @@ public class Noise {
         new Noise(weltschmerz);
     }
 
-    public Noise (Weltschmerz weltschmerz){
+    private Noise(Weltschmerz weltschmerz){
         Config config = weltschmerz.getConfiguration();
         int latitude = config.getInt("map.latitude");
         int longitude = config.getInt("map.longitude");
@@ -20,7 +20,7 @@ public class Noise {
         //Creates frame for heigh map
         JFrame worldFrame = new JFrame("World Noise");
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
-        WorldNoiseCanvas worldNoiseCanvas = new WorldNoiseCanvas(longitude, latitude, weltschmerz.world);
+        WorldNoiseCanvas worldNoiseCanvas = new WorldNoiseCanvas(longitude, latitude, weltschmerz);
         worldFrame.add(worldNoiseCanvas);
         worldFrame.setVisible(true);
         worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

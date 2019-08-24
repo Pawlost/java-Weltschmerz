@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.maps.noise;
 
 import com.ritualsoftheold.weltschmerz.core.MapIO;
-import com.ritualsoftheold.weltschmerz.core.World;
+import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +15,9 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable, ActionListen
   private BufferedImage image;
   private int width;
   private int height;
-  private World world;
+  private Weltschmerz world;
 
-  public WorldNoiseCanvas(int width, int height, World world) {
+  public WorldNoiseCanvas(int width, int height, Weltschmerz world) {
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     this.width = width;
     this.height = height;

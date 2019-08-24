@@ -13,7 +13,7 @@ public class Moisture {
         new Moisture(weltschmerz);
     }
 
-    public Moisture(Weltschmerz weltschmerz) {
+    private Moisture(Weltschmerz weltschmerz) {
         Config config = weltschmerz.getConfiguration();
 
         int latitude = config.getInt("map.latitude");
@@ -23,7 +23,7 @@ public class Moisture {
 
         worldFrame.setPreferredSize(new Dimension(longitude, latitude));
 
-        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(longitude, latitude, weltschmerz.world);
+        WorldMoistureCanvas worldTemperatureCanvas = new WorldMoistureCanvas(longitude, latitude, weltschmerz);
 
         worldFrame.add(worldTemperatureCanvas);
 

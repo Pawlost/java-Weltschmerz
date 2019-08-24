@@ -1,7 +1,6 @@
 package com.ritualsoftheold.weltschmerz.maps;
 
 import com.ritualsoftheold.weltschmerz.core.Weltschmerz;
-import com.ritualsoftheold.weltschmerz.core.World;
 import com.ritualsoftheold.weltschmerz.maps.misc.DoubleJSlider;
 import com.ritualsoftheold.weltschmerz.maps.world.WorldBiomesCanvas;
 import com.typesafe.config.Config;
@@ -26,7 +25,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
     private NumberFormatter integerFormatter;
     private NumberFormatter doubleFormatter;
 
-    private World world;
+    private Weltschmerz weltschmerz;
     private int longitude;
     private int latitude;
 
@@ -93,9 +92,8 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
     private All() {
         super();
-        Weltschmerz weltschmerz = new Weltschmerz();
-        this.world = weltschmerz.world;
-        config = world.config;
+        weltschmerz = new Weltschmerz();
+        config = weltschmerz.config;
 
         longitude = 500;
         latitude = 500;
@@ -128,7 +126,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
     }
 
     private JPanel initCanvas() {
-        biomesCanvas = new WorldBiomesCanvas(longitude, latitude, world);
+        biomesCanvas = new WorldBiomesCanvas(longitude, latitude, weltschmerz);
         biomesCanvas.updateImage();
         JPanel panel = new JPanel();
 
@@ -712,7 +710,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
         Config config = ConfigFactory.parseString(string);
 
-        world.changeConfiguration(config);
+        weltschmerz.changeConfiguration(config);
         biomesCanvas.updateImage();
     }
 
@@ -846,7 +844,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
         Config config = ConfigFactory.parseString(string);
 
-        world.changeConfiguration(config);
+        weltschmerz.changeConfiguration(config);
         biomesCanvas.updateImage();
     }
 }
