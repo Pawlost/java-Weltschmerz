@@ -3,6 +3,7 @@ package com.ritualsoftheold.weltschmerz.core;
 import com.ritualsoftheold.weltschmerz.environment.*;
 
 import com.ritualsoftheold.weltschmerz.misc.misc.Constants;
+import com.ritualsoftheold.weltschmerz.misc.misc.Random;
 import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import com.typesafe.config.Config;
@@ -18,16 +19,15 @@ public class Weltschmerz {
     private WorldNoise noise;
     private Circulation circulation;
     private final Biom[][] bioms;
-    private Config configuration;
     private static final String EARTH_FILE = "earth.png";
 
-    private XoRoRNG xoRoRNG;
+    private Random random;
 
     //Generate map image
     public static void main(String[] args) {
         Weltschmerz weltschmerz = new Weltschmerz();
 
-        Config configuration = weltschmerz.configuration;
+        Config configuration = weltschmerz.config;
 
         int latitude = configuration.getInt("map.latitude");
         int longitude = configuration.getInt("map.longitude");
@@ -51,13 +51,13 @@ public class Weltschmerz {
         this.equator = new Equator(config);
         this.circulation = new Circulation(equator, noise, config);
         this.precipitation = new Precipitation(equator, noise, config);
-        this.xoRoRNG = new XoRoRNG(config.getLong("map.seed"));
+        this.random = new Random(config.getLong("map.seed"));
         bioms = MapIO.loadBiomMap(config);
         System.out.println("Preparation done");
     }
 
     public Config getConfiguration() {
-        return configuration;
+        return config;
     }
 
     public Biom getBiom(int posX, int posY) {
@@ -111,14 +111,14 @@ public class Weltschmerz {
         return noise.getNoise(posX, posY);
     }
 
-    public WorldNoise getWorldNoise() {
-        return noise;
-    }
-
     public void changeConfiguration(Config config) {
         this.equator.changeConfiguration(config);
         this.noise.changeConfiguration(config);
         this.circulation.changeConfiguration(config);
         this.precipitation.changeConfiguration(config);
+    }
+
+    public Random getRandom(){
+        return random;
     }
 }
