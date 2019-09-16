@@ -2,12 +2,11 @@ package com.ritualsoftheold.weltschmerz.core;
 
 import com.ritualsoftheold.weltschmerz.environment.*;
 
-import com.ritualsoftheold.weltschmerz.misc.misc.Constants;
-import com.ritualsoftheold.weltschmerz.misc.misc.Random;
-import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
+import com.ritualsoftheold.weltschmerz.misc.utils.Constants;
+import com.ritualsoftheold.weltschmerz.misc.utils.Random;
+import com.ritualsoftheold.weltschmerz.misc.utils.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import com.typesafe.config.Config;
-import squidpony.squidmath.XoRoRNG;
 
 import java.awt.image.BufferedImage;
 

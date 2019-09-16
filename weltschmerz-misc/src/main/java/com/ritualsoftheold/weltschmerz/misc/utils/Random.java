@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.misc.misc;
+package com.ritualsoftheold.weltschmerz.misc.utils;
 
 import squidpony.squidmath.XoRoRNG;
 

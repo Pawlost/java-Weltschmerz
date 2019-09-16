@@ -1,7 +1,7 @@
 package com.ritualsoftheold.weltschmerz.environment;
 
-import com.ritualsoftheold.weltschmerz.misc.misc.Constants;
-import com.ritualsoftheold.weltschmerz.misc.misc.Utils;
+import com.ritualsoftheold.weltschmerz.misc.utils.Constants;
+import com.ritualsoftheold.weltschmerz.misc.utils.Utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 import com.typesafe.config.Config;
 

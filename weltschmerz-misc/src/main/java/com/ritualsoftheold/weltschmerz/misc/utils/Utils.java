@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.misc.misc;
+package com.ritualsoftheold.weltschmerz.misc.utils;
 import com.ritualsoftheold.weltschmerz.misc.units.Vector;
 
 public class Utils {

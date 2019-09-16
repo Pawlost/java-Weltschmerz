@@ -1,4 +1,4 @@
-package com.ritualsoftheold.weltschmerz.misc.misc;
+package com.ritualsoftheold.weltschmerz.misc.utils;
 
 public class Constants {
     public static final double OCEAN_DEPTH = -50.0;
