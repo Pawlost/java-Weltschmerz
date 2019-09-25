@@ -9,7 +9,7 @@ import java.io.ObjectInputFilter;
 
 public class Moisture {
     public static void main(String... args) {
-        Weltschmerz weltschmerz = new Weltschmerz();
+        Weltschmerz weltschmerz = new Weltschmerz(true);
         new Moisture(weltschmerz);
     }
 

@@ -24,7 +24,7 @@ public class Weltschmerz {
 
     //Generate map image
     public static void main(String[] args) {
-        Weltschmerz weltschmerz = new Weltschmerz();
+        Weltschmerz weltschmerz = new Weltschmerz(true);
 
         Config configuration = weltschmerz.config;
 
@@ -42,11 +42,20 @@ public class Weltschmerz {
         MapIO.saveImage(image);
     }
 
-    public Weltschmerz() {
+    public Weltschmerz(boolean generateImages) {
         this.config = MapIO.loadMapConfig();
         System.out.println("Preparation");
-        BufferedImage earth = MapIO.loadMap(EARTH_FILE);
-        this.noise = new WorldNoise(config, earth);
+
+        if(generateImages) {
+            BufferedImage earth = null;
+            if(config.getBoolean("map.use_earth")) {
+                earth = MapIO.loadMap(EARTH_FILE);
+            }
+            this.noise = new WorldNoise(config, earth, true);
+        }else{
+            this.noise = new WorldNoise(config, false);
+        }
+
         this.equator = new Equator(config);
         this.circulation = new Circulation(equator, noise, config);
         this.precipitation = new Precipitation(equator, noise, config);
@@ -110,9 +119,10 @@ public class Weltschmerz {
         return noise.getNoise(posX, posY);
     }
 
-    public void changeConfiguration(Config config) {
+    public void changeConfiguration(Config config, boolean useImage) {
         this.equator.changeConfiguration(config);
         this.noise.changeConfiguration(config);
+        this.noise.fillImage(useImage);
         this.circulation.changeConfiguration(config);
         this.precipitation.changeConfiguration(config);
     }

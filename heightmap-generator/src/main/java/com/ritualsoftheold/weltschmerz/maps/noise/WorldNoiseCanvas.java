@@ -30,11 +30,13 @@ public class WorldNoiseCanvas extends JPanel implements Scrollable, ActionListen
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        float c = (float) (world.getWorldNoise().getNoise(x, y)/world.getWorldNoise().getMax());
+     /*   float c = (float) (world.getWorldNoise().getNoise(x, y)/world.getWorldNoise().getMax());
         if(c < 0){
             c = 0;
         }
         this.image.setRGB(x, y, new Color(c, c, c).getRGB());
+
+      */
       }
     }
     MapIO.saveImage(image);

@@ -20,14 +20,18 @@ public class WorldNoise {
     private int maxElevation;
     private double[] image;
 
-    public WorldNoise(Config config){
-        this(config, null);
+    public WorldNoise(Config config, boolean useImage) {
+        this(config, null, useImage);
     }
 
-    public WorldNoise(Config config, BufferedImage earth) {
-        changeConfiguration(config);
+    public WorldNoise(Config config, BufferedImage earth, boolean useImage) {
         this.earth = earth;
+        changeConfiguration(config);
+        init();
+        fillImage(useImage);
+    }
 
+    private void init() {
         ModuleFractal gen = new ModuleFractal();
         gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADIENT);
         gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
@@ -55,11 +59,11 @@ public class WorldNoise {
         }
     }
 
-    public int getMax(){
+    public int getMax() {
         return maxElevation;
     }
 
-    public void changeConfiguration(Config config){
+    public void changeConfiguration(Config config) {
         latitude = config.getInt("map.latitude");
         longitude = config.getInt("map.longitude");
         minElevation = config.getInt("map.min_elevation");
@@ -68,18 +72,20 @@ public class WorldNoise {
         octaves = config.getInt("noise.octaves");
         frequency = config.getDouble("noise.frequency");
         samples = config.getInt("noise.samples");
+    }
 
-        if(config.getBoolean("map.use_image")) {
-            if (earth != null){
+    public void fillImage(boolean useImage) {
+        if (useImage) {
+            image = new double[longitude * latitude];
+            if (earth != null) {
                 int[] earthImage = new int[earth.getWidth() * earth.getHeight()];
                 earth.getRGB(0, 0, earth.getWidth(), earth.getHeight(), earthImage, 0, earth.getWidth());
                 for (int y = 0; y < earth.getHeight(); y++) {
                     for (int x = 0; x < earth.getWidth(); x++) {
-                         image[(y*longitude)+x] = earthImage[(y*earth.getWidth())+x] & 0xFF;
+                        image[(y * longitude) + x] = earthImage[(y * earth.getWidth()) + x] & 0xFF;
                     }
                 }
-            }else {
-                image = new double[longitude * latitude];
+            } else {
                 for (int y = 0; y < latitude; y++) {
                     for (int x = 0; x < longitude; x++) {
                         float s = x / (float) longitude;

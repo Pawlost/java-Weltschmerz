@@ -92,11 +92,11 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
     private All() {
         super();
-        weltschmerz = new Weltschmerz();
+        weltschmerz = new Weltschmerz(true);
         config = weltschmerz.config;
 
-        longitude = 500;
-        latitude = 500;
+        latitude = config.getInt("map.latitude");
+        longitude = config.getInt("map.longitude");
 
         integerFormatter = new NumberFormatter();
         integerFormatter.setValueClass(Integer.class);
@@ -602,7 +602,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
                         "    #Seed to generate unique world\n" +
                         "    seed = "+config.getLong("map.seed")+"\n" +
                         "\n" +
-                        "    use_earth_image = "+config.getString("map.use_earth_image")+"\n" +
+                        "    use_earth = "+config.getString("map.use_earth")+"\n" +
                         "\n" +
                         "    //Minimal map elvation in negative value\n" +
                         "    min_elevation = "+config.getInt("map.min_elevation")+"\n" +
@@ -710,7 +710,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
         Config config = ConfigFactory.parseString(string);
 
-        weltschmerz.changeConfiguration(config);
+        weltschmerz.changeConfiguration(config, true);
         biomesCanvas.updateImage();
     }
 
@@ -738,7 +738,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
                         "    #Seed to generate unique world\n" +
                         "    seed = "+config.getLong("map.seed")+"\n" +
                         "\n" +
-                        "    use_earth_image = "+config.getString("map.use_earth_image")+"\n" +
+                        "    use_earth = "+config.getString("map.use_earth")+"\n" +
                         "\n" +
                         "    //Minimal map elvation in negative value\n" +
                         "    min_elevation = "+config.getInt("map.min_elevation")+"\n" +
@@ -844,7 +844,7 @@ public class All extends JPanel implements MouseListener, ActionListener {
 
         Config config = ConfigFactory.parseString(string);
 
-        weltschmerz.changeConfiguration(config);
+        weltschmerz.changeConfiguration(config, true);
         biomesCanvas.updateImage();
     }
 }

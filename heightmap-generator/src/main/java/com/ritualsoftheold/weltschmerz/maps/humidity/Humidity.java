@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Humidity {
     public static void main(String... args) {
-        Weltschmerz weltschmerz = new Weltschmerz();
+        Weltschmerz weltschmerz = new Weltschmerz(true);
         new Humidity(weltschmerz);
     }
 
